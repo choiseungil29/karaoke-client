@@ -134,7 +134,9 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
         
         ArrayList<MidiTrack> tracks = file.ChangeMidiNotes(options);
         // SetNoteSize(options.largeNoteSize);
-        scrollVert = options.scrollVert;
+        //scrollVert = options.scrollVert;
+        //scrollVert = false;
+        scrollVert = true;
         showNoteLetters = options.showNoteLetters;
         TimeSignature time = file.getTime(); 
         if (options.time != null) {

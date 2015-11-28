@@ -85,7 +85,8 @@ public class MidiOptions implements Serializable {
         for (int i = 0; i < instruments.length; i++) {
             instruments[i] = midifile.getTracks().get(i).getInstrument();
         }
-        scrollVert = true;
+        //scrollVert = true;
+        scrollVert = false;
         largeNoteSize = true;
         if (tracks.length != 2) {
             twoStaffs = true;

@@ -6,6 +6,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="landscape"
+        android:configChanges="orientation"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".Activity.MidiActivity"
@@ -26,7 +28,8 @@
         <activity android:name="com.midisheetmusic.SettingsActivity" />
         <activity android:name="com.midisheetmusic.AllSongsActivity" />
         <activity android:name="com.midisheetmusic.RecentSongsActivity" />
-        <activity android:name="com.midisheetmusic.SheetMusicActivity" />
+        <activity android:name="com.midisheetmusic.SheetMusicActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
