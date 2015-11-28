@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.clogic.karaokeviewer" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Activity.MidiActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity android:name=".Activity.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.midisheetmusic.MidiSheetMusicActivity" />
+        <activity android:name="com.midisheetmusic.FileBrowserActivity" />
+        <activity android:name="com.midisheetmusic.ChooseSongActivity" />
+        <activity android:name="com.midisheetmusic.HelpActivity" />
+        <activity android:name="com.midisheetmusic.SettingsActivity" />
+        <activity android:name="com.midisheetmusic.AllSongsActivity" />
+        <activity android:name="com.midisheetmusic.RecentSongsActivity" />
+        <activity android:name="com.midisheetmusic.SheetMusicActivity" />
+    </application>
+
+</manifest>
