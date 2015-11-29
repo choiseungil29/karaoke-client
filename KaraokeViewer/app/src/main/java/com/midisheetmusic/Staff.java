@@ -14,6 +14,7 @@ package com.midisheetmusic;
 
 import java.util.*;
 import android.graphics.*;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.midisheetmusic.enums.Clef;
@@ -40,17 +41,18 @@ public class Staff {
     private ArrayList<MusicSymbol> symbols;  /** The music symbols in this staff */
     private ArrayList<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
     private int yTop;                   /** The y pixel of the top of the staff */
-    private ClefSymbol clefsym;         /** The left-side Clef symbol */
+    private ClefSymbol clefSymbol;         /** The left-side Clef symbol */
     private AccidentalSymbol[] keys;         /** The key signature symbols */
     private boolean showMeasures;       /** If true, show the measure numbers */
-    private int keysigWidth;            /** The width of the clef and key signature */
+    private int keySignatureWidth;            /** The width of the clef and key signature */
     private int width;                  /** The width of the staff in pixels */
     private int height;                 /** The height of the staff in pixels */
-    private int tracknum;               /** The track this staff represents */
-    private int totaltracks;            /** The total number of tracks */
-    private int starttime;              /** The time (in pulses) of first symbol */
-    private int endtime;                /** The time (in pulses) of last symbol */
+    private int trackNum;               /** The track this staff represents */
+    private int totalTracks;            /** The total number of tracks */
+    private int startTime;              /** The time (in pulses) of first symbol */
+    private int endTime;                /** The time (in pulses) of last symbol */
     private int measureLength;          /** The time (in pulses) of a measure */
+    private boolean isStart = false;
 
     /** Create a new staff with the given list of music symbols,
      * and the given key signature.  The clef is determined by
@@ -59,13 +61,13 @@ public class Staff {
      * with the staffs above and below. The MidiOptions are used
      * to check whether to display measure numbers or not.
      */
-    public Staff(ArrayList<MusicSymbol> symbols, KeySignature key, 
-                 MidiOptions options, int tracknum, int totaltracks)  {
+    public Staff(ArrayList<MusicSymbol> symbols, KeySignature key,
+                 MidiOptions options, int trackNum, int totalTracks)  {
 
-        keysigWidth = SheetMusic.KeySignatureWidth(key);
-        this.tracknum = tracknum;
-        this.totaltracks = totaltracks;
-        showMeasures = (options.showMeasures && tracknum == 0);
+        keySignatureWidth = SheetMusic.KeySignatureWidth(key);
+        this.trackNum = trackNum;
+        this.totalTracks = totalTracks;
+        showMeasures = (options.showMeasures && trackNum == 0);
         if (options.time != null) {
             measureLength = options.time.getMeasure();
         }
@@ -74,7 +76,7 @@ public class Staff {
         }
         Clef clef = FindClef(symbols);
 
-        clefsym = new ClefSymbol(clef, 0, false);
+        clefSymbol = new ClefSymbol(clef, 0, false);
         keys = key.GetSymbols(clef);
         this.symbols = symbols;
         CalculateWidth(options.scrollVert);
@@ -86,24 +88,26 @@ public class Staff {
     /** Return the width of the staff */
     public int getWidth() { return width; }
 
+    public void setHeight(int n) { this.height = n; }
+
     /** Return the height of the staff */
     public int getHeight() { return height; }
 
     /** Return the track number of this staff (starting from 0 */
-    public int getTrack() { return tracknum; }
+    public int getTrack() { return trackNum; }
 
     /** Return the starting time of the staff, the start time of
      *  the first symbol.  This is used during playback, to 
      *  automatically scroll the music while playing.
      */
-    public int getStartTime() { return starttime; }
+    public int getStartTime() { return startTime; }
 
-    /** Return the ending time of the staff, the endtime of
+    /** Return the ending time of the staff, the endTime of
      *  the last symbol.  This is used during playback, to 
      *  automatically scroll the music while playing.
      */
-    public int getEndTime() { return endtime; }
-    public void setEndTime(int value) { endtime = value; }
+    public int getEndTime() { return endTime; }
+    public void setEndTime(int value) { endTime = value; }
 
     /** Find the initial clef to use for this staff.  Use the clef of
      * the first ChordSymbol.
@@ -130,8 +134,8 @@ public class Staff {
             above = Math.max(above, s.getAboveStaff());
             below = Math.max(below, s.getBelowStaff());
         }
-        above = Math.max(above, clefsym.getAboveStaff());
-        below = Math.max(below, clefsym.getBelowStaff());
+        above = Math.max(above, clefSymbol.getAboveStaff());
+        below = Math.max(below, clefSymbol.getBelowStaff());
         if (showMeasures) {
             above = Math.max(above, SheetMusic.NoteHeight * 3);
         }
@@ -144,7 +148,7 @@ public class Staff {
         /* Add some extra vertical space between the last track
          * and first track.
          */
-        if (tracknum == totaltracks-1)
+        if (trackNum == totalTracks -1)
             height += SheetMusic.NoteHeight * 3;
     }
 
@@ -154,7 +158,7 @@ public class Staff {
             width = SheetMusic.PageWidth;
             return;
         }
-        width = keysigWidth;
+        width = keySignatureWidth;
         for (MusicSymbol s : symbols) {
             width += s.getWidth();
         }
@@ -162,19 +166,19 @@ public class Staff {
 
     /** Calculate the start and end time of this staff. */
     private void CalculateStartEndTime() {
-        starttime = endtime = 0;
+        startTime = endTime = 0;
         if (symbols.size() == 0) {
             return;
         }
-        starttime = symbols.get(0).getStartTime();
+        startTime = symbols.get(0).getStartTime();
         for (MusicSymbol m : symbols) {
-            if (endtime < m.getStartTime()) {
-                endtime = m.getStartTime();
+            if (endTime < m.getStartTime()) {
+                endTime = m.getStartTime();
             }
             if (m instanceof ChordSymbol) {
                 ChordSymbol c = (ChordSymbol) m;
-                if (endtime < c.getEndTime()) {
-                    endtime = c.getEndTime();
+                if (endTime < c.getEndTime()) {
+                    endTime = c.getEndTime();
                 }
             }
         }
@@ -186,7 +190,7 @@ public class Staff {
         if (width != SheetMusic.PageWidth)
             return;
 
-        int totalwidth = keysigWidth;
+        int totalwidth = keySignatureWidth;
         int totalsymbols = 0;
         int i = 0;
 
@@ -225,25 +229,25 @@ public class Staff {
         if (tracklyrics == null || tracklyrics.size() == 0) {
             return;
         }
-        lyrics = new ArrayList<LyricSymbol>();
-        int xpos = 0;
-        int symbolindex = 0;
+        lyrics = new ArrayList<>();
+        int xPoisition = 0;
+        int symbolIndex = 0;
         for (LyricSymbol lyric : tracklyrics) {
-            if (lyric.getStartTime() < starttime) {
+            if (lyric.getStartTime() < startTime) {
                 continue;
             }
-            if (lyric.getStartTime() > endtime) {
+            if (lyric.getStartTime() > endTime) {
                 break;
             }
             /* Get the x-position of this lyric */
-            while (symbolindex < symbols.size() &&
-                   symbols.get(symbolindex).getStartTime() < lyric.getStartTime()) {
-                xpos += symbols.get(symbolindex).getWidth();
-                symbolindex++;
+            while (symbolIndex < symbols.size() &&
+                   symbols.get(symbolIndex).getStartTime() < lyric.getStartTime()) {
+                xPoisition += symbols.get(symbolIndex).getWidth();
+                symbolIndex++;
             }
-            lyric.setX(xpos);
-            if (symbolindex < symbols.size() &&
-                (symbols.get(symbolindex) instanceof BarSymbol)) {
+            lyric.setX(xPoisition);
+            if (symbolIndex < symbols.size() &&
+                (symbols.get(symbolIndex) instanceof BarSymbol)) {
                 lyric.setX(lyric.getX() + SheetMusic.NoteWidth);
             }
             lyrics.add(lyric);
@@ -256,7 +260,7 @@ public class Staff {
     /** Draw the lyrics */
     private void DrawLyrics(Canvas canvas, Paint paint) {
         /* Skip the left side Clef symbol and key signature */
-        int xpos = keysigWidth;
+        int xpos = keySignatureWidth;
         int ypos = height - SheetMusic.NoteHeight * 3/2;
 
         for (LyricSymbol lyric : lyrics) {
@@ -271,7 +275,7 @@ public class Staff {
     /** Draw the measure numbers for each measure */
     private void DrawMeasureNumbers(Canvas canvas, Paint paint) {
         /* Skip the left side Clef symbol and key signature */
-        int xpos = keysigWidth;
+        int xpos = keySignatureWidth;
         int ypos = yTop - SheetMusic.NoteHeight * 3;
 
         for (MusicSymbol s : symbols) {
@@ -311,12 +315,12 @@ public class Staff {
          *   End exactly at the bottom of the staff.
          */
         int ystart, yend;
-        if (tracknum == 0)
+        if (trackNum == 0)
             ystart = yTop - SheetMusic.LineWidth;
         else
             ystart = 0;
 
-        if (tracknum == (totaltracks-1))
+        if (trackNum == (totalTracks -1))
             yend = yTop + 4 * SheetMusic.NoteHeight;
         else
             yend = height;
@@ -334,9 +338,9 @@ public class Staff {
 
         /* Draw the left side Clef symbol */
         canvas.translate(xPosition, 0);
-        clefsym.Draw(canvas, paint, yTop);
+        clefSymbol.Draw(canvas, paint, yTop);
         canvas.translate(-xPosition, 0);
-        xPosition += clefsym.getWidth();
+        xPosition += clefSymbol.getWidth();
 
         /* Draw the key signature */
         for (AccidentalSymbol a : keys) {
@@ -364,7 +368,7 @@ public class Staff {
         DrawHorizLines(canvas, paint);
         DrawEndLines(canvas, paint);
 
-        if (showMeasures) {
+        if (!showMeasures) {
             DrawMeasureNumbers(canvas, paint);
         }
         if (lyrics != null) {
@@ -373,24 +377,28 @@ public class Staff {
 
     }
 
-
     /** Shade all the chords played in the given time.
      *  Un-shade any chords shaded in the previous pulse time.
      *  Store the x coordinate location where the shade was drawn.
      */
     public int ShadeNotes(Canvas canvas, Paint paint, int shade,
-                           int currentPulseTime, int prevPulseTime, int xShade) {
+                          int currentPulseTime, int prevPulseTime, int xShade, @Nullable StaffInterface staffState) {
 
         /* If there's nothing to unshade, or shade, return */
-        if ((starttime > prevPulseTime || endtime < prevPulseTime) &&
-            (starttime > currentPulseTime || endtime < currentPulseTime)) {
+        if ((startTime > prevPulseTime || endTime < prevPulseTime) &&
+            (startTime > currentPulseTime || endTime < currentPulseTime)) {
+            return xShade;
+        }
+
+        if(currentPulseTime > endTime && staffState != null) {
+            staffState.staffEnd(endTime);
             return xShade;
         }
 
         /* Skip the left side Clef symbol and key signature */
-        int xPosition = keysigWidth;
+        int xPosition = keySignatureWidth;
 
-        MusicSymbol currentSymbol = null;
+        MusicSymbol curr = null;
         ChordSymbol prevChord = null;
         int prevX = 0;
 
@@ -399,13 +407,13 @@ public class Staff {
          * Shade symbols where start <= currentPulseTime < end
          */ 
         for (int i = 0; i < symbols.size(); i++) {
-            currentSymbol = symbols.get(i);
-            if (currentSymbol instanceof BarSymbol) {
-                xPosition += currentSymbol.getWidth();
+            curr = symbols.get(i);
+            if (curr instanceof BarSymbol) {
+                xPosition += curr.getWidth();
                 continue;
             }
 
-            int start = currentSymbol.getStartTime();
+            int start = curr.getStartTime();
             int end = 0;
             if (i+2 < symbols.size() && symbols.get(i+1) instanceof BarSymbol) {
                 end = symbols.get(i+2).getStartTime();
@@ -414,9 +422,8 @@ public class Staff {
                 end = symbols.get(i+1).getStartTime();
             }
             else {
-                end = endtime;
+                end = endTime;
             }
-
 
             /* If we've past the previous and current times, we're done. */
             if ((start > prevPulseTime) && (start > currentPulseTime)) {
@@ -428,12 +435,27 @@ public class Staff {
             /* If shaded notes are the same, we're done */
             if ((start <= currentPulseTime) && (currentPulseTime < end) &&
                 (start <= prevPulseTime) && (prevPulseTime < end)) {
-
                 xShade = xPosition;
                 return xShade;
             }
 
             boolean redrawLines = false;
+
+            /* If symbol is in the previous time, draw a white background */
+            /*if ((start <= prevPulseTime) && (prevPulseTime < end)) {
+                canvas.translate(xPosition-2, -2);
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(Color.WHITE);
+                canvas.drawRect(0, 0, curr.getWidth() + 4, this.getHeight() + 4, paint);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setColor(Color.BLACK);
+                canvas.translate(-(xPosition - 2), 2);
+                canvas.translate(xPosition, 0);
+                curr.Draw(canvas, paint, yTop);
+                canvas.translate(-xPosition, 0);
+
+                redrawLines = true;
+            }*/
 
             /* If symbol is in the current time, draw a shaded background */
             if ((start <= currentPulseTime) && (currentPulseTime < end)) {
@@ -441,12 +463,13 @@ public class Staff {
                 canvas.translate(xPosition, 0);
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(shade);
-                canvas.drawRect(0, 0, currentSymbol.getWidth(), this.getHeight(), paint);
+                canvas.drawRect(0, 0, curr.getWidth(), this.getHeight(), paint);
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setColor(Color.BLACK);
-                currentSymbol.Draw(canvas, paint, yTop);
+                curr.Draw(canvas, paint, yTop);
                 canvas.translate(-xPosition, 0);
                 redrawLines = true;
+                isStart = true;
             }
 
             /* If either a gray or white background was drawn, we need to redraw
@@ -460,7 +483,7 @@ public class Staff {
                 paint.setStrokeWidth(1);
                 canvas.translate(xPosition-2, 0);
                 for (line = 1; line <= 5; line++) {
-                    canvas.drawLine(0, y, currentSymbol.getWidth()+4, y, paint);
+                    canvas.drawLine(0, y, curr.getWidth()+4, y, paint);
                     y += SheetMusic.LineWidth + SheetMusic.LineSpace;
                 }
                 canvas.translate(-(xPosition-2), 0);
@@ -470,21 +493,21 @@ public class Staff {
                     prevChord.Draw(canvas, paint, yTop);
                     canvas.translate(-prevX, 0);
                 }
-                if (showMeasures) {
+                if (!showMeasures) {
                     DrawMeasureNumbers(canvas, paint);
                 }
                 if (lyrics != null) {
                     DrawLyrics(canvas, paint);
                 }
             }
-            if (currentSymbol instanceof ChordSymbol) {
-                ChordSymbol chord = (ChordSymbol) currentSymbol;
+            if (curr instanceof ChordSymbol) {
+                ChordSymbol chord = (ChordSymbol) curr;
                 if (chord.getStem() != null && !chord.getStem().getReceiver()) {
-                    prevChord = (ChordSymbol) currentSymbol;
+                    prevChord = (ChordSymbol) curr;
                     prevX = xPosition;
                 }
             }
-            xPosition += currentSymbol.getWidth();
+            xPosition += curr.getWidth();
         }
         return xShade;
     }
@@ -495,8 +518,8 @@ public class Staff {
      */
     public int PulseTimeForPoint(Point point) {
 
-        int xpos = keysigWidth;
-        int pulseTime = starttime;
+        int xpos = keySignatureWidth;
+        int pulseTime = startTime;
         for (MusicSymbol sym : symbols) {
             pulseTime = sym.getStartTime();
             if (point.x <= xpos + sym.getWidth()) {
@@ -510,7 +533,7 @@ public class Staff {
 
     @Override
     public String toString() {
-        String result = "Staff clef=" + clefsym.toString() + "\n";
+        String result = "Staff clef=" + clefSymbol.toString() + "\n";
         result += "  Keys:\n";
         for (AccidentalSymbol a : keys) {
             result += "    " + a.toString() + "\n";

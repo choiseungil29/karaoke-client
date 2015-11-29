@@ -18,6 +18,7 @@ import android.app.*;
 import android.content.*;
 import android.content.res.*;
 import android.graphics.*;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.os.*;
@@ -696,7 +697,6 @@ public class MidiPlayer extends LinearLayout {
                 return;
             }
             sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
-            //piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
             timer.postDelayed(TimerCallback, 100);
             return;
         }
@@ -707,7 +707,6 @@ public class MidiPlayer extends LinearLayout {
             prevPulseTime = currentPulseTime;
             currentPulseTime = startPulseTime + mSec * pulsesPerMsec;
             sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
-            //piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
             playState = paused;
             timer.postDelayed(ReShade, 1000);
             return;
