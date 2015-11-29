@@ -16,23 +16,26 @@ package com.midisheetmusic;
 
 import android.graphics.*;
 
+import com.midisheetmusic.enums.Accidental;
+import com.midisheetmusic.enums.Clef;
 
-/** @class AccidSymbol
- * An accidental (accid) symbol represents a sharp, flat, or natural
+
+/** @class AccidentalSymbol
+ * An accidental (accidental) symbol represents a sharp, flat, or natural
  * accidental that is displayed at a specific position (note and clef).
  */
-public class AccidSymbol implements MusicSymbol {
-    private Accid accid;          /** The accidental (sharp, flat, natural) */
+public class AccidentalSymbol implements MusicSymbol {
+    private Accidental accidental;          /** The accidental (sharp, flat, natural) */
     private WhiteNote whitenote;  /** The white note where the symbol occurs */
     private Clef clef;            /** Which clef the symbols is in */
     private int width;            /** Width of symbol */
 
     /** 
-     * Create a new AccidSymbol with the given accidental, that is
+     * Create a new AccidentalSymbol with the given accidental, that is
      * displayed at the given note in the given clef.
      */
-    public AccidSymbol(Accid accid, WhiteNote note, Clef clef) {
-        this.accid = accid;
+    public AccidentalSymbol(Accidental accidental, WhiteNote note, Clef clef) {
+        this.accidental = accidental;
         this.whitenote = note;
         this.clef = clef;
         width = getMinWidth();
@@ -43,7 +46,7 @@ public class AccidSymbol implements MusicSymbol {
 
     /** Get the time (in pulses) this symbol occurs at.
      * Not used.  Instead, the startTime of the ChordSymbol containing this
-     * AccidSymbol is used.
+     * AccidentalSymbol is used.
      */
     public int getStartTime() { return -1; }  
 
@@ -62,9 +65,9 @@ public class AccidSymbol implements MusicSymbol {
     public int getAboveStaff() {
         int dist = WhiteNote.Top(clef).Dist(whitenote) * 
                    SheetMusic.NoteHeight/2;
-        if (accid == Accid.Sharp || accid == Accid.Natural)
+        if (accidental == Accidental.Sharp || accidental == Accidental.Natural)
             dist -= SheetMusic.NoteHeight;
-        else if (accid == Accid.Flat)
+        else if (accidental == Accidental.Flat)
             dist -= 3*SheetMusic.NoteHeight/2;
 
         if (dist < 0)
@@ -80,7 +83,7 @@ public class AccidSymbol implements MusicSymbol {
         int dist = WhiteNote.Bottom(clef).Dist(whitenote) * 
                    SheetMusic.NoteHeight/2 + 
                    SheetMusic.NoteHeight;
-        if (accid == Accid.Sharp || accid == Accid.Natural) 
+        if (accidental == Accidental.Sharp || accidental == Accidental.Natural)
             dist += SheetMusic.NoteHeight;
 
         if (dist > 0)
@@ -96,15 +99,15 @@ public class AccidSymbol implements MusicSymbol {
         /* Align the symbol to the right */
         canvas.translate(getWidth() - getMinWidth(), 0);
 
-        /* Store the y-pixel value of the top of the whitenote in ynote. */
+        /* Store the y-pixel value of the top of the whiteNote in ynote. */
         int ynote = ytop + WhiteNote.Top(clef).Dist(whitenote) * 
                     SheetMusic.NoteHeight/2;
 
-        if (accid == Accid.Sharp)
+        if (accidental == Accidental.Sharp)
             DrawSharp(canvas, paint, ynote);
-        else if (accid == Accid.Flat)
+        else if (accidental == Accidental.Flat)
             DrawFlat(canvas, paint, ynote);
-        else if (accid == Accid.Natural)
+        else if (accidental == Accidental.Natural)
             DrawNatural(canvas, paint, ynote);
 
         canvas.translate(-(getWidth() - getMinWidth()), 0);
@@ -212,8 +215,8 @@ public class AccidSymbol implements MusicSymbol {
     
     public String toString() {
         return String.format(
-          "AccidSymbol accid={0} whitenote={1} clef={2} width={3}",
-          accid, whitenote, clef, width);
+          "AccidentalSymbol accidental={0} whiteNote={1} clef={2} width={3}",
+                accidental, whitenote, clef, width);
     }
 
 }

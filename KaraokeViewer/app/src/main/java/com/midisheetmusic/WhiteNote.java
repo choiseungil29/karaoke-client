@@ -13,6 +13,8 @@
 
 package com.midisheetmusic;
 
+import com.midisheetmusic.enums.Clef;
+
 import java.util.*;
 
 
@@ -115,7 +117,7 @@ public class WhiteNote implements Comparator<WhiteNote> {
             case G: offset = NoteScale.G; break;
             default: offset = 0; break;
         }
-        return NoteScale.ToNumber(offset, octave);
+        return NoteScale.toMidiNumber(offset, octave);
     }
 
     /** Compare the two notes.  Return

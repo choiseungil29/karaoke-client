@@ -22,8 +22,6 @@ class PairInt {
     public int high;
 }
 
-
-
 /* MIDI file format.
  *
  * The Midi File format is described below.  The description uses
@@ -1281,9 +1279,9 @@ public class MidiFile {
         if (count == 0)
             return result;
 
-        int prevhigh  = 76; /* E5, top of treble staff */
-        int prevlow   = 45; /* A3, bottom of bass staff */
-        int startindex = 0;
+        int prevHigh  = 76; /* E5, top of treble staff */
+        int prevLow   = 45; /* A3, bottom of bass staff */
+        int startIndex = 0;
 
         for (MidiNote note : notes) {
             int high, low, highExact, lowExact;
@@ -1291,8 +1289,8 @@ public class MidiFile {
             int number = note.getNumber();
             high = low = highExact = lowExact = number;
 
-            while (notes.get(startindex).getEndTime() < note.getStartTime()) {
-                startindex++;
+            while (notes.get(startIndex).getEndTime() < note.getStartTime()) {
+                startIndex++;
             }
 
             /* I've tried several algorithms for splitting a track in two,
@@ -1309,12 +1307,14 @@ public class MidiFile {
              *   octave apart.  Choose the closeset note.
              */
             PairInt pair = new PairInt();
-            pair.high = high; pair.low = low;
+            pair.high = high;
+            pair.low = low;
             PairInt pairExact = new PairInt();
-            pairExact.high = highExact; pairExact.low = lowExact;
+            pairExact.high = highExact;
+            pairExact.low = lowExact;
 
-            FindHighLowNotes(notes, measurelen, startindex, note.getStartTime(), note.getEndTime(), pair);
-            FindExactHighLowNotes(notes, startindex, note.getStartTime(), pairExact);
+            FindHighLowNotes(notes, measurelen, startIndex, note.getStartTime(), note.getEndTime(), pair);
+            FindExactHighLowNotes(notes, startIndex, note.getStartTime(), pairExact);
 
             high = pair.high; low = pair.low;
             highExact = pairExact.high; lowExact = pairExact.low;
@@ -1352,7 +1352,7 @@ public class MidiFile {
                 }
             }
             else {
-                if (prevhigh - number <= number - prevlow) {
+                if (prevHigh - number <= number - prevLow) {
                     top.AddNote(note);
                 }
                 else {
@@ -1364,8 +1364,8 @@ public class MidiFile {
              * that are more than an octave apart.
              */
             if (high - low > 12) {
-                prevhigh = high;
-                prevlow = low;
+                prevHigh = high;
+                prevLow = low;
             }
         }
 
@@ -1509,21 +1509,22 @@ public class MidiFile {
     public static void
     RoundStartTimes(ArrayList<MidiTrack> tracks, int millisec, TimeSignature time) {
         /* Get all the starttimes in all tracks, in sorted order */
-        ListInt starttimes = new ListInt();
+        List<Integer> startTimes = new ArrayList<>();
         for (MidiTrack track : tracks) {
             for (MidiNote note : track.getNotes()) {
-                starttimes.add(note.getStartTime());
+                startTimes.add(note.getStartTime());
             }
         }
-        starttimes.sort();
+        //startTimes.sort();
+        Collections.sort(startTimes);
 
         /* Notes within "millisec" milliseconds apart will be combined. */
         int interval = time.getQuarter() * millisec * 1000 / time.getTempo();
 
         /* If two starttimes are within interval millisec, make them the same */
-        for (int i = 0; i < starttimes.size() - 1; i++) {
-            if (starttimes.get(i+1) - starttimes.get(i) <= interval) {
-                starttimes.set(i+1, starttimes.get(i));
+        for (int i = 0; i < startTimes.size() - 1; i++) {
+            if (startTimes.get(i+1) - startTimes.get(i) <= interval) {
+                startTimes.set(i+1, startTimes.get(i));
             }
         }
 
@@ -1534,15 +1535,15 @@ public class MidiFile {
             int i = 0;
 
             for (MidiNote note : track.getNotes()) {
-                while (i < starttimes.size() &&
-                       note.getStartTime() - interval > starttimes.get(i)) {
+                while (i < startTimes.size() &&
+                       note.getStartTime() - interval > startTimes.get(i)) {
                     i++;
                 }
 
-                if (note.getStartTime() > starttimes.get(i) &&
-                    note.getStartTime() - starttimes.get(i) <= interval) {
+                if (note.getStartTime() > startTimes.get(i) &&
+                    note.getStartTime() - startTimes.get(i) <= interval) {
 
-                    note.setStartTime(starttimes.get(i));
+                    note.setStartTime(startTimes.get(i));
                 }
             }
             Collections.sort(track.getNotes(), track.getNotes().get(0));
@@ -1663,19 +1664,19 @@ public class MidiFile {
      * Take all the note start times that fall between 0.5 and 
      * 4 seconds, and return the starttimes.
      */
-    public ListInt
+    public List<Integer>
     GuessMeasureLength() {
-        ListInt result = new ListInt();
+        ArrayList<Integer> result = new ArrayList<>();
 
         int pulses_per_second = (int) (1000000.0 / timesig.getTempo() * timesig.getQuarter());
-        int minmeasure = pulses_per_second / 2;  /* The minimum measure length in pulses */
-        int maxmeasure = pulses_per_second * 4;  /* The maximum measure length in pulses */
+        int minMeasure = pulses_per_second / 2;  /* The minimum measure length in pulses */
+        int maxMeasure = pulses_per_second * 4;  /* The maximum measure length in pulses */
 
         /* Get the start time of the first note in the midi file. */
-        int firstnote = timesig.getMeasure() * 5;
+        int firstNote = timesig.getMeasure() * 5;
         for (MidiTrack track : tracks) {
-            if (firstnote > track.getNotes().get(0).getStartTime()) {
-                firstnote = track.getNotes().get(0).getStartTime();
+            if (firstNote > track.getNotes().get(0).getStartTime()) {
+                firstNote = track.getNotes().get(0).getStartTime();
             }
         }
 
@@ -1683,20 +1684,20 @@ public class MidiFile {
         int interval = timesig.getQuarter() * 60000 / timesig.getTempo();
 
         for (MidiTrack track : tracks) {
-            int prevtime = 0;
+            int prevTime = 0;
             for (MidiNote note : track.getNotes()) {
-                if (note.getStartTime() - prevtime <= interval)
+                if (note.getStartTime() - prevTime <= interval)
                     continue;
 
-                prevtime = note.getStartTime();
+                prevTime = note.getStartTime();
 
-                int time_from_firstnote = note.getStartTime() - firstnote;
+                int time_from_firstnote = note.getStartTime() - firstNote;
 
                 /* Round the time down to a multiple of 4 */
                 time_from_firstnote = time_from_firstnote / 4 * 4;
-                if (time_from_firstnote < minmeasure)
+                if (time_from_firstnote < minMeasure)
                     continue;
-                if (time_from_firstnote > maxmeasure)
+                if (time_from_firstnote > maxMeasure)
                     break;
 
                 if (!result.contains(time_from_firstnote)) {
@@ -1704,7 +1705,7 @@ public class MidiFile {
                 }
             }
         }
-        result.sort();
+        Collections.sort(result);
         return result;
     }
 
@@ -1756,47 +1757,6 @@ public class MidiFile {
             result += track.toString();
         }
         return result;
-    }
-
-    /* Command-line program to print out a parsed Midi file. Used for debugging.
-     * To run:
-     * - Change main2 to main
-     * - javac MidiFile.java
-     * - java MidiFile file.mid
-     *
-     */
-    public static void main2(String[] args) {
-        /**
-        if (args.length == 0) {
-            System.out.println("Usage: MidiFile <filename>");
-            return;
-        }
-        String filename = args[0];
-        byte[] data;
-        try {
-            File info = new File(filename);
-            FileInputStream file = new FileInputStream(filename);
-
-            data = new byte[ (int)info.length() ];
-            int offset = 0;
-            int len = (int)info.length();
-            while (true) {
-                if (offset == len)
-                    break;
-                int n = file.read(data, offset, len- offset);
-                if (n <= 0)
-                    break;
-                offset += n;
-            }
-            file.close();
-        }
-        catch(IOException e) {
-            return;
-        }
-
-        MidiFile f = new MidiFile(data, "");
-        System.out.print(f.toString());
-        **/
     }
 
 }  /* End class MidiFile */

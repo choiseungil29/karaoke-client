@@ -18,7 +18,6 @@ import android.view.*;
 import android.widget.*;
 import android.content.*;
 import android.content.res.*;
-import android.graphics.*;
 
 import com.clogic.karaokeviewer.R;
 
@@ -52,7 +51,7 @@ public class MidiSheetMusicActivity extends Activity {
     /** Load all the resource images */
     private void loadImages() {
         ClefSymbol.LoadImages(this);
-        TimeSigSymbol.LoadImages(this);
+        TimeSignatureSymbol.LoadImages(this);
         MidiPlayer.LoadImages(this);
     }
 

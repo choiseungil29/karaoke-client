@@ -11,10 +11,10 @@
  */
 
 
-package com.midisheetmusic;
+package com.midisheetmusic.enums;
 
 /** Accidentals */
-public enum Accid {
+public enum Accidental {
     None, Sharp, Flat, Natural
 }
 

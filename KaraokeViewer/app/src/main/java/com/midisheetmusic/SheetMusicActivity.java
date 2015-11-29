@@ -17,7 +17,6 @@ import java.net.*;
 import android.app.*;
 import android.net.Uri;
 import android.os.*;
-import android.util.*;
 import android.widget.*;
 import android.view.*;
 import android.graphics.*;
@@ -60,7 +59,7 @@ public class SheetMusicActivity extends Activity {
         super.onCreate(state);
 
         ClefSymbol.LoadImages(this);
-        TimeSigSymbol.LoadImages(this);
+        TimeSignatureSymbol.LoadImages(this);
         MidiPlayer.LoadImages(this);
 
         // Parse the MidiFile from the raw bytes

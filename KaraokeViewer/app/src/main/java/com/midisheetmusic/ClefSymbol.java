@@ -17,6 +17,7 @@ import android.content.*;
 import android.content.res.*;
 
 import com.clogic.karaokeviewer.R;
+import com.midisheetmusic.enums.Clef;
 
 
 /** @class ClefSymbol 

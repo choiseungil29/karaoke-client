@@ -12,6 +12,8 @@
 
 package com.midisheetmusic;
 
+import com.midisheetmusic.enums.NoteDuration;
+
 import java.io.*;
 
 /** @class TimeSignature
@@ -29,7 +31,7 @@ import java.io.*;
 public class TimeSignature implements Serializable {
     private int numerator;      /** numerator of the time signature */
     private int denominator;    /** denominator of the time signature */
-    private int quarternote;    /** Number of pulses per quarter note */
+    private int quarterNote;    /** Number of pulses per quarter note */
     private int measure;        /** Number of pulses per measure */
     private int tempo;          /** Number of microseconds per quarter note */
 
@@ -40,7 +42,7 @@ public class TimeSignature implements Serializable {
     public int getDenominator() { return denominator; }
 
     /** Get the number of pulses per quarter note */
-    public int getQuarter() { return quarternote; }
+    public int getQuarter() { return quarterNote; }
 
     /** Get the number of pulses per measure */
     public int getMeasure() { return measure; }
@@ -51,8 +53,8 @@ public class TimeSignature implements Serializable {
     /** Create a new time signature, with the given numerator,
      * denominator, pulses per quarter note, and tempo.
      */
-    public TimeSignature(int numerator, int denominator, int quarternote, int tempo) {
-        if (numerator <= 0 || denominator <= 0 || quarternote <= 0) {
+    public TimeSignature(int numerator, int denominator, int quarterNote, int tempo) {
+        if (numerator <= 0 || denominator <= 0 || quarterNote <= 0) {
             throw new MidiFileException("Invalid time signature", 0);
         }
 
@@ -63,14 +65,14 @@ public class TimeSignature implements Serializable {
 
         this.numerator = numerator;
         this.denominator = denominator;
-        this.quarternote = quarternote;
+        this.quarterNote = quarterNote;
         this.tempo = tempo;
 
         int beat;
         if (denominator < 4)
-            beat = quarternote * 2;
+            beat = quarterNote * 2;
         else
-            beat = quarternote / (denominator/4);
+            beat = quarterNote / (denominator/4);
 
         measure = numerator * beat;
     }
@@ -82,7 +84,7 @@ public class TimeSignature implements Serializable {
 
     /** Given a duration in pulses, return the closest note duration. */
     public NoteDuration GetNoteDuration(int duration) {
-        int whole = quarternote * 4;
+        int whole = quarterNote * 4;
 
         /**
          1       = 32/32
@@ -135,18 +137,18 @@ public class TimeSignature implements Serializable {
 
     /** Return the time period (in pulses) the the given duration spans */
     public int DurationToTime(NoteDuration dur) {
-        int eighth = quarternote/2;
+        int eighth = quarterNote /2;
         int sixteenth = eighth/2;
 
         switch (dur) {
-            case Whole:         return quarternote * 4; 
-            case DottedHalf:    return quarternote * 3; 
-            case Half:          return quarternote * 2; 
+            case Whole:         return quarterNote * 4;
+            case DottedHalf:    return quarterNote * 3;
+            case Half:          return quarterNote * 2;
             case DottedQuarter: return 3*eighth; 
-            case Quarter:       return quarternote; 
+            case Quarter:       return quarterNote;
             case DottedEighth:  return 3*sixteenth;
             case Eighth:        return eighth;
-            case Triplet:       return quarternote/3; 
+            case Triplet:       return quarterNote /3;
             case Sixteenth:     return sixteenth;
             case ThirtySecond:  return sixteenth/2; 
             default:                         return 0;
@@ -157,7 +159,7 @@ public class TimeSignature implements Serializable {
     public 
     String toString() {
         return String.format("TimeSignature=%1$s/%2$s quarter=%3$s tempo=%4$s",
-                             numerator, denominator, quarternote, tempo);
+                             numerator, denominator, quarterNote, tempo);
     }
     
 }

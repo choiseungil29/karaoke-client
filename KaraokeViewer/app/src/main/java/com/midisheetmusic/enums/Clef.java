@@ -10,14 +10,11 @@
  *  GNU General Public License for more details.
  */
 
-package com.midisheetmusic;
 
-/** The possible note durations */
-public enum NoteDuration {
-  ThirtySecond, Sixteenth, Triplet, Eighth,
-  DottedEighth, Quarter, DottedQuarter,
-  Half, DottedHalf, Whole
-}
+package com.midisheetmusic.enums;
 
+
+/** The possible clefs, Treble or Bass */
+public enum Clef { Treble, Bass }
 
 

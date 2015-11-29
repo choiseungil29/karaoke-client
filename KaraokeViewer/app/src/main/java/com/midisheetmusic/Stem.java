@@ -14,6 +14,8 @@ package com.midisheetmusic;
 
 import android.graphics.*;
 
+import com.midisheetmusic.enums.NoteDuration;
+
 
 /** @class Stem
  * The Stem class is used by ChordSymbol to draw the stem portion of
@@ -44,13 +46,13 @@ public class Stem {
     private WhiteNote top;         /** Topmost note in chord */
     private WhiteNote bottom;      /** Bottommost note in chord */
     private WhiteNote end;         /** Location of end of the stem */
-    private boolean notesoverlap;     /** Do the chord notes overlap */
+    private boolean notesOverlap;     /** Do the chord notes overlap */
     private int side;              /** Left side or right side of note */
 
     private Stem pair;              /** If pair != null, this is a horizontal 
                                      * beam stem to another chord */
-    private int width_to_pair;      /** The width (in pixels) to the chord pair */
-    private boolean receiver_in_pair;  /** This stem is the receiver of a horizontal
+    private int widthToPair;      /** The width (in pixels) to the chord pair */
+    private boolean receiverInPair;  /** This stem is the receiver of a horizontal
                                     * beam stem from another chord. */
 
     /** Get/Set the direction of the stem (Up or Down) */
@@ -76,8 +78,8 @@ public class Stem {
      * of a chord pair.  In Draw(), if this stem is a receiver, we
      * don't draw a curvy stem, we only draw the vertical line.
      */
-    public boolean getReceiver() { return receiver_in_pair; }
-    public void setReceiver(boolean value) { receiver_in_pair = value; }
+    public boolean getReceiver() { return receiverInPair; }
+    public void setReceiver(boolean value) { receiverInPair = value; }
 
     /** Create a new stem.  The top note, bottom note, and direction are 
      * needed for drawing the vertical line of the stem.  The duration is 
@@ -92,15 +94,15 @@ public class Stem {
         this.bottom = bottom;
         this.duration = duration;
         this.direction = direction;
-        this.notesoverlap = overlap;
-        if (direction == Up || notesoverlap)
+        this.notesOverlap = overlap;
+        if (direction == Up || notesOverlap)
             side = RightSide;
         else 
             side = LeftSide;
         end = CalculateEnd();
         pair = null;
-        width_to_pair = 0;
-        receiver_in_pair = false;
+        widthToPair = 0;
+        receiverInPair = false;
     }
 
     /** Calculate the vertical position (white note key) where 
@@ -138,9 +140,9 @@ public class Stem {
      * ChordSymbol.MakePair().  When two chords are joined by a horizontal
      * beam, their stems must point in the same direction (up or down).
      */
-    public void ChangeDirection(int newdirection) {
-        direction = newdirection;
-        if (direction == Up || notesoverlap)
+    public void ChangeDirection(int newDirection) {
+        direction = newDirection;
+        if (direction == Up || notesOverlap)
             side = RightSide;
         else
             side = LeftSide;
@@ -153,12 +155,12 @@ public class Stem {
      */
     public void SetPair(Stem pair, int width_to_pair) {
         this.pair = pair;
-        this.width_to_pair = width_to_pair;
+        this.widthToPair = width_to_pair;
     }
 
     /** Return true if this Stem is part of a horizontal beam. */
     public boolean IsBeam() {
-        return receiver_in_pair || (pair != null);
+        return receiverInPair || (pair != null);
     }
 
     /** Draw this stem.
@@ -174,7 +176,7 @@ public class Stem {
             duration == NoteDuration.DottedQuarter || 
             duration == NoteDuration.Half ||
             duration == NoteDuration.DottedHalf ||
-            receiver_in_pair) {
+                receiverInPair) {
 
             return;
         }
@@ -190,11 +192,11 @@ public class Stem {
      * @param topstaff  The note at the top of the staff.
      */
     private void DrawVerticalLine(Canvas canvas, Paint paint, int ytop, WhiteNote topstaff) {
-        int xstart;
+        int xStart;
         if (side == LeftSide)
-            xstart = SheetMusic.LineSpace/4 + 1;
+            xStart = SheetMusic.LineSpace/4 + 1;
         else
-            xstart = SheetMusic.LineSpace/4 + SheetMusic.NoteWidth;
+            xStart = SheetMusic.LineSpace/4 + SheetMusic.NoteWidth;
 
         if (direction == Up) {
             int y1 = ytop + topstaff.Dist(bottom) * SheetMusic.NoteHeight/2 
@@ -202,7 +204,7 @@ public class Stem {
 
             int ystem = ytop + topstaff.Dist(end) * SheetMusic.NoteHeight/2;
 
-            canvas.drawLine(xstart, y1, xstart, ystem, paint);
+            canvas.drawLine(xStart, y1, xStart, ystem, paint);
         }
         else if (direction == Down) {
             int y1 = ytop + topstaff.Dist(top) * SheetMusic.NoteHeight/2 
@@ -216,7 +218,7 @@ public class Stem {
             int ystem = ytop + topstaff.Dist(end) * SheetMusic.NoteHeight/2 
                           + SheetMusic.NoteHeight;
 
-            canvas.drawLine(xstart, y1, xstart, ystem, paint);
+            canvas.drawLine(xStart, y1, xStart, ystem, paint);
         }
     }
 
@@ -348,7 +350,7 @@ public class Stem {
 
 
         if (direction == Up) {
-            int xend = width_to_pair + xstart2;
+            int xend = widthToPair + xstart2;
             int ystart = ytop + topstaff.Dist(end) * SheetMusic.NoteHeight/2;
             int yend = ytop + topstaff.Dist(pair.end) * SheetMusic.NoteHeight/2;
 
@@ -386,7 +388,7 @@ public class Stem {
         }
 
         else {
-            int xend = width_to_pair + xstart2;
+            int xend = widthToPair + xstart2;
             int ystart = ytop + topstaff.Dist(end) * SheetMusic.NoteHeight/2 + 
                          SheetMusic.NoteHeight;
             int yend = ytop + topstaff.Dist(pair.end) * SheetMusic.NoteHeight/2 
@@ -430,9 +432,9 @@ public class Stem {
     @Override
     public String toString() {
         return String.format("Stem duration=%1$s direction=%2$s top=%3$s bottom=%4$s end=%5$s" +
-                             " overlap=%6$s side=%7$s width_to_pair=%8$s receiver_in_pair=%9$s",
+                             " overlap=%6$s side=%7$s widthToPair=%8$s receiverInPair=%9$s",
                              duration, direction, top.toString(), bottom.toString(),
-                             end.toString(), notesoverlap, side, width_to_pair, receiver_in_pair);
+                             end.toString(), notesOverlap, side, widthToPair, receiverInPair);
     }
 
 } 

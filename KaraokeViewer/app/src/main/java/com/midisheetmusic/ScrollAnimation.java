@@ -50,7 +50,7 @@ public class ScrollAnimation {
 
 
     public ScrollAnimation(ScrollAnimationListener listener, boolean scrollVert) {
-        this.listener = listener;
+        //this.listener = listener;
         this.scrollVert = scrollVert;
         scrollTimer = new Handler();
     }
@@ -61,7 +61,6 @@ public class ScrollAnimation {
         downX = downY = moveX = moveY = prevMoveX = prevMoveY = upX = upY = deltaX = deltaY = velocityX = velocityY = 0;
         downTime = prevMoveTime = moveTime = upTime = flingStartTime = 0;
         flingVelocity = 0;
-        scrollTimer.removeCallbacks(flingScroll);
     } 
 
     /** Handle touch/motion events to implement scrolling the sheet music.
@@ -103,14 +102,14 @@ public class ScrollAnimation {
                 moveTime = currentTime; 
 
                 if (scrollVert) {
-                    listener.scrollUpdate(0, (int)deltaY);
+                    //listener.scrollUpdate(0, (int)deltaY);
                 }
                 else {
                     if ((Math.abs(deltaY) > Math.abs(deltaX)) || (Math.abs(deltaY) > 4)) {
-                        listener.scrollUpdate((int)deltaX, (int)deltaY);
+                        //listener.scrollUpdate((int)deltaX, (int)deltaY);
                     }
                     else { 
-                        listener.scrollUpdate((int)deltaX, 0);
+                        //listener.scrollUpdate((int)deltaX, 0);
                     }
                 }
                 return true;
@@ -131,7 +130,7 @@ public class ScrollAnimation {
                     Math.abs(overallDeltaX) <= 5 &&
                     Math.abs(overallDeltaY) <= 5) {
 
-                    listener.scrollTapped((int)downX, (int)downY);
+                    //listener.scrollTapped((int)downX, (int)downY);
                     return true;
                 }
 
@@ -161,44 +160,11 @@ public class ScrollAnimation {
                 else {
                     flingVelocity = scale * velocityX;
                 }
-                scrollTimer.postDelayed(flingScroll, (int)timerInterval);
                 return true;
 
             default:
                 return false;
         }
     }
-
-    /** The timer callback for doing 'fling' scrolling.
-     *  Adjust the scrollX/scrollY using the last delta.
-     *  Redraw the sheet music.
-     *  Then, schedule this timer again.
-     */
-    Runnable flingScroll = new Runnable() {
-    public void run() {
-        long currentTime = AnimationUtils.currentAnimationTimeMillis();
-        float percentDone = (currentTime - flingStartTime) / totalFlingTime;
-
-        if (percentDone >= 1.0f) {
-            return;
-        }
-        float exp = -2.0f + percentDone * 2.0f;  // -2 to 0
-        float scale = (float)(1.0f - Math.pow(Math.E, exp)); // 0.99 to 0
-
-        float velocity = flingVelocity * scale;
-        float delta = velocity * 1.0f/timerInterval;
-        
-        if (scrollVert) {
-            listener.scrollUpdate(0, (int)delta);
-        }
-        else if (!scrollVert) {
-            listener.scrollUpdate((int)delta, 0);
-        }
-        if (percentDone < 1.0) {
-            scrollTimer.postDelayed(flingScroll, (int)timerInterval);
-        }
-    }
-    };
-
 }
  

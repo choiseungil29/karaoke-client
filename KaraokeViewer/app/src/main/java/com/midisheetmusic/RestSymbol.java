@@ -14,6 +14,8 @@ package com.midisheetmusic;
 
 import android.graphics.*;
 
+import com.midisheetmusic.enums.NoteDuration;
+
 
 /* @class RestSymbol
  * A Rest symbol represents a rest - whole, half, quarter, or eighth.

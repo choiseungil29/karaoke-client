@@ -34,60 +34,60 @@ public class SymbolWidths {
     private DictInt[] widths;
 
     /** Map of starttime -> maximum symbol width */
-    private DictInt maxwidths;
+    private DictInt maxWidths;
 
-    /** An array of all the starttimes, in all tracks */
-    private int[] starttimes;
+    /** An array of all the startTimes, in all tracks */
+    private int[] startTimes;
 
 
     /** Initialize the symbol width maps, given all the symbols in
      * all the tracks.
      */
-    public SymbolWidths(ArrayList<ArrayList<MusicSymbol>> tracks, ArrayList<ArrayList<LyricSymbol>> tracklyrics) {
+    public SymbolWidths(ArrayList<ArrayList<MusicSymbol>> tracks, ArrayList<ArrayList<LyricSymbol>> trackLyrics) {
 
         /* Get the symbol widths for all the tracks */
         widths = new DictInt[ tracks.size() ];
         for (int track = 0; track < tracks.size(); track++) {
             widths[track] = GetTrackWidths(tracks.get(track));
         }
-        maxwidths = new DictInt();
+        maxWidths = new DictInt();
 
         /* Calculate the maximum symbol widths */
         for (DictInt dict : widths) {
             for (int i = 0; i < dict.count(); i++) {
                 int time = dict.getKey(i);
-                if (!maxwidths.contains(time) ||
-                    (maxwidths.get(time) < dict.get(time)) ) {
+                if (!maxWidths.contains(time) ||
+                    (maxWidths.get(time) < dict.get(time)) ) {
 
-                    maxwidths.set(time, dict.get(time));
+                    maxWidths.set(time, dict.get(time));
                 }
             }
         }
 
-        if (tracklyrics != null) {
-            for (ArrayList<LyricSymbol> lyrics : tracklyrics) {
+        if (trackLyrics != null) {
+            for (ArrayList<LyricSymbol> lyrics : trackLyrics) {
                 if (lyrics == null) {
                     continue;
                 }
                 for (LyricSymbol lyric : lyrics) {
                     int width = lyric.getMinWidth();
                     int time = lyric.getStartTime();
-                    if (!maxwidths.contains(time) ||
-                        (maxwidths.get(time) < width) ) {
+                    if (!maxWidths.contains(time) ||
+                        (maxWidths.get(time) < width) ) {
 
-                        maxwidths.set(time, width);
+                        maxWidths.set(time, width);
                     }
                 }
             }
         }
 
         /* Store all the start times to the starttime array */
-        starttimes = new int[ maxwidths.count() ];
-        for (int i = 0; i < maxwidths.count(); i++) {
-            int key = maxwidths.getKey(i);
-            starttimes[i] = key;
+        startTimes = new int[ maxWidths.count() ];
+        for (int i = 0; i < maxWidths.count(); i++) {
+            int key = maxWidths.getKey(i);
+            startTimes[i] = key;
         }
-        Arrays.sort(starttimes); 
+        Arrays.sort(startTimes);
     }
 
     /** Create a table of the symbol widths for each starttime in the track. */
@@ -116,14 +116,14 @@ public class SymbolWidths {
      */
     public int GetExtraWidth(int track, int start) {
         if (!widths[track].contains(start)) {
-            return maxwidths.get(start);
+            return maxWidths.get(start);
         } else {
-            return maxwidths.get(start) - widths[track].get(start);
+            return maxWidths.get(start) - widths[track].get(start);
         }
     }
 
     /** Return an array of all the start times in all the tracks */
-    public int[] getStartTimes() { return starttimes; }
+    public int[] getStartTimes() { return startTimes; }
 }
 
 

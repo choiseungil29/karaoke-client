@@ -19,21 +19,21 @@ import android.content.res.*;
 import com.clogic.karaokeviewer.R;
 
 
-/** @class TimeSigSymbol
- * A TimeSigSymbol represents the time signature at the beginning
+/** @class TimeSignatureSymbol
+ * A TimeSignatureSymbol represents the time signature at the beginning
  * of the staff. We use pre-made images for the numbers, instead of
  * drawing strings.
  */
 
-public class TimeSigSymbol implements MusicSymbol {
+public class TimeSignatureSymbol implements MusicSymbol {
     private static Bitmap[] images; /** The images for each number */
     private int  numerator;         /** The numerator */
     private int  denominator;       /** The denominator */
     private int  width;             /** The width in pixels */
     private boolean candraw;        /** True if we can draw the time signature */
 
-    /** Create a new TimeSigSymbol */
-    public TimeSigSymbol(int numer, int denom) {
+    /** Create a new TimeSignatureSymbol */
+    public TimeSignatureSymbol(int numer, int denom) {
         numerator = numer;
         denominator = denom;
         if (numer >= 0 && numer < images.length && images[numer] != null &&
@@ -122,7 +122,7 @@ public class TimeSigSymbol implements MusicSymbol {
     }
 
     public String toString() {
-        return String.format("TimeSigSymbol numerator=%1$s denominator=%2$s",
+        return String.format("TimeSignatureSymbol numerator=%1$s denominator=%2$s",
                              numerator, denominator);
     }
 }

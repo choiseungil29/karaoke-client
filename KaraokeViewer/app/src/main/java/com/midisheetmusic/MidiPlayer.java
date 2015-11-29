@@ -59,7 +59,6 @@ public class MidiPlayer extends LinearLayout {
     static Bitmap pauseImage;            /** The pause image */
     static Bitmap stopImage;             /** The stop image */
     static Bitmap fastFwdImage;          /** The fast forward image */
-    static Bitmap volumeImage;           /** The volume image */
     static Bitmap settingsImage;         /** The settings image */
 
     private ImageButton rewindButton;    /** The rewind button */
@@ -70,7 +69,7 @@ public class MidiPlayer extends LinearLayout {
     private TextView speedText;          /** The "Speed %" label */
     private SeekBar speedBar;    /** The seekbar for controlling the playback speed */
 
-    int playstate;               /** The playing state of the Midi Player */
+    int playState;               /** The playing state of the Midi Player */
     final int stopped   = 1;     /** Currently stopped */
     final int playing   = 2;     /** Currently playing music */
     final int paused    = 3;     /** Currently paused */
@@ -118,7 +117,7 @@ public class MidiPlayer extends LinearLayout {
         this.midifile = null;
         this.options = null;
         this.sheet = null;
-        playstate = stopped;
+        playState = stopped;
         startTime = SystemClock.uptimeMillis();
         startPulseTime = 0;
         currentPulseTime = 0;
@@ -323,10 +322,10 @@ public class MidiPlayer extends LinearLayout {
         /* If we're paused, and using the same midi file, redraw the
          * highlighted notes.
          */
-        if ((file == midifile && midifile != null && playstate == paused)) {
+        if ((file == midifile && midifile != null && playState == paused)) {
             options = opt;
             sheet = s;
-            sheet.ShadeNotes((int)currentPulseTime, (int)-1, SheetMusic.DontScroll);
+            sheet.ShadeNotes((int)currentPulseTime, (int)-1, SheetMusic.dontScroll);
 
             /* We have to wait some time (200 msec) for the sheet music
              * to scroll and redraw, before we can re-shade.
@@ -345,8 +344,8 @@ public class MidiPlayer extends LinearLayout {
     /** If we're paused, reshade the sheet music and piano. */
     Runnable ReShade = new Runnable() {
       public void run() {
-        if (playstate == paused || playstate == stopped) {
-            sheet.ShadeNotes((int)currentPulseTime, (int)-10, SheetMusic.ImmediateScroll);
+        if (playState == paused || playState == stopped) {
+            sheet.ShadeNotes((int)currentPulseTime, -10, SheetMusic.immediateScroll);
             piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
         }
       }
@@ -458,10 +457,10 @@ public class MidiPlayer extends LinearLayout {
         if (midifile == null || sheet == null || numberTracks() == 0) {
             return;
         }
-        else if (playstate == initStop || playstate == initPause || playstate == playing) {
+        else if (playState == initStop || playState == initPause || playState == playing) {
             return;
         }
-        // playstate is stopped or paused
+        // playState is stopped or paused
 
         // Hide the midi player, wait a little for the view
         // to refresh, and then start playing
@@ -470,6 +469,7 @@ public class MidiPlayer extends LinearLayout {
         timer.postDelayed(DoPlay, 1000);
     }
 
+    // 재생부
     Runnable DoPlay = new Runnable() {
       public void run() {
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -489,7 +489,7 @@ public class MidiPlayer extends LinearLayout {
             startPulseTime = currentPulseTime;
             options.pauseTime = (int)(currentPulseTime - options.shiftTime);
         }
-        else if (playstate == paused) {
+        else if (playState == paused) {
             startPulseTime = currentPulseTime;
             options.pauseTime = (int)(currentPulseTime - options.shiftTime);
         }
@@ -501,7 +501,7 @@ public class MidiPlayer extends LinearLayout {
         }
 
         CreateMidiFile();
-        playstate = playing;
+        playState = playing;
         PlaySound(tempSoundFile);
         startTime = SystemClock.uptimeMillis();
 
@@ -509,8 +509,8 @@ public class MidiPlayer extends LinearLayout {
         timer.removeCallbacks(ReShade);
         timer.postDelayed(TimerCallback, 100);
 
-        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.GradualScroll);
-        piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
+        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
+        //piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
         return;
       }
     };
@@ -532,8 +532,8 @@ public class MidiPlayer extends LinearLayout {
         if (midifile == null || sheet == null || numberTracks() == 0) {
             return;
         }
-        else if (playstate == playing) {
-            playstate = initPause;
+        else if (playState == playing) {
+            playState = initPause;
             return;
         }
     }
@@ -545,16 +545,16 @@ public class MidiPlayer extends LinearLayout {
      */
     void Stop() {
         this.setVisibility(View.VISIBLE);
-        if (midifile == null || sheet == null || playstate == stopped) {
+        if (midifile == null || sheet == null || playState == stopped) {
             return;
         }
 
-        if (playstate == initPause || playstate == initStop || playstate == playing) {
+        if (playState == initPause || playState == initStop || playState == playing) {
             /* Wait for timer to finish */
-            playstate = initStop;
+            playState = initStop;
             DoStop();
         }
-        else if (playstate == paused) {
+        else if (playState == paused) {
             DoStop();
         }
     }
@@ -563,10 +563,10 @@ public class MidiPlayer extends LinearLayout {
      *  removing any shading, and clearing the state.
      */
     void DoStop() { 
-        playstate = stopped;
+        playState = stopped;
         timer.removeCallbacks(TimerCallback);
-        sheet.ShadeNotes(-10, (int)prevPulseTime, SheetMusic.DontScroll);
-        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.DontScroll);
+        sheet.ShadeNotes(-10, (int)prevPulseTime, SheetMusic.dontScroll);
+        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.dontScroll);
         piano.ShadeNotes(-10, (int)prevPulseTime);
         piano.ShadeNotes(-10, (int)currentPulseTime);
         startPulseTime = 0;
@@ -583,12 +583,12 @@ public class MidiPlayer extends LinearLayout {
      *  and re-shade the sheet music.
      */
     void Rewind() {
-        if (midifile == null || sheet == null || playstate != paused) {
+        if (midifile == null || sheet == null || playState != paused) {
             return;
         }
 
         /* Remove any highlighted notes */
-        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.DontScroll);
+        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.dontScroll);
         piano.ShadeNotes(-10, (int)currentPulseTime);
    
         prevPulseTime = currentPulseTime; 
@@ -596,7 +596,7 @@ public class MidiPlayer extends LinearLayout {
         if (currentPulseTime < options.shiftTime) {
             currentPulseTime = options.shiftTime;
         }
-        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.ImmediateScroll);
+        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
         piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
     }
     
@@ -610,13 +610,13 @@ public class MidiPlayer extends LinearLayout {
         if (midifile == null || sheet == null) {
             return;
         }
-        if (playstate != paused && playstate != stopped) {
+        if (playState != paused && playState != stopped) {
             return;
         }
-        playstate = paused;
+        playState = paused;
 
         /* Remove any highlighted notes */
-        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.DontScroll);
+        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.dontScroll);
         piano.ShadeNotes(-10, (int)currentPulseTime);
    
         prevPulseTime = currentPulseTime; 
@@ -624,7 +624,7 @@ public class MidiPlayer extends LinearLayout {
         if (currentPulseTime > midifile.getTotalPulses()) {
             currentPulseTime -= midifile.getTime().getMeasure();
         }
-        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.ImmediateScroll);
+        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
         piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
     }
 
@@ -638,13 +638,13 @@ public class MidiPlayer extends LinearLayout {
         if (midifile == null || sheet == null) {
             return;
         }
-        if (playstate != paused && playstate != stopped) {
+        if (playState != paused && playState != stopped) {
             return;
         }
-        playstate = paused;
+        playState = paused;
 
         /* Remove any highlighted notes */
-        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.DontScroll);
+        sheet.ShadeNotes(-10, (int)currentPulseTime, SheetMusic.dontScroll);
         piano.ShadeNotes(-10, (int)currentPulseTime);
 
         currentPulseTime = sheet.PulseTimeForPoint(new Point(x, y));
@@ -652,7 +652,7 @@ public class MidiPlayer extends LinearLayout {
         if (currentPulseTime > midifile.getTotalPulses()) {
             currentPulseTime -= midifile.getTime().getMeasure();
         }
-        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.DontScroll);
+        sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.dontScroll);
         piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
     }
 
@@ -665,20 +665,20 @@ public class MidiPlayer extends LinearLayout {
     Runnable TimerCallback = new Runnable() {
       public void run() {
         if (midifile == null || sheet == null) {
-            playstate = stopped;
+            playState = stopped;
             return;
         }
-        else if (playstate == stopped || playstate == paused) {
+        else if (playState == stopped || playState == paused) {
             /* This case should never happen */
             return;
         }
-        else if (playstate == initStop) {
+        else if (playState == initStop) {
             return;
         }
-        else if (playstate == playing) {
-            long msec = SystemClock.uptimeMillis() - startTime;
+        else if (playState == playing) {
+            long mSec = SystemClock.uptimeMillis() - startTime;
             prevPulseTime = currentPulseTime;
-            currentPulseTime = startPulseTime + msec * pulsesPerMsec;
+            currentPulseTime = startPulseTime + mSec * pulsesPerMsec;
 
             /* If we're playing in a loop, stop and restart */
             if (options.playMeasuresInLoop) {
@@ -695,20 +695,20 @@ public class MidiPlayer extends LinearLayout {
                 DoStop();
                 return;
             }
-            sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.GradualScroll);
-            piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
+            sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
+            //piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
             timer.postDelayed(TimerCallback, 100);
             return;
         }
-        else if (playstate == initPause) {
-            long msec = SystemClock.uptimeMillis() - startTime;
+        else if (playState == initPause) {
+            long mSec = SystemClock.uptimeMillis() - startTime;
             StopSound();
 
             prevPulseTime = currentPulseTime;
-            currentPulseTime = startPulseTime + msec * pulsesPerMsec;
-            sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.ImmediateScroll);
-            piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
-            playstate = paused;
+            currentPulseTime = startPulseTime + mSec * pulsesPerMsec;
+            sheet.ShadeNotes((int)currentPulseTime, (int)prevPulseTime, SheetMusic.immediateScroll);
+            //piano.ShadeNotes((int)currentPulseTime, (int)prevPulseTime);
+            playState = paused;
             timer.postDelayed(ReShade, 1000);
             return;
         }
@@ -721,9 +721,9 @@ public class MidiPlayer extends LinearLayout {
      *  start playing again.
      */
     private void RestartPlayMeasuresInLoop() {
-        playstate = stopped;
+        playState = stopped;
         piano.ShadeNotes(-10, (int)prevPulseTime);
-        sheet.ShadeNotes(-10, (int)prevPulseTime, SheetMusic.DontScroll);
+        sheet.ShadeNotes(-10, (int)prevPulseTime, SheetMusic.dontScroll);
         currentPulseTime = 0;
         prevPulseTime = -1;
         StopSound();

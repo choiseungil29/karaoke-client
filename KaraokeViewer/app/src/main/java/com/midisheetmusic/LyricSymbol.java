@@ -29,7 +29,7 @@ public class LyricSymbol {
         this.starttime = starttime; 
         this.text = text;
     }
-     
+
     public int getStartTime() { return starttime; }
     public void setStartTime(int value) { starttime = value; }
 

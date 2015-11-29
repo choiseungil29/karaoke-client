@@ -13,6 +13,8 @@
 
 package com.midisheetmusic;
 
+import com.midisheetmusic.enums.Clef;
+
 import java.util.*;
 
 /** @class ClefMeasures

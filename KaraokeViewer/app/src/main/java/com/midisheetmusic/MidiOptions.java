@@ -44,7 +44,7 @@ public class MidiOptions implements Serializable {
     public int showNoteLetters;      /** Show the letters (A, A#, etc) next to the notes */
     public boolean showLyrics;       /** Show the lyrics under each note */
     public boolean showMeasures;     /** Show the measure numbers for each staff */
-    public int shiftTime;            /** Shift note starttimes by the given amount */
+    public int shiftTime;            /** Shift note startTimes by the given amount */
     public int transpose;            /** Shift note key up/down by given amount */
     public int key;                  /** Use the given KeySignature (NoteScale) */
     public TimeSignature time;       /** Use the given time signature (null for default) */
