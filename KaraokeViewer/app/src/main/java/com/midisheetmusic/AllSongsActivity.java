@@ -18,7 +18,6 @@ import android.net.*;
 import android.app.*;
 import android.os.*;
 import android.widget.*;
-import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.content.*;
@@ -35,8 +34,8 @@ import com.clogic.karaokeviewer.R;
  * on a background thread.
  */
 class ScanMidiFiles extends AsyncTask<Integer, Integer, ArrayList<FileUri> > {
-    private ArrayList<FileUri> songlist;
-    private File rootdir;
+    private ArrayList<FileUri> songList;
+    private File rootDir;
     private AllSongsActivity activity;
 
     public ScanMidiFiles() {
@@ -48,10 +47,10 @@ class ScanMidiFiles extends AsyncTask<Integer, Integer, ArrayList<FileUri> > {
 
     @Override
     protected void onPreExecute() {
-        songlist = new ArrayList<FileUri>();
+        songList = new ArrayList<FileUri>();
         try {
-            rootdir = Environment.getExternalStorageDirectory();
-            Toast message = Toast.makeText(activity, "Scanning " + rootdir.getAbsolutePath() + " for MIDI files", Toast.LENGTH_SHORT);
+            rootDir = Environment.getExternalStorageDirectory();
+            Toast message = Toast.makeText(activity, "Scanning " + rootDir.getAbsolutePath() + " for MIDI files", Toast.LENGTH_SHORT);
             message.show();
         }
         catch (Exception e) {}
@@ -59,15 +58,15 @@ class ScanMidiFiles extends AsyncTask<Integer, Integer, ArrayList<FileUri> > {
 
     @Override
     protected ArrayList<FileUri> doInBackground(Integer... params) {
-        if (rootdir == null) {
-            return songlist;
+        if (rootDir == null) {
+            return songList;
         }
         try {
-            loadMidiFilesFromDirectory(rootdir, 1);
+            loadMidiFilesFromDirectory(rootDir, 1);
         }
         catch (Exception e) {
         }
-        return songlist;
+        return songList;
     }
 
     @Override
@@ -78,8 +77,8 @@ class ScanMidiFiles extends AsyncTask<Integer, Integer, ArrayList<FileUri> > {
     protected void onPostExecute(ArrayList<FileUri> result) {
         AllSongsActivity act = activity;
         this.activity = null;
-        act.scanDone(songlist);
-        Toast message = Toast.makeText(act, "Found " + songlist.size() + " MIDI files", Toast.LENGTH_SHORT);
+        act.scanDone(songList);
+        Toast message = Toast.makeText(act, "Found " + songList.size() + " MIDI files", Toast.LENGTH_SHORT);
         message.show();
     }
 
@@ -88,7 +87,7 @@ class ScanMidiFiles extends AsyncTask<Integer, Integer, ArrayList<FileUri> > {
         this.activity = null;
     }
     
-    /* Given a directory, add MIDI files (ending in .mid) to the songlist.
+    /* Given a directory, add MIDI files (ending in .mid) to the songList.
      * If the directory contains subdirectories, call this method recursively.
      */
     private void loadMidiFilesFromDirectory(File dir, int depth) throws IOException {
@@ -114,7 +113,7 @@ class ScanMidiFiles extends AsyncTask<Integer, Integer, ArrayList<FileUri> > {
                 Uri uri = Uri.parse("file://" + file.getAbsolutePath());
                 String displayName = uri.getLastPathSegment();
                 FileUri song = new FileUri(uri, displayName);
-                songlist.add(song);
+                songList.add(song);
             }
         }
         for (File file : files) {
@@ -157,7 +156,7 @@ public class AllSongsActivity extends ListActivity implements TextWatcher {
 
     IconArrayAdapter<FileUri> adapter;
 
-    /* When this activity changes orientation, save the songlist,
+    /* When this activity changes orientation, save the songList,
      * so we don't have to re-scan for midi songs.
      */
     @Override
@@ -192,7 +191,7 @@ public class AllSongsActivity extends ListActivity implements TextWatcher {
             loadMidiFilesFromProvider(MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
             loadMidiFilesFromProvider(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 
-            // Sort the songlist by name
+            // Sort the songList by name
             if (songlist.size() > 0) {
                 Collections.sort(songlist, songlist.get(0));
             }
@@ -219,6 +218,10 @@ public class AllSongsActivity extends ListActivity implements TextWatcher {
         filterText.clearFocus();
         InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(filterText.getWindowToken(), 0);
+
+        //FileUri file = (FileUri) this.getListAdapter().getItem(0);
+        // Test code! 나중에 지워야됨
+        ChooseSongActivity.openFile(adapter.getItem(0));
     }
 
 
@@ -241,7 +244,7 @@ public class AllSongsActivity extends ListActivity implements TextWatcher {
         for (FileUri file : newfiles) {
             songlist.add(file);
         }
-        // Sort the songlist by name
+        // Sort the songList by name
         Collections.sort(songlist, songlist.get(0));
 
         // Remove duplicates
@@ -259,7 +262,7 @@ public class AllSongsActivity extends ListActivity implements TextWatcher {
         scanner = null;
     }
 
-    /** Load all the sample midi songs from the assets directory into songlist.
+    /** Load all the sample midi songs from the assets directory into songList.
      *  Look for files ending with ".mid"
      */
     void loadAssetMidiFiles() {
@@ -280,7 +283,7 @@ public class AllSongsActivity extends ListActivity implements TextWatcher {
 
     
     /** Look for midi files (with mime-type audio/midi) in the 
-     * internal/external storage. Add them to the songlist.
+     * internal/external storage. Add them to the songList.
      */
     private void loadMidiFilesFromProvider(Uri content_uri) {
         ContentResolver resolver = getContentResolver();

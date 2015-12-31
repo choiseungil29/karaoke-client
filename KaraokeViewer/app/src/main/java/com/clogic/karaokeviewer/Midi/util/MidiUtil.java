@@ -16,6 +16,15 @@
 
 package com.clogic.karaokeviewer.Midi.util;
 
+import com.clogic.karaokeviewer.Midi.renderer.StaffSymbol;
+import com.clogic.karaokeviewer.Util.Logger;
+import com.clogic.karaokeviewer.View.ScoreView;
+
+import java.lang.reflect.GenericArrayType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class MidiUtil
 {
     /**
@@ -137,5 +146,129 @@ public class MidiUtil
             sb.append(byteToHex(b[i])).append(" ");
         }
         return sb.toString();
+    }
+
+    public static List<Integer> getBeatScale(int resolution) {
+        int Whole = resolution * 4;
+        int Half = resolution * 2;
+        int Quarter = resolution;
+        int Eighth = resolution / 2;
+        int Sixteenth = resolution / 4;
+
+        int DotHalf = Half + Half/2;
+        int DotQuarter = Quarter + Quarter/2;
+        int DotEighth = Eighth + Eighth/2;
+
+        List<Integer> scales = new ArrayList<>();
+        scales.add(Whole);
+        scales.add(DotHalf);
+        scales.add(Half);
+        scales.add(DotQuarter);
+        scales.add(Quarter);
+        scales.add(DotEighth);
+        scales.add(Eighth);
+        scales.add(Sixteenth);
+
+        /**
+         * 크기 순서
+         * Whole 480
+         * DotHalf 360
+         * Half 240
+         * DotQuarter 180
+         * Quarter 120
+         * DotEighth 90
+         * Eighth 60
+         * Sixteenth 30
+         */
+
+        return scales;
+    }
+
+    public static int Whole(int resolution) {
+        return getBeatScale(resolution).get(0);
+    }
+
+    public static int DotHalf(int resolution) {
+        return getBeatScale(resolution).get(1);
+    }
+
+    public static int Half(int resolution) {
+        return getBeatScale(resolution).get(2);
+    }
+
+    public static int DotQuarter(int resolution) {
+        return getBeatScale(resolution).get(3);
+    }
+
+    public static int Quarter(int resolution) {
+        return getBeatScale(resolution).get(4);
+    }
+
+    public static int DotEighth(int resolution) {
+        return getBeatScale(resolution).get(5);
+    }
+
+    public static int Eighth(int resolution) {
+        return getBeatScale(resolution).get(6);
+    }
+
+    public static int Sixteenth(int resolution) {
+        return getBeatScale(resolution).get(7);
+    }
+
+    public static int getHeightFromNoteValue(int noteValue) {
+        int octave = 12;
+        int height = 0;
+        int defaultHeight = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 5;
+        if(ScoreView.DEFAULT_C <= noteValue) {
+            int remainder = noteValue%ScoreView.DEFAULT_C;
+            /*if(isSharp(noteValue)) {
+                remainder -= 1;
+            }*/
+
+            HashMap<Integer, Integer> scale = new HashMap<>();
+            scale.put(0, 0);
+            scale.put(1, 0);
+            scale.put(2, 1);
+            scale.put(3, 1);
+            scale.put(4, 2);
+            scale.put(5, 3);
+            scale.put(6, 3);
+            scale.put(7, 4);
+            scale.put(8, 4);
+            scale.put(9, 5);
+            scale.put(10, 5);
+            scale.put(11, 6);
+
+            height = defaultHeight - (ScoreView.LINE_SPACE_HEIGHT/2)*(scale.get(remainder%octave) + 7 * (remainder/octave));
+        } else {
+            /*if(isSharp(noteValue)) {
+                noteValue -= 1;
+            }*/
+
+        }
+        return height;
+    }
+
+    public static boolean isSharp(int noteValue) {
+        int octave = 12;
+        int remainder = noteValue%octave;
+        if(remainder == 1 || remainder == 3 || remainder == 6 || remainder == 8 || remainder == 10) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 꼬리방향이 위쪽인지
+     * @param noteValue 노트 음정값
+     * @return true -> 위로향함, false -> 아래로향함
+     */
+    public static boolean isTailTop(int noteValue) {
+        int remainder = noteValue - ScoreView.DEFAULT_C;
+        if(remainder >= 11) {
+            return false;
+        }
+        return true;
     }
 }

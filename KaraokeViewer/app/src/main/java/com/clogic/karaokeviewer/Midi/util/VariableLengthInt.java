@@ -68,7 +68,7 @@ public class VariableLengthInt
         while(mSizeInBytes < 4)
         {
             mSizeInBytes++;
-            
+
             boolean variable = (b & 0x80) > 0;
             if(!variable)
             {

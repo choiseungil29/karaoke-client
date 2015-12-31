@@ -156,6 +156,6 @@ public abstract class MidiEvent implements Comparable<MidiEvent>
     @Override
     public String toString()
     {
-        return "" + mTick + " (" + mDelta.getValue() + "): " + this.getClass().getSimpleName();
+        return "" + mTick + " (" + mDelta.getValue() + "): " + this.getClass().getSimpleName() + ", MidiEvent";
     }
 }

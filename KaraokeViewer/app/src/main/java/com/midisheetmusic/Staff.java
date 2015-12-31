@@ -20,16 +20,16 @@ import android.util.Log;
 import com.midisheetmusic.enums.Clef;
 
 
-/* @class Staff
- * The Staff is used to draw a single Staff (a row of measures) in the 
- * SheetMusic Control. A Staff needs to draw
- * - The Clef
+/* @class StaffSymbol
+ * The StaffSymbol is used to draw a single StaffSymbol (a row of measures) in the
+ * SheetMusic Control. A StaffSymbol needs to draw
+ * - The ClefSymbol
  * - The key signature
  * - The horizontal lines
  * - A list of MusicSymbols
  * - The left and right vertical lines
  *
- * The height of the Staff is determined by the number of pixels each
+ * The height of the StaffSymbol is determined by the number of pixels each
  * MusicSymbol extends above and below the staff.
  *
  * The vertical lines (left and right sides) of the staff are joined
@@ -39,9 +39,9 @@ import com.midisheetmusic.enums.Clef;
 
 public class Staff {
     private ArrayList<MusicSymbol> symbols;  /** The music symbols in this staff */
-    private ArrayList<LyricSymbol> lyrics;   /** The lyrics to display (can be null) */
+    private ArrayList<LyricSymbol> lyrics;   /** The lyricsList to display (can be null) */
     private int yTop;                   /** The y pixel of the top of the staff */
-    private ClefSymbol clefSymbol;         /** The left-side Clef symbol */
+    private ClefSymbol clefSymbol;         /** The left-side ClefSymbol symbol */
     private AccidentalSymbol[] keys;         /** The key signature symbols */
     private boolean showMeasures;       /** If true, show the measure numbers */
     private int keySignatureWidth;            /** The width of the clef and key signature */
@@ -257,9 +257,9 @@ public class Staff {
         }
     }
 
-    /** Draw the lyrics */
+    /** Draw the lyricsList */
     private void DrawLyrics(Canvas canvas, Paint paint) {
-        /* Skip the left side Clef symbol and key signature */
+        /* Skip the left side ClefSymbol symbol and key signature */
         int xpos = keySignatureWidth;
         int ypos = height - SheetMusic.NoteHeight * 3/2;
 
@@ -274,7 +274,7 @@ public class Staff {
 
     /** Draw the measure numbers for each measure */
     private void DrawMeasureNumbers(Canvas canvas, Paint paint) {
-        /* Skip the left side Clef symbol and key signature */
+        /* Skip the left side ClefSymbol symbol and key signature */
         int xpos = keySignatureWidth;
         int ypos = yTop - SheetMusic.NoteHeight * 3;
 
@@ -336,7 +336,7 @@ public class Staff {
         paint.setColor(Color.BLACK);
         int xPosition = SheetMusic.LeftMargin + 5;
 
-        /* Draw the left side Clef symbol */
+        /* Draw the left side ClefSymbol symbol */
         canvas.translate(xPosition, 0);
         clefSymbol.Draw(canvas, paint, yTop);
         canvas.translate(-xPosition, 0);
@@ -368,7 +368,7 @@ public class Staff {
         DrawHorizLines(canvas, paint);
         DrawEndLines(canvas, paint);
 
-        if (!showMeasures) {
+        if (showMeasures) {
             DrawMeasureNumbers(canvas, paint);
         }
         if (lyrics != null) {
@@ -395,7 +395,7 @@ public class Staff {
             return xShade;
         }
 
-        /* Skip the left side Clef symbol and key signature */
+        /* Skip the left side ClefSymbol symbol and key signature */
         int xPosition = keySignatureWidth;
 
         MusicSymbol curr = null;
@@ -493,7 +493,7 @@ public class Staff {
                     prevChord.Draw(canvas, paint, yTop);
                     canvas.translate(-prevX, 0);
                 }
-                if (!showMeasures) {
+                if (showMeasures) {
                     DrawMeasureNumbers(canvas, paint);
                 }
                 if (lyrics != null) {
@@ -533,7 +533,7 @@ public class Staff {
 
     @Override
     public String toString() {
-        String result = "Staff clef=" + clefSymbol.toString() + "\n";
+        String result = "StaffSymbol clef=" + clefSymbol.toString() + "\n";
         result += "  Keys:\n";
         for (AccidentalSymbol a : keys) {
             result += "    " + a.toString() + "\n";
@@ -545,7 +545,7 @@ public class Staff {
         for (MusicSymbol m : symbols) {
             result += "    " + m.toString() + "\n";
         }
-        result += "End Staff\n";
+        result += "End StaffSymbol\n";
         return result;
     }
 

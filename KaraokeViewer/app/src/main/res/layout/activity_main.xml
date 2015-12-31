@@ -2,14 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity"
+    android:id="@+id/rv_parent" >
 
-    <TextView android:text="@string/hello_world"
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vv_background" />
+
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="선곡해주세요!"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="#1E1C1B"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

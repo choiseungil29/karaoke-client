@@ -21,7 +21,7 @@ import com.midisheetmusic.enums.Clef;
 
 
 /** @class ClefSymbol 
- * A ClefSymbol represents either a Treble or Bass Clef image.
+ * A ClefSymbol represents either a Treble or Bass ClefSymbol image.
  * The clef can be either normal or small size.  Normal size is
  * used at the beginning of a new staff, on the left side.  The
  * small symbols are used to show clef changes within a staff.
@@ -77,7 +77,7 @@ public class ClefSymbol implements MusicSymbol {
     public void setWidth(int value){ width = value; }
 
     /** Get the number of pixels this symbol extends above the staff. Used
-     *  to determine the minimum height needed for the staff (Staff.FindBounds).
+     *  to determine the minimum height needed for the staff (StaffSymbol.FindBounds).
      */
     @Override
     public int getAboveStaff() { 
@@ -88,7 +88,7 @@ public class ClefSymbol implements MusicSymbol {
     }
 
     /** Get the number of pixels this symbol extends below the staff. Used
-     *  to determine the minimum height needed for the staff (Staff.FindBounds).
+     *  to determine the minimum height needed for the staff (StaffSymbol.FindBounds).
      */
     @Override
     public int getBelowStaff() {

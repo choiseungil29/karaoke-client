@@ -57,7 +57,7 @@ public class MidiTrack
 
     public MidiTrack()
     {
-        mEvents = new TreeSet<MidiEvent>();
+        mEvents = new TreeSet<>();
         mSize = 0;
         mSizeNeedsRecalculating = false;
         mClosed = false;
@@ -163,7 +163,6 @@ public class MidiTrack
 
     public void insertNote(int channel, int pitch, int velocity, long tick, long duration)
     {
-
         insertEvent(new NoteOn(tick, channel, pitch, velocity));
         insertEvent(new NoteOn(tick + duration, channel, pitch, 0));
     }
@@ -302,6 +301,9 @@ public class MidiTrack
         insertEvent(eot);
     }
 
+    /**
+     * print log of all events
+     */
     public void dumpEvents()
     {
         Iterator<MidiEvent> it = mEvents.iterator();

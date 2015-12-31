@@ -47,4 +47,9 @@ public class NoteOn extends ChannelEvent
     {
         mValue2 = v;
     }
+
+    @Override
+    public String toString() {
+        return "Ticks " + getTick() + ", Note " + getNoteValue() + ", Delta " + getDelta() + ", Velocity : " + getVelocity();
+    }
 }

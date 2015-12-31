@@ -141,7 +141,7 @@ public class ChordSymbol implements MusicSymbol {
      * overlap (like A and B) you cannot draw the next note directly above it.
      * Instead you must shift one of the notes to the right.
      *
-     * The KeySignature is used to determine the white key and accidental.
+     * The KeySignatureSymbol is used to determine the white key and accidental.
      * The TimeSignature is used to determine the duration.
      */
  
@@ -306,7 +306,7 @@ public class ChordSymbol implements MusicSymbol {
 
 
     /** Get the number of pixels this symbol extends above the staff. Used
-     *  to determine the minimum height needed for the staff (Staff.FindBounds).
+     *  to determine the minimum height needed for the staff (StaffSymbol.FindBounds).
      */
     @Override
     public int getAboveStaff() {
@@ -336,7 +336,7 @@ public class ChordSymbol implements MusicSymbol {
     }
 
     /** Get the number of pixels this symbol extends below the staff. Used
-     *  to determine the minimum height needed for the staff (Staff.FindBounds).
+     *  to determine the minimum height needed for the staff (StaffSymbol.FindBounds).
      */
     @Override
     public int getBelowStaff() {
@@ -553,16 +553,21 @@ public class ChordSymbol implements MusicSymbol {
                 note.duration == NoteDuration.Half ||
                 note.duration == NoteDuration.DottedHalf) {
 
-                RectF rect = new RectF(-SheetMusic.NoteWidth/2, -SheetMusic.NoteHeight/2,
+                RectF rect = new RectF(-SheetMusic.NoteWidth/2,
+                                       -SheetMusic.NoteHeight/2,
                                        -SheetMusic.NoteWidth/2 + SheetMusic.NoteWidth, 
                                        -SheetMusic.NoteHeight/2 + SheetMusic.NoteHeight-1);
                 canvas.drawOval(rect, paint);
-                rect = new RectF(-SheetMusic.NoteWidth/2, -SheetMusic.NoteHeight/2 + 1,
+
+                rect = new RectF(-SheetMusic.NoteWidth/2,
+                                 -SheetMusic.NoteHeight/2 + 1,
                                  -SheetMusic.NoteWidth/2 +  SheetMusic.NoteWidth, 
                                  -SheetMusic.NoteHeight/2 + 1 + SheetMusic.NoteHeight-2);
                 canvas.drawOval(rect, paint);
-                rect = new RectF(-SheetMusic.NoteWidth/2, -SheetMusic.NoteHeight/2 + 1,
-                                 -SheetMusic.NoteWidth/2 + SheetMusic.NoteWidth, 
+
+                rect = new RectF(-SheetMusic.NoteWidth/2,
+                                 -SheetMusic.NoteHeight/2 + 1,
+                                 -SheetMusic.NoteWidth/2 + SheetMusic.NoteWidth,
                                  -SheetMusic.NoteHeight/2 + 1 + SheetMusic.NoteHeight-3);
                 canvas.drawOval(rect, paint);
                 

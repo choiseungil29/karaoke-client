@@ -42,11 +42,11 @@ public class MidiOptions implements Serializable {
     public boolean largeNoteSize;    /** Display large or small note sizes */
     public boolean twoStaffs;        /** Combine tracks into two staffs ? */
     public int showNoteLetters;      /** Show the letters (A, A#, etc) next to the notes */
-    public boolean showLyrics;       /** Show the lyrics under each note */
+    public boolean showLyrics;       /** Show the lyricsList under each note */
     public boolean showMeasures;     /** Show the measure numbers for each staff */
     public int shiftTime;            /** Shift note startTimes by the given amount */
     public int transpose;            /** Shift note key up/down by given amount */
-    public int key;                  /** Use the given KeySignature (NoteScale) */
+    public int key;                  /** Use the given KeySignatureSymbol (NoteScale) */
     public TimeSignature time;       /** Use the given time signature (null for default) */
     public TimeSignature defaultTime;  /** The default time signature */
     public int combineInterval;      /** Combine notes within given time interval (msec) */

@@ -30,7 +30,7 @@ import com.clogic.karaokeviewer.R;
  *  to the left side of each item displayed.
  *  Midi files show a NotePair icon.
  */
-class IconArrayAdapter<T> extends ArrayAdapter<T> {
+public class IconArrayAdapter<T> extends ArrayAdapter<T> {
     private LayoutInflater inflater;
     private static Bitmap midiIcon;       /* The midi icon */
     private static Bitmap directoryIcon;  /* The directory icon */

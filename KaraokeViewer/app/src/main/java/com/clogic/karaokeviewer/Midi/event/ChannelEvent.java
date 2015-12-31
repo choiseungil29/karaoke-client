@@ -192,7 +192,7 @@ public class ChannelEvent extends MidiEvent
     private static void buildOrderMap()
     {
 
-        mOrderMap = new HashMap<Integer, Integer>();
+        mOrderMap = new HashMap<>();
 
         mOrderMap.put(PROGRAM_CHANGE, 0);
         mOrderMap.put(CONTROLLER, 1);

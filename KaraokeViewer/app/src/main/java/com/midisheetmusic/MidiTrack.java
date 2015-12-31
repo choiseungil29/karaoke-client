@@ -33,7 +33,7 @@ public class MidiTrack {
     private int trackNum;                 /** The track number */
     private ArrayList<MidiNote> notes;    /** List of Midi notes */
     private int instrument;               /** instrument for this track */
-    private ArrayList<MidiEvent> lyrics;  /** The lyrics in this track */
+    private ArrayList<MidiEvent> lyrics;  /** The lyricsList in this track */
 
     /** Create an empty MidiTrack.  Used by the Clone method */
     public MidiTrack(int trackNum) {

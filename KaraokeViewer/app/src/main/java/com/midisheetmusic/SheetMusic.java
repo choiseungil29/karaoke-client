@@ -109,8 +109,6 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
         nowStaffs = new Staff[2][];
         nowStaffs[0] = new Staff[2];
         nowStaffs[1] = new Staff[2];
-
-
     }
 
     /** Create a new SheetMusic View.
@@ -163,7 +161,7 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
         /* Create all the music symbols (notes, rests, vertical bars, and
          * clef changes).  The symbols variable contains a list of music
          * symbols for each track.  The list does not include the left-side
-         * Clef and key signature symbols.  Those can only be calculated
+         * ClefSymbol and key signature symbols.  Those can only be calculated
          * when we create the staffs.
          */
         ArrayList<ArrayList<MusicSymbol>> allSymbols =
@@ -188,7 +186,7 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
         staffs = CreateStaffs(allSymbols, mainKey, options, time.getMeasure());
         CreateAllBeamedChords(allSymbols, time);
         if (lyrics != null) {
-            AddLyricsToStaffs(staffs, lyrics);
+            //AddLyricsToStaffs(staffs, lyricsList);
         }
 
         /* After making chord pairs, the stem directions can change,
@@ -471,10 +469,10 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
 
     /** The current clef is always shown at the beginning of the staff, on
      * the left side.  However, the clef can also change from measure to
-     * measure. When it does, a Clef symbol must be shown to indicate the
-     * change in clef.  This function adds these Clef change symbols.
-     * This function does not add the main Clef Symbol that begins each
-     * staff.  That is done in the Staff() contructor.
+     * measure. When it does, a ClefSymbol symbol must be shown to indicate the
+     * change in clef.  This function adds these ClefSymbol change symbols.
+     * This function does not add the main ClefSymbol Symbol that begins each
+     * staff.  That is done in the StaffSymbol() contructor.
      */
     private ArrayList<MusicSymbol> AddClefChanges(ArrayList<MusicSymbol> symbols,
                                      ClefMeasures clefs) {
@@ -725,7 +723,7 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
 
 
     /** Given MusicSymbols for a track, create the staffs for that track.
-     *  Each Staff has a maxmimum width of PageWidth (800 pixels).
+     *  Each StaffSymbol has a maxmimum width of PageWidth (800 pixels).
      *  Also, measures should not span multiple Staffs.
      */
     private ArrayList<Staff> CreateStaffsForTrack(ArrayList<MusicSymbol> symbols, int measureLength,
@@ -836,7 +834,7 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
                     options, track, totalTracks));
         }
 
-        /* Update the EndTime of each Staff. EndTime is used for playback */
+        /* Update the EndTime of each StaffSymbol. EndTime is used for playback */
         for (ArrayList<Staff> list : trackStaffs) {
             for (int i = 0; i < list.size()-1; i++) {
                 list.get(i).setEndTime( list.get(i+1).getStartTime() );
@@ -898,7 +896,7 @@ public class SheetMusic extends SurfaceView implements SurfaceHolder.Callback, S
     /** Get the main key signature */
     public KeySignature getMainKey() { return mainKey; }
 
-    /** Get the lyrics for each track */
+    /** Get the lyricsList for each track */
     private static ArrayList<ArrayList<LyricSymbol>>
     GetLyrics(ArrayList<MidiTrack> tracks) {
        boolean hasLyrics = false;

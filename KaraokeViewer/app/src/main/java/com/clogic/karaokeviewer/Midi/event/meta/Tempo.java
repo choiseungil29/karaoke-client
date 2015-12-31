@@ -117,4 +117,9 @@ public class Tempo extends MetaEvent
         }
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n" + "BPM : " + getBpm() + ", MPQN : " + getMpqn();
+    }
 }

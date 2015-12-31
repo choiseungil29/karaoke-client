@@ -18,7 +18,7 @@ import com.midisheetmusic.enums.Clef;
 import java.util.*;
 
 /** @class ClefMeasures
- * The ClefMeasures class is used to report what Clef (Treble or Bass) a
+ * The ClefMeasures class is used to report what ClefSymbol (Treble or Bass) a
  * given measure uses.
  */
 public class ClefMeasures {
@@ -26,7 +26,7 @@ public class ClefMeasures {
     private int measure;       /** The length of a measure, in pulses */
 
  
-    /** Given the notes in a track, calculate the appropriate Clef to use
+    /** Given the notes in a track, calculate the appropriate ClefSymbol to use
      * for each measure.  Store the result in the clefs list.
      * @param notes  The midi notes
      * @param measurelen The length of a measure, in pulses

@@ -59,7 +59,7 @@ public class SettingsActivity extends PreferenceActivity
     private CheckBoxPreference scrollVertically;  /** Scroll vertically/horizontally */
     private CheckBoxPreference showPiano;         /** Show the piano */
     private CheckBoxPreference showMeasures;      /** Show the measure numbers */
-    private CheckBoxPreference showLyrics;        /** Show the lyrics */
+    private CheckBoxPreference showLyrics;        /** Show the lyricsList */
     private CheckBoxPreference twoStaffs;         /** Combine tracks into two staffs */
     private ListPreference showNoteLetters;       /** Show the note letters */
     private ListPreference transpose;             /** Transpose notes */

@@ -17,6 +17,7 @@
 package com.clogic.karaokeviewer.Midi;
 
 import com.clogic.karaokeviewer.Midi.util.MidiUtil;
+import com.clogic.karaokeviewer.Util.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -205,5 +206,6 @@ public class MidiFile
         mType = MidiUtil.bytesToInt(buffer, 8, 2);
         mTrackCount = MidiUtil.bytesToInt(buffer, 10, 2);
         mResolution = MidiUtil.bytesToInt(buffer, 12, 2);
+        Logger.i("단위시간! : " + mResolution);
     }
 }

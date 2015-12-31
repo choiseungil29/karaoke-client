@@ -138,7 +138,7 @@ public class TimeSignature extends MetaEvent
     @Override
     public String toString()
     {
-        return super.toString() + " " + mNumerator + "/" + getRealDenominator();
+        return ""  + mNumerator + "/" + getRealDenominator() + " : TimeSignature";
     }
 
     @Override
@@ -169,5 +169,19 @@ public class TimeSignature extends MetaEvent
             return mDenominator < o.mDenominator ? -1 : 1;
         }
         return 0;
+    }
+
+    public TimeSignature clone() {
+        TimeSignature signature = new TimeSignature();
+        signature.mNumerator = mNumerator;
+        signature.mDenominator = mDenominator;
+        signature.mDivision = mDivision;
+        signature.mMeter = mMeter;
+        signature.mType = mType;
+        signature.mLength = mLength;
+        signature.mTick = mTick;
+        signature.mDelta = mDelta;
+
+        return signature;
     }
 }

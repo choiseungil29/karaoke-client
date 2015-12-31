@@ -60,7 +60,7 @@ public class AccidentalSymbol implements MusicSymbol {
     public void setWidth(int value) { width = value; }
 
     /** Get the number of pixels this symbol extends above the staff. Used
-     *  to determine the minimum height needed for the staff (Staff.FindBounds).
+     *  to determine the minimum height needed for the staff (StaffSymbol.FindBounds).
      */
     public int getAboveStaff() {
         int dist = WhiteNote.Top(clef).Dist(whitenote) * 
@@ -77,7 +77,7 @@ public class AccidentalSymbol implements MusicSymbol {
     }
 
     /** Get the number of pixels this symbol extends below the staff. Used
-     *  to determine the minimum height needed for the staff (Staff.FindBounds).
+     *  to determine the minimum height needed for the staff (StaffSymbol.FindBounds).
      */
     public int getBelowStaff() {
         int dist = WhiteNote.Bottom(clef).Dist(whitenote) * 
@@ -167,16 +167,14 @@ public class AccidentalSymbol implements MusicSymbol {
         bezierPath = new Path();
         bezierPath.moveTo(x, ynote + SheetMusic.LineSpace/4);
         bezierPath.cubicTo(x + SheetMusic.LineSpace/2, ynote - SheetMusic.LineSpace/2, 
-                           x + SheetMusic.LineSpace + SheetMusic.LineSpace/4, 
-                           ynote + SheetMusic.LineSpace/3 - SheetMusic.LineSpace/4, 
+                           x + SheetMusic.LineSpace + SheetMusic.LineSpace/4, ynote + SheetMusic.LineSpace/3 - SheetMusic.LineSpace/4,
                            x, ynote + SheetMusic.LineSpace + SheetMusic.LineWidth + 1);
         canvas.drawPath(bezierPath, paint);
 
         bezierPath = new Path();
         bezierPath.moveTo(x, ynote + SheetMusic.LineSpace/4);
         bezierPath.cubicTo(x + SheetMusic.LineSpace/2, ynote - SheetMusic.LineSpace/2, 
-                           x + SheetMusic.LineSpace + SheetMusic.LineSpace/2, 
-                           ynote + SheetMusic.LineSpace/3 - SheetMusic.LineSpace/2, 
+                           x + SheetMusic.LineSpace + SheetMusic.LineSpace/2, ynote + SheetMusic.LineSpace/3 - SheetMusic.LineSpace/2,
                            x, ynote + SheetMusic.LineSpace + SheetMusic.LineWidth + 1);
         canvas.drawPath(bezierPath, paint);
 

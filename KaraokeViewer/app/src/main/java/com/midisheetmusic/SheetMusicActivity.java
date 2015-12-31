@@ -25,6 +25,7 @@ import android.content.res.*;
 import android.media.*;
 
 import com.clogic.karaokeviewer.R;
+import com.clogic.karaokeviewer.Util.Prefs;
 
 import java.util.zip.CRC32;
 
@@ -64,7 +65,7 @@ public class SheetMusicActivity extends Activity {
 
         // Parse the MidiFile from the raw bytes
         Uri uri = this.getIntent().getData();
-        String title = this.getIntent().getStringExtra(MidiTitleID);
+        String title = this.getIntent().getStringExtra(Prefs.MIDI_FILE_NAME);
         if (title == null) {
             title = uri.getLastPathSegment();
         }

@@ -16,8 +16,11 @@
 
 package com.clogic.karaokeviewer.Midi.event.meta;
 
+import android.util.Log;
+
 import com.clogic.karaokeviewer.Midi.event.MidiEvent;
 import com.clogic.karaokeviewer.Midi.util.VariableLengthInt;
+import com.clogic.karaokeviewer.Util.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -86,10 +89,17 @@ public class KeySignature extends MetaEvent
             return new GenericMetaEvent(tick, delta, info);
         }
 
+        //Logger.i("" + info.data[0]);
+
         int key = info.data[0];
         int scale = info.data[1];
 
         return new KeySignature(tick, delta, key, scale);
+    }
+
+    @Override
+    public String toString() {
+        return "key: " + mKey + ", scale: " + mScale + " : " + this.getClass().getSimpleName();
     }
 
     @Override

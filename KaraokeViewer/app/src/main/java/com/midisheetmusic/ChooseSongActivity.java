@@ -12,16 +12,24 @@
 
 package com.midisheetmusic;
 
-import android.app.*;
-import android.os.*;
-import android.widget.*;
-import android.util.Log;
-import android.content.*;
-import org.json.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.TabActivity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.widget.TabHost;
 
+import com.clogic.karaokeviewer.Activity.TestActivity;
 import com.clogic.karaokeviewer.R;
+import com.clogic.karaokeviewer.Util.Prefs;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /** @class ChooseSongActivity
  * The ChooseSongActivity class is a tabbed view for choosing a song to play.
@@ -39,6 +47,9 @@ public class ChooseSongActivity extends TabActivity {
         globalActivity = this;
         super.onCreate(state);
 
+        ClefSymbol.LoadImages(this);
+        TimeSignatureSymbol.LoadImages(this);
+        MidiPlayer.LoadImages(this);
        
         Bitmap allFilesIcon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.allfilesicon);
         Bitmap recentFilesIcon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.recentfilesicon);
@@ -71,8 +82,10 @@ public class ChooseSongActivity extends TabActivity {
             return;
         }
         updateRecentFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), this, SheetMusicActivity.class);
-        intent.putExtra(SheetMusicActivity.MidiTitleID, file.toString());
+        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), this, TestActivity.class);
+        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

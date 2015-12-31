@@ -18,8 +18,8 @@ import com.midisheetmusic.enums.Clef;
 
 import java.util.List;
 
-/** @class KeySignature
- * The KeySignature class represents a key signature, like G Major
+/** @class KeySignatureSymbol
+ * The KeySignatureSymbol class represents a key signature, like G Major
  * or B-flat Major.  For sheet music, we only care about the number
  * of sharps or flats in the key signature, not whether it is major
  * or minor.

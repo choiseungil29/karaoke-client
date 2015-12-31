@@ -208,8 +208,8 @@ public class MidiFile {
     public static final byte EventProgramChange   = (byte)0xC0;
     public static final byte EventChannelPressure = (byte)0xD0;
     public static final byte EventPitchBend       = (byte)0xE0;
-    public static final byte SysexEvent1          = (byte)0xF0;
-    public static final byte SysexEvent2          = (byte)0xF7;
+    public static final byte SysExEvent1          = (byte)0xF0;
+    public static final byte SysExEvent2          = (byte)0xF7;
     public static final byte MetaEvent            = (byte)0xFF;
 
     /* The list of Meta Events */
@@ -382,7 +382,7 @@ public class MidiFile {
             return "pitchBend";
         else if (ev == MetaEvent)
             return "MetaEvent";
-        else if (ev == SysexEvent1 || ev == SysexEvent2)
+        else if (ev == SysExEvent1 || ev == SysExEvent2)
             return "SysexEvent";
         else
             return "Unknown";
@@ -462,13 +462,13 @@ public class MidiFile {
             throw new MidiFileException("Bad MThd header", 4);
         }
         trackmode = (short) file.ReadShort();
-        int num_tracks = file.ReadShort();
+        int numOfTracks = file.ReadShort();
         quarternote = file.ReadShort(); 
 
         allevents = new ArrayList<ArrayList<MidiEvent>>();
-        for (int tracknum = 0; tracknum < num_tracks; tracknum++) {
+        for (int i = 0; i < numOfTracks; i++) {
             allevents.add(ReadTrack(file));
-            MidiTrack track = new MidiTrack(allevents.get(tracknum), tracknum);
+            MidiTrack track = new MidiTrack(allevents.get(i), i);
             if (track.getNotes().size() > 0) {
                 tracks.add(track);
             }
@@ -529,135 +529,129 @@ public class MidiFile {
      */
     private ArrayList<MidiEvent> ReadTrack(MidiFileReader file) {
         ArrayList<MidiEvent> result = new ArrayList<MidiEvent>(20);
-        int starttime = 0;
+        int startTime = 0;
         String id = file.ReadAscii(4);
 
         if (!id.equals("MTrk")) {
             throw new MidiFileException("Bad MTrk header", file.GetOffset() - 4);
         }
-        int tracklen = file.ReadInt();
-        int trackend = tracklen + file.GetOffset();
+        int trackLength = file.ReadInt();
+        int trackEnd = trackLength + file.GetOffset();
 
-        byte eventflag = 0;
+        byte eventFlag = 0;
 
-        while (file.GetOffset() < trackend) {
+        while (file.GetOffset() < trackEnd) {
 
             // If the midi file is truncated here, we can still recover.
             // Just return what we've parsed so far.
 
-            int startoffset, deltatime;
-            byte peekevent;
+            int deltaTime;
+            byte peekEvent;
             try {
-                startoffset = file.GetOffset();
-                deltatime = file.ReadVarlen();
-                starttime += deltatime;
-                peekevent = file.Peek();
+                deltaTime = file.ReadVarlen();
+                startTime += deltaTime;
+                peekEvent = file.Peek();
             }
             catch (MidiFileException e) {
                 return result;
             }
 
-            MidiEvent mevent = new MidiEvent();
-            result.add(mevent);
-            mevent.deltaTime = deltatime;
-            mevent.startTime = starttime;
+            MidiEvent event = new MidiEvent();
+            result.add(event);
+            event.deltaTime = deltaTime;
+            event.startTime = startTime;
 
-            // if (peekevent >= EventNoteOff) { 
-            if (peekevent < 0) {
-                mevent.hasEventFlag = true;
-                eventflag = file.ReadByte();
+            if (peekEvent < 0) {
+                event.hasEventFlag = true;
+                eventFlag = file.ReadByte();
             }
 
-            //Log.e("debug",  "offset " + startoffset + 
-            //                " event " + eventflag + " " + EventName(eventflag) +
-            //                " start " + starttime + " delta " + mevent.deltaTime);
-
-            if (eventflag >= EventNoteOn && eventflag < EventNoteOn + 16) {
-                mevent.eventFlag = EventNoteOn;
-                mevent.channel = ((byte)(eventflag - EventNoteOn));
-                mevent.noteNumber = file.ReadByte();
-                mevent.velocity = file.ReadByte();
+            if (eventFlag >= EventNoteOn && eventFlag < EventNoteOn + 16) {
+                event.eventFlag = EventNoteOn;
+                event.channel = ((byte)(eventFlag - EventNoteOn));
+                event.noteNumber = file.ReadByte();
+                event.velocity = file.ReadByte();
             }
-            else if (eventflag >= EventNoteOff && eventflag < EventNoteOff + 16) {
-                mevent.eventFlag = EventNoteOff;
-                mevent.channel = ((byte)(eventflag - EventNoteOff));
-                mevent.noteNumber = file.ReadByte();
-                mevent.velocity = file.ReadByte();
+            else if (eventFlag >= EventNoteOff && eventFlag < EventNoteOff + 16) {
+                event.eventFlag = EventNoteOff;
+                event.channel = ((byte)(eventFlag - EventNoteOff));
+                event.noteNumber = file.ReadByte();
+                event.velocity = file.ReadByte();
             }
-            else if (eventflag >= EventKeyPressure && 
-                     eventflag < EventKeyPressure + 16) {
-                mevent.eventFlag = EventKeyPressure;
-                mevent.channel = ((byte)(eventflag - EventKeyPressure));
-                mevent.noteNumber = file.ReadByte();
-                mevent.keyPressure = file.ReadByte();
+            else if (eventFlag >= EventKeyPressure &&
+                     eventFlag < EventKeyPressure + 16) {
+                event.eventFlag = EventKeyPressure;
+                event.channel = ((byte)(eventFlag - EventKeyPressure));
+                event.noteNumber = file.ReadByte();
+                event.keyPressure = file.ReadByte();
             }
-            else if (eventflag >= EventControlChange && 
-                     eventflag < EventControlChange + 16) {
-                mevent.eventFlag = EventControlChange;
-                mevent.channel = ((byte)(eventflag - EventControlChange));
-                mevent.controlNum = file.ReadByte();
-                mevent.controlValue = file.ReadByte();
+            else if (eventFlag >= EventControlChange &&
+                     eventFlag < EventControlChange + 16) {
+                event.eventFlag = EventControlChange;
+                event.channel = ((byte)(eventFlag - EventControlChange));
+                event.controlNum = file.ReadByte();
+                event.controlValue = file.ReadByte();
             }
-            else if (eventflag >= EventProgramChange && 
-                     eventflag < EventProgramChange + 16) {
-                mevent.eventFlag = EventProgramChange;
-                mevent.channel = ((byte)(eventflag - EventProgramChange));
-                mevent.instrument = file.ReadByte();
+            else if (eventFlag >= EventProgramChange &&
+                     eventFlag < EventProgramChange + 16) {
+                event.eventFlag = EventProgramChange;
+                event.channel = ((byte)(eventFlag - EventProgramChange));
+                event.instrument = file.ReadByte();
             }
-            else if (eventflag >= EventChannelPressure && 
-                     eventflag < EventChannelPressure + 16) {
-                mevent.eventFlag = EventChannelPressure;
-                mevent.channel = ((byte)(eventflag - EventChannelPressure));
-                mevent.channelPressure = file.ReadByte();
+            else if (eventFlag >= EventChannelPressure &&
+                     eventFlag < EventChannelPressure + 16) {
+                event.eventFlag = EventChannelPressure;
+                event.channel = ((byte)(eventFlag - EventChannelPressure));
+                event.channelPressure = file.ReadByte();
             }
-            else if (eventflag >= EventPitchBend && 
-                     eventflag < EventPitchBend + 16) {
-                mevent.eventFlag = EventPitchBend;
-                mevent.channel = ((byte)(eventflag - EventPitchBend));
-                mevent.pitchBend = (short) file.ReadShort();
+            else if (eventFlag >= EventPitchBend &&
+                     eventFlag < EventPitchBend + 16) {
+                event.eventFlag = EventPitchBend;
+                event.channel = ((byte)(eventFlag - EventPitchBend));
+                event.pitchBend = (short) file.ReadShort();
             }
-            else if (eventflag == SysexEvent1) {
-                mevent.eventFlag = SysexEvent1;
-                mevent.metaLength = file.ReadVarlen();
-                mevent.value = file.ReadBytes(mevent.metaLength);
+            else if (eventFlag == SysExEvent1) {
+                event.eventFlag = SysExEvent1;
+                event.metaLength = file.ReadVarlen();
+                event.value = file.ReadBytes(event.metaLength);
             }
-            else if (eventflag == SysexEvent2) {
-                mevent.eventFlag = SysexEvent2;
-                mevent.metaLength = file.ReadVarlen();
-                mevent.value = file.ReadBytes(mevent.metaLength);
+            else if (eventFlag == SysExEvent2) {
+                event.eventFlag = SysExEvent2;
+                event.metaLength = file.ReadVarlen();
+                event.value = file.ReadBytes(event.metaLength);
             }
-            else if (eventflag == MetaEvent) {
-                mevent.eventFlag = MetaEvent;
-                mevent.metaEvent = file.ReadByte();
-                mevent.metaLength = file.ReadVarlen();
-                mevent.value = file.ReadBytes(mevent.metaLength);
-                if (mevent.metaEvent == MetaEventTimeSignature) {
-                    if (mevent.metaLength < 2) {
+            else if (eventFlag == MetaEvent) {
+                event.eventFlag = MetaEvent;
+                event.metaEvent = file.ReadByte();
+                event.metaLength = file.ReadVarlen();
+                event.value = file.ReadBytes(event.metaLength);
+                if (event.metaEvent == MetaEventTimeSignature) {
+                    if (event.metaLength < 2) {
                         throw new MidiFileException(
-                          "Meta Event Time Signature len == " + mevent.metaLength +
+                          "Meta Event Time Signature len == " + event.metaLength +
                           " != 4", file.GetOffset());
                     }
                     else {
-                        mevent.numerator = ((byte)mevent.value[0]);
-                        mevent.denominator = ((byte)Math.pow(2, mevent.value[1]));
+                        event.numerator = ((byte)event.value[0]);
+                        event.denominator = ((byte)Math.pow(2, event.value[1]));
                     }
                 }
-                else if (mevent.metaEvent == MetaEventTempo) {
-                    if (mevent.metaLength != 3) {
+                else if (event.metaEvent == MetaEventTempo) {
+                    if (event.metaLength != 3) {
                         throw new MidiFileException(
-                          "Meta Event tempo len == " + mevent.metaLength +
+                          "Meta Event tempo len == " + event.metaLength +
                           " != 3", file.GetOffset());
                     }
-                    mevent.tempo = ((mevent.value[0] & 0xFF) << 16) |
-                                   ((mevent.value[1] & 0xFF) << 8) |
-                                    (mevent.value[2] & 0xFF);
+                    event.tempo = ((event.value[0] & 0xFF) << 16) |
+                                   ((event.value[1] & 0xFF) << 8) |
+                                    (event.value[2] & 0xFF);
                 }
-                else if (mevent.metaEvent == MetaEventEndOfTrack) {
+                else if (event.metaEvent == MetaEventEndOfTrack) {
                     /* break;  */
                 }
             }
             else {
-                throw new MidiFileException("Unknown event " + mevent.eventFlag,
+                throw new MidiFileException("Unknown event " + event.eventFlag,
                                              file.GetOffset()-1); 
             }
         }
@@ -736,8 +730,8 @@ public class MidiFile {
                 case EventChannelPressure: len += 1; break;
                 case EventPitchBend: len += 2; break;
 
-                case SysexEvent1: 
-                case SysexEvent2:
+                case SysExEvent1:
+                case SysExEvent2:
                     len += VarlenToBytes(mevent.metaLength, buf, 0);
                     len += mevent.metaLength;
                     break;
@@ -799,8 +793,8 @@ public class MidiFile {
                 int varlen = VarlenToBytes(mevent.deltaTime, buf, 0);
                 file.write(buf, 0, varlen);
 
-                if (mevent.eventFlag == SysexEvent1 ||
-                    mevent.eventFlag == SysexEvent2 ||
+                if (mevent.eventFlag == SysExEvent1 ||
+                    mevent.eventFlag == SysExEvent2 ||
                     mevent.eventFlag == MetaEvent) {
                     buf[0] = mevent.eventFlag;
                 }
@@ -842,12 +836,12 @@ public class MidiFile {
                     buf[1] = (byte)(mevent.pitchBend & 0xFF);
                     file.write(buf, 0, 2);
                 }
-                else if (mevent.eventFlag == SysexEvent1) {
+                else if (mevent.eventFlag == SysExEvent1) {
                     int offset = VarlenToBytes(mevent.metaLength, buf, 0);
                     ArrayCopy(mevent.value, 0, buf, offset, mevent.value.length);
                     file.write(buf, 0, offset + mevent.value.length);
                 }
-                else if (mevent.eventFlag == SysexEvent2) {
+                else if (mevent.eventFlag == SysExEvent2) {
                     int offset = VarlenToBytes(mevent.metaLength, buf, 0);
                     ArrayCopy(mevent.value, 0, buf, offset, mevent.value.length);
                     file.write(buf, 0, offset + mevent.value.length);
@@ -1622,23 +1616,23 @@ public class MidiFile {
 
         /* Find the instrument used for each channel */
         int[] channelInstruments = new int[16];
-        for (MidiEvent mevent : events) {
-            if (mevent.eventFlag == EventProgramChange) {
-                channelInstruments[mevent.channel] = mevent.instrument;
+        for (MidiEvent event : events) {
+            if (event.eventFlag == EventProgramChange) {
+                channelInstruments[event.channel] = event.instrument;
             }
         }
         channelInstruments[9] = 128; /* channel 9 = Percussion */
 
         ArrayList<MidiTrack> result = new ArrayList<MidiTrack>();
         for (MidiNote note : origtrack.getNotes()) {
-            boolean foundchannel = false;
+            boolean foundChannel = false;
             for (MidiTrack track : result) {
                 if (note.getChannel() == track.getNotes().get(0).getChannel()) {
-                    foundchannel = true;
+                    foundChannel = true;
                     track.AddNote(note); 
                 }
             }
-            if (!foundchannel) {
+            if (!foundChannel) {
                 MidiTrack track = new MidiTrack(result.size() + 1);
                 track.AddNote(note);
                 track.setInstrument(channelInstruments[note.getChannel()]);
@@ -1723,7 +1717,7 @@ public class MidiFile {
     }
 
 
-    /** Return true if this midi file has lyrics */
+    /** Return true if this midi file has lyricsList */
     public boolean hasLyrics() {
         for (MidiTrack track : tracks) {
             if (track.getLyrics() != null) {
