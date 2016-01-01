@@ -30,13 +30,6 @@
             android:name=".activity.SearchActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
-        <activity
-            android:name=".bluetooth.DeviceList"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" />
-        <activity
-            android:name=".activity.BluetoothTest"
-            android:label="@string/title_activity_bluetooth_test" >
-        </activity>
     </application>
 
 </manifest>

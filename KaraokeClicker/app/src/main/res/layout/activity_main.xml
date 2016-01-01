@@ -28,15 +28,5 @@
         android:layout_height="wrap_content"
         android:text="검색화면" />
 
-    <Button
-        android:id="@+id/btn_bluetooth_connect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="블루투스연결" />
-    <Button
-        android:id="@+id/btn_bluetooth_send"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="블루투스 데이터 전송" />
 
 </LinearLayout>
