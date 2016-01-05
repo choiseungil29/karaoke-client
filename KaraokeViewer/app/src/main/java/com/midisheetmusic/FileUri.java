@@ -64,6 +64,10 @@ public class FileUri implements Comparator<FileUri> {
         }
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     /** Return the uri */
     public Uri getUri() {
         return uri;

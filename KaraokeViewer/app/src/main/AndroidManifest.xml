@@ -38,7 +38,6 @@
         <activity android:name="com.midisheetmusic.SettingsActivity" />
         <activity android:name="com.midisheetmusic.AllSongsActivity" />
         <activity android:name="com.midisheetmusic.RecentSongsActivity" />
-        <activity android:name=".Activity.MidiInfoViewActivity" />
         <activity android:name=".Activity.TestActivity"
             android:screenOrientation="landscape"/>
         <activity android:name="com.midisheetmusic.SheetMusicActivity"

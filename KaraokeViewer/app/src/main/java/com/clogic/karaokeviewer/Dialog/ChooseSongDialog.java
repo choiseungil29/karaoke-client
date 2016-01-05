@@ -37,14 +37,18 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
     private ArrayList<FileUri> list;
     private IconArrayAdapter adapter;
 
-    @Bind(R.id.lv_songs) ListView lv_songs;
-    @Bind(R.id.et_songs) EditText et_songs;
+    @Bind(R.id.lv_songs)
+    ListView lv_songs;
+    @Bind(R.id.et_songs)
+    EditText et_songs;
 
+    private String sendData;
     private Context context;
+    private MainActivity activity;
 
     public ChooseSongDialog(Context context, ArrayList<FileUri> list) {
         this(context, true);
-
+        this.activity = (MainActivity) context;
         this.list = list;
         this.init(context);
     }
@@ -82,6 +86,12 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
         lv_songs.setOnItemClickListener(this);
     }
 
+    public void setData(String data) {
+        String oldData = et_songs.getText().toString();
+        et_songs.setText(oldData + data);
+        Toast.makeText(context, oldData + data + "", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -89,7 +99,7 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        adapter.getFilter().filter(s);
+        adapter.filter(s.toString());
     }
 
     @Override

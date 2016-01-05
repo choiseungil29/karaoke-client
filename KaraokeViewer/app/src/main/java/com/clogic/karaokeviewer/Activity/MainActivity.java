@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     VideoView vv_background;
     ArrayList<FileUri> list;
+    ChooseSongDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         rv_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseSong();
+//                chooseSong("1");
             }
         });
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         vv_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseSong();
+//                chooseSong();
             }
         });
 
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
             }
             prevname = file.toString();
         }
+
+        dialog = new ChooseSongDialog(this, list);
     }
 
     void loadAssetMidiFiles() {
@@ -137,15 +140,15 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    private void chooseSong() {
-        /*Intent intent = new ø(this, AllSongsActivity.class);
-        startActivity(intent);*/
-        ChooseSongDialog dialog = new ChooseSongDialog(this, list);
-        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-        params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-        dialog.getWindow().setAttributes(params);
-        dialog.show();
+    private void chooseSong(String sendData) {
+        if (!dialog.isShowing()) {
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setAttributes(params);
+            dialog.show();
+        }
+        dialog.setData(sendData);
     }
 
     @Override
@@ -182,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                //입력받아오는
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                chooseSong(message);
             }
         });
 
