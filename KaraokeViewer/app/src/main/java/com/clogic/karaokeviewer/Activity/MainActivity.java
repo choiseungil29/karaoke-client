@@ -34,7 +34,7 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BluetoothSPP bt;
+    //private BluetoothSPP bt;
 
     VideoView vv_background;
     ArrayList<FileUri> list;
@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initBluetooth();
+        //initBluetooth();
         RelativeLayout rv_parent = (RelativeLayout) findViewById(R.id.rv_parent);
         rv_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                chooseSong("1");
+                chooseSong("1");
             }
         });
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         vv_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                chooseSong();
+                chooseSong("7");
             }
         });
 
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.getWindow().setAttributes(params);
             dialog.show();
         }
-        dialog.setData(sendData);
+        //dialog.setData(sendData);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initBluetooth() {
-        bt = new BluetoothSPP(this);
+        /*bt = new BluetoothSPP(this);
 
         if (!bt.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext()
@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-//                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                 chooseSong(message);
             }
         });
@@ -213,19 +212,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(getApplicationContext(), DeviceList.class);
             startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-        }
+        }*/
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bt.stopService();
+        //bt.stopService();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!bt.isBluetoothEnabled()) {
+        /*if (!bt.isBluetoothEnabled()) {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
         } else {
@@ -234,13 +233,13 @@ public class MainActivity extends AppCompatActivity {
                 bt.startService(BluetoothState.DEVICE_ANDROID);
                 bluetoothSetUp();
             }
-        }
+        }*/
 
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+        /*if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK)
                 bt.connect(data);
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
@@ -254,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                         , Toast.LENGTH_SHORT).show();
                 finish();
             }
-        }
+        }*/
     }
 
     private void bluetoothSetUp() {

@@ -1,6 +1,5 @@
 package com.clogic.karaokeviewer.View;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -33,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,14 +46,14 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<MidiTrack> renderTracks;
     private MidiTrack signTrack;
     private MidiTrack renderTrack;
-    private MidiTrack lyricsTrack;
+    public MidiTrack lyricsTrack;
 
     public static int LINE_SPACE_HEIGHT; // 오선 사이의 공간
     public static int LINE_STROKE;
     public static int STEM_HEIGHT;
     public static int FIRST_LINE_HEIGHT; // 오선 맨 윗줄 높이
     public static int DEFAULT_C = 128; // 가장 기본이 되는 도의 위치. 중간에 계산되어지고 변경된다.
-    public static final int MEASURE_LIMIT = 2;
+    public static final int MEASURE_LIMIT = 4;
 
     public static int resolution = 0;
 
@@ -66,13 +64,18 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     private MediaPlayer player = new MediaPlayer();
 
     private List<MeasureSymbol> measures;
-    private List<MeasureSymbol> nowMeasures;
+    private List<MeasureSymbol> nowMeasures[] = new List[2];
     private MeasureSymbol nowMeasure;
 
     private String fileName;
     private StringBuilder lyrics;
-    private String soneName;
-    private String composer;
+    public ArrayList<String> lyricsArray;
+    public String songName;
+    public String composer;
+    public String singer;
+
+    public long startTick;
+    public int measureLength;
 
     private Uri uri = null;
 
@@ -159,12 +162,33 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
                     String line;
                     lyrics = new StringBuilder();
+                    lyricsArray = new ArrayList<>();
                     int count = 0;
                     while ((line = reader.readLine()) != null) {
+                        switch (count) {
+                            case 0:
+                                songName = line;
+                                break;
+                            case 2:
+                                composer = line;
+                                break;
+                            case 3:
+                                singer = line;
+                                break;
+                            default:
+                                break;
+                        }
+                        if(count == 0) {
+                            songName = line;
+                        }
+                        if(count == 1) {
+
+                        }
                         if (count < 4) {
                             count++;
                             continue;
                         }
+                        lyricsArray.add(line);
                         lyrics.append(line);
                     }
                 }
@@ -175,51 +199,60 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         Iterator<MidiEvent> lyricsIt = lyricsTrack.getEvents().iterator();
         int lyricsIndex = 0;
-        int eventLyricsSize = 0;
-        while (lyricsIt.hasNext()) {
-            MidiEvent event = lyricsIt.next();
-            if (event instanceof Lyrics) {
-                //Logger.i("lyricsList : " + ((Lyrics) event).getLyric());
-                //Logger.i("lyricsList : " + ((Lyrics) event).getLyric().length());
-                //((Lyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)));
-                try {
-                    //((Lyrics) event).setLyric(String.valueOf(lyricsList.substring(lyricsIndex + ((Lyrics) event).getLyric().length())));
-                } catch (Exception e) {
-                    //((Lyrics) event).setLyric(String.valueOf(lyricsList.substring(lyricsIndex + ((Lyrics) event).getLyric().length() - 1)));
-                }
-                //lyricsIndex += ((Lyrics) event).getLyric().length();
-                if (((Lyrics) event).getLyric().length() == 0) {
-                    ((Lyrics) event).setLyric("\n");
-                    continue;
-                }
-                if (((Lyrics) event).getLyric().length() == 1) {
-                    ((Lyrics) event).setLyric("\r");
-                    continue;
-                }
-                if (((Lyrics) event).getLyric().length() == 2) {
-                    try {
-                        ((Lyrics) event).setLyric(new String(((Lyrics) event).getLyric().getBytes(), "euc-kr"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (((Lyrics) event).getLyric().length() == 4) {
-                    ((Lyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)) + lyrics.charAt(lyricsIndex + 1));
-                    lyricsIndex++;
-                }
-                if (((Lyrics) event).getLyric().length() == 3) {
-                    ((Lyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)));
-                }
-                /*try {
-                    ((Lyrics) event).setLyric(new String(((Lyrics) event).getLyric().getBytes(), "utf-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }*/
+        int eventCount = 0;
+        startTick = 10000000;
+        try {
+            while (lyricsIt.hasNext()) {
+                MidiEvent event = lyricsIt.next();
+                if (event instanceof Lyrics) {
 
-                lyricsIndex++;
-                eventLyricsSize += ((Lyrics) event).getLyric().length();
-                Logger.i("" + ((Lyrics) event).getLyric().length());
+                    if(((Lyrics) event).getLyric().equals("\r")) {
+                        continue;
+                    }
+                    if(((Lyrics) event).getLyric().equals("\n")) {
+                        continue;
+                    }
+                    if(((Lyrics) event).getLyric().equals("")) {
+                        continue;
+                    }
+
+                    if(startTick > event.getTick()) {
+                        startTick = event.getTick();
+                    }
+
+                    if(lyrics.charAt(lyricsIndex) == '@' ||
+                            lyrics.charAt(lyricsIndex) == '#') {
+                        lyricsIndex++;
+                    }
+
+                    if (lyrics.charAt(lyricsIndex) == ' ') {
+                        lyricsIndex++;
+                    }
+
+                    String english = "";
+                    while ((lyrics.charAt(lyricsIndex) >= 'a' && lyrics.charAt(lyricsIndex) <= 'z') ||
+                            (lyrics.charAt(lyricsIndex) >= 'A' && lyrics.charAt(lyricsIndex) <= 'Z')) {
+                        english += lyrics.charAt(lyricsIndex);
+                        lyricsIndex++;
+                    }
+                    if(english.length() != 0) {
+                        ((Lyrics) event).setLyric(english);
+                        continue;
+                    }
+
+                    ((Lyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)));
+
+                    Logger.i("lyrics " + ((Lyrics) event).getLyric());
+
+                    lyricsIndex++;
+                    eventCount++;
+                }
+                else {
+                    Logger.i("else : " + event.toString());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         renderTrack = new MidiTrack();
@@ -259,8 +292,13 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         canvas.drawRect(0, 0, width, height, paint);
 
-        StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures);
+        StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
         staffSymbol.draw(canvas);
+
+        canvas.translate(0, height/2);
+        StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
+        staffSymbol1.draw(canvas);
+        canvas.translate(0, -(height/2));
     }
 
     @Override
@@ -271,7 +309,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
         this.resolution = midi.getResolution();
 
-        createMeasures(renderTrack);
+        try {
+            createMeasures(renderTrack);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         settingMeasures();
 
         try {
@@ -286,8 +328,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             e.printStackTrace();
         }
 
+
+
         nowMeasure = measures.get(0);
-        nowMeasures = measures.subList(0, 2);
+        nowMeasures[0] = measures.subList(0, 4);
+        nowMeasures[1] = measures.subList(4, 8);
+        //nowMeasures = measures.subList(0, 2);
         callOnDraw();
         thread.start();
     }
@@ -312,7 +358,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         Iterator<MidiEvent> it = track.getEvents().iterator();
         int nowTicks = 0;
-        int measureLength = 0;
+        measureLength = 0;
         MeasureSymbol measure = new MeasureSymbol();
         while (it.hasNext()) {
             MidiEvent e = it.next();
@@ -333,8 +379,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     continue;
                 }
             }
+
             if (e instanceof TimeSignature) {
                 measureLength = ScoreView.resolution * 4 * ((TimeSignature) e).getNumerator() / ((TimeSignature) e).getRealDenominator();
+                Logger.i("measure length : " + measureLength);
                 measure.startTicks = nowTicks;
                 measure.endTicks = nowTicks + measureLength;
                 measure.addSymbol(e);
@@ -384,17 +432,15 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                         return;
                     }
                     nowMeasure = measures.get(measureCount);
-                    if (measureCount % 2 == 0) {
-                        nowMeasures = measures.subList(measureCount, measureCount + 2);
-                        ArrayList<String> list = new ArrayList<>();
-                        try {
-                            list.add(nowMeasures.get(0).lyrics);
-                            list.add(nowMeasures.get(1).lyrics);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        listener.notifyMeasureChanged(list);
+
+                    int measureIndex = (measureCount/MEASURE_LIMIT)%2;
+                    int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
+                    nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
+                    ArrayList<String> list = new ArrayList<>();
+                    for(int i=0; i<MEASURE_LIMIT; i++) {
+                        list.add(nowMeasures[measureIndex].get(i).lyrics);
                     }
+                    listener.notifyMeasureChanged(list, currentMillis - startMills);
 
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);

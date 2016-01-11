@@ -22,6 +22,7 @@ import java.util.TreeSet;
  * Created by clogic on 2015. 12. 10..
  */
 public class StaffSymbol extends Symbol {
+
     private int height;
 
     private List<MeasureSymbol> measures;

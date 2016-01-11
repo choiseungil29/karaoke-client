@@ -9,18 +9,15 @@
         android:layout_width="1px"
         android:layout_height="1px"/>
 
-    <TextView
-        android:id="@+id/tv_lyrics"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:gravity="center"
-        android:text="가사가 \n보여질 화면입니다" />
-
     <com.clogic.karaokeviewer.View.ScoreView
         android:id="@+id/sv_score"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
+    <com.clogic.karaokeviewer.View.LyricsTextView
+        android:id="@+id/tv_lyric"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
 </LinearLayout>

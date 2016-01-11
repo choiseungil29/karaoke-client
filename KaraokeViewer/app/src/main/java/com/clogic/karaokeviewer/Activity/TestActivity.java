@@ -20,6 +20,7 @@ import com.clogic.karaokeviewer.Midi.MidiFile;
 import com.clogic.karaokeviewer.R;
 import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.Util.Prefs;
+import com.clogic.karaokeviewer.View.LyricsTextView;
 import com.clogic.karaokeviewer.View.ScoreView;
 import com.clogic.karaokeviewer.camera.CameraPreview;
 import com.midisheetmusic.ClefSymbol;
@@ -44,15 +45,15 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     //녹화
     private Camera camera;
     private CameraPreview preview;
-    private MediaRecorder recorder;
+    //private MediaRecorder recorder;
     private boolean is_holder_created;
     public boolean is_recording;
 
     private MidiFile midi = null;
     @Bind(R.id.sv_score)
     ScoreView scoreView;
-    @Bind(R.id.tv_lyrics)
-    TextView tv_lyrics;
+    @Bind(R.id.tv_lyric)
+    LyricsTextView tv_lyrics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             scoreView.setMidiFile(new MidiFile(stream), getIntent().getStringExtra(Prefs.MIDI_FILE_NAME));
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
+
+            tv_lyrics.lyricsTrack = scoreView.lyricsTrack;
+            tv_lyrics.lyricsArray = scoreView.lyricsArray;
+
+            //tv_lyrics.setText(scoreView.songName + "\n\t" + scoreView.singer + "\n\t" + scoreView.composer);
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,16 +94,22 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     @Override
-    public void notifyMeasureChanged(ArrayList<String> lyrics) {
+    public void notifyMeasureChanged(ArrayList<String> lyrics, long tick) {
+        if(lyrics.size() == 0) {
+            return;
+        }
+
         String text = "";
         for (String lyric : lyrics) {
             text += lyric;
             text += "\r\n";
         }
+
         final String finalText = text;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                //tv_lyrics.setText(finalText);
                 tv_lyrics.setText(finalText);
             }
         });
@@ -108,9 +120,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         super.onResume();
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//                camera.enableShutterSound(false);
-//            }
             preview.refreshCamera(camera);
         }
     }
@@ -163,11 +172,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     public void stopRecord() {
-        if (recorder != null) {
+        /*if (recorder != null) {
             recorder.stop();
             releaseMediaRecorder();
             Toast.makeText(getApplicationContext(), "Video captured!", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     public void startRecord() {
@@ -181,7 +190,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             public void run() {
                 try {
                     is_recording = true;
-                    recorder.start();
+                    //recorder.start();
                 } catch (final Exception ex) {
                     ex.printStackTrace();
                 }
@@ -194,12 +203,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        recorder = new MediaRecorder();
+        //recorder = new MediaRecorder();
         camera.unlock();
-        recorder.setCamera(camera);
+        /*recorder.setCamera(camera);
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(600000 * 10); // Set max duration 60 sec.
@@ -216,18 +225,18 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             e.printStackTrace();
             releaseMediaRecorder();
             return false;
-        }
+        }*/
         return true;
 
     }
 
     private void releaseMediaRecorder() {
-        if (recorder != null) {
+        /*if (recorder != null) {
             recorder.reset();
             recorder.release();
             recorder = null;
 //            camera.lock();
-        }
+        }*/
     }
 
 
@@ -240,7 +249,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         preview.setLayoutParams(new LinearLayout.LayoutParams(1, 1));
         layoutCamera.addView(preview);
         is_recording = false;
-
     }
 
 }
