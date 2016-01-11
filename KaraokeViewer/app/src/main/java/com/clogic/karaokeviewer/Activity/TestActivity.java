@@ -7,16 +7,17 @@ import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clogic.karaokeviewer.Midi.MidiFile;
+import com.clogic.karaokeviewer.Midi.event.MidiEvent;
+import com.clogic.karaokeviewer.Midi.event.meta.Lyrics;
+import com.clogic.karaokeviewer.Model.KSALyrics;
 import com.clogic.karaokeviewer.R;
 import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.Util.Prefs;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -45,7 +47,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     //녹화
     private Camera camera;
     private CameraPreview preview;
-    //private MediaRecorder recorder;
+    private MediaRecorder recorder;
     private boolean is_holder_created;
     public boolean is_recording;
 
@@ -69,10 +71,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         MidiPlayer.LoadImages(this);
 
         Uri uri = this.getIntent().getData();
-        /*String title = this.getIntent().getStringExtra(MidiTitleID);
-        if (title == null) {
-            title = uri.getLastPathSegment();
-        }*/
 
         try {
             AssetManager assetManager = getResources().getAssets();
@@ -84,8 +82,61 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
             tv_lyrics.lyricsTrack = scoreView.lyricsTrack;
             tv_lyrics.lyricsArray = scoreView.lyricsArray;
+            //tv_lyrics.KSALyricsArray.add
 
-            //tv_lyrics.setText(scoreView.songName + "\n\t" + scoreView.singer + "\n\t" + scoreView.composer);
+            int lineIndex = 0;
+            String lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
+            StringBuilder line = new StringBuilder();
+            MidiEvent first = null;
+            MidiEvent last = null;
+            for(MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
+                if(!(event instanceof Lyrics)) {
+                    continue;
+                }
+
+                if(((Lyrics) event).getLyric().equals("\r")) {
+                    continue;
+                }
+                if(((Lyrics) event).getLyric().equals("\n")) {
+                    continue;
+                }
+                if(((Lyrics) event).getLyric().equals("")) {
+                    continue;
+                }
+                /*if(((Lyrics) event).getLyric().equals("#") ||
+                        ((Lyrics) event).getLyric().equals("@")) {
+                    continue;
+                }*/
+                if(lyricsLine.equals("@") || lyricsLine.equals("#")) {
+                    lineIndex++;
+                    lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
+                    first = null;
+                    line = new StringBuilder();
+                }
+
+                if(first == null) {
+                    first = event;
+                }
+
+                last = event;
+                line.append(((Lyrics) event).getLyric());
+
+                if(lyricsLine.replaceAll(" ", "").equals(line.toString())) {
+                    tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricsLine, first.getTick(), last.getTick()));
+
+                    lineIndex++;
+                    lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
+                    first = null;
+                    line = new StringBuilder();
+                }
+            }
+
+            for(MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
+                if(!(event instanceof Lyrics)) {
+                    continue;
+                }
+            }
+
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,6 +144,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         //scoreView.callOnDraw();
     }
 
+    /**
+     *
+     * @param lyrics
+     * @param tick 실제 mills가 건너온다.
+     */
     @Override
     public void notifyMeasureChanged(ArrayList<String> lyrics, long tick) {
         if(lyrics.size() == 0) {
@@ -105,14 +161,21 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             text += "\r\n";
         }
 
-        final String finalText = text;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //tv_lyrics.setText(finalText);
-                tv_lyrics.setText(finalText);
+        for(KSALyrics lyricss : tv_lyrics.KSALyricsArray) {
+            if(tick >= lyricss.startTick &&
+                    tick <= lyricss.endTick) {
+                final String finalText = lyricss.lyricLine;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //tv_lyrics.setText(finalText);
+                        tv_lyrics.setText(finalText);
+                    }
+                });
             }
-        });
+        }
+
+
     }
 
     @Override
@@ -172,11 +235,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     public void stopRecord() {
-        /*if (recorder != null) {
+        if (recorder != null) {
             recorder.stop();
             releaseMediaRecorder();
             Toast.makeText(getApplicationContext(), "Video captured!", Toast.LENGTH_LONG).show();
-        }*/
+        }
     }
 
     public void startRecord() {
@@ -203,12 +266,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        //recorder = new MediaRecorder();
+        recorder = new MediaRecorder();
         camera.unlock();
-        /*recorder.setCamera(camera);
+        recorder.setCamera(camera);
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(600000 * 10); // Set max duration 60 sec.
@@ -225,18 +288,18 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             e.printStackTrace();
             releaseMediaRecorder();
             return false;
-        }*/
+        }
         return true;
 
     }
 
     private void releaseMediaRecorder() {
-        /*if (recorder != null) {
+        if (recorder != null) {
             recorder.reset();
             recorder.release();
             recorder = null;
 //            camera.lock();
-        }*/
+        }
     }
 
 

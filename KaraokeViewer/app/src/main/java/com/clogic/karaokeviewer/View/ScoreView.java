@@ -232,8 +232,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     String english = "";
                     while ((lyrics.charAt(lyricsIndex) >= 'a' && lyrics.charAt(lyricsIndex) <= 'z') ||
                             (lyrics.charAt(lyricsIndex) >= 'A' && lyrics.charAt(lyricsIndex) <= 'Z')) {
-                        english += lyrics.charAt(lyricsIndex);
-                        lyricsIndex++;
+                        if(english.trim().length() < ((Lyrics)event).getLyric().trim().length()) {
+                            english += lyrics.charAt(lyricsIndex);
+                            lyricsIndex++;
+                        } else {
+                            break;
+                        }
                     }
                     if(english.length() != 0) {
                         ((Lyrics) event).setLyric(english);
@@ -419,10 +423,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             long currentMillis = System.currentTimeMillis();
             long startMills = currentMillis;
             long endMills;
+            long tick = 0;
             while (true) {
                 if (System.currentTimeMillis() - currentMillis >
                         ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
                     Logger.i("CHECK TIME", "times : " + (System.currentTimeMillis() - currentMillis));
+                    Logger.i("CHECK TIME", "ticks : " + tick);
 
                     currentMillis = System.currentTimeMillis();
                     if (measureCount >= measures.size()) {
@@ -440,7 +446,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     for(int i=0; i<MEASURE_LIMIT; i++) {
                         list.add(nowMeasures[measureIndex].get(i).lyrics);
                     }
-                    listener.notifyMeasureChanged(list, currentMillis - startMills);
+                    //listener.notifyMeasureChanged(list, currentMillis - startMills);
+                    listener.notifyMeasureChanged(list, tick);
 
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);
@@ -448,6 +455,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     callOnDraw();
 
                     measureCount++;
+                    tick = nowMeasure.endTicks;
                 }
             }
         }

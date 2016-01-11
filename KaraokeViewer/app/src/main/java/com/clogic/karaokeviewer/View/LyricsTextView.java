@@ -7,13 +7,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clogic.karaokeviewer.Midi.MidiTrack;
-import com.clogic.karaokeviewer.Midi.event.MidiEvent;
-import com.clogic.karaokeviewer.Midi.event.meta.Lyrics;
+import com.clogic.karaokeviewer.Model.KSALyrics;
 import com.clogic.karaokeviewer.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,7 +25,7 @@ public class LyricsTextView extends LinearLayout {
     @Bind(R.id.tv_count) TextView tv_count;
 
     public MidiTrack lyricsTrack;
-    public ArrayList<KSALyric> KSALyricsArray;
+    public ArrayList<KSALyrics> KSALyricsArray;
     public ArrayList<String> lyricsArray;
     public HashMap<String, Long> lyricsTimeTable;
 
@@ -57,17 +55,5 @@ public class LyricsTextView extends LinearLayout {
 
     public void setText(String text) {
         tv_lyrics.setText(text);
-    }
-
-    public class KSALyric {
-        public String lyricLine;
-        public long startTick;
-        public long endTick;
-
-        public KSALyric(String lyricLine, long startTick, long endTick) {
-            this.lyricLine = lyricLine;
-            this.startTick = startTick;
-            this.endTick = endTick;
-        }
     }
 }
