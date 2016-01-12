@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -89,39 +90,39 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             StringBuilder line = new StringBuilder();
             MidiEvent first = null;
             MidiEvent last = null;
-            for(MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
-                if(!(event instanceof Lyrics)) {
+            for (MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
+                if (!(event instanceof Lyrics)) {
                     continue;
                 }
 
-                if(((Lyrics) event).getLyric().equals("\r")) {
+                if (((Lyrics) event).getLyric().equals("\r")) {
                     continue;
                 }
-                if(((Lyrics) event).getLyric().equals("\n")) {
+                if (((Lyrics) event).getLyric().equals("\n")) {
                     continue;
                 }
-                if(((Lyrics) event).getLyric().equals("")) {
+                if (((Lyrics) event).getLyric().equals("")) {
                     continue;
                 }
                 /*if(((Lyrics) event).getLyric().equals("#") ||
                         ((Lyrics) event).getLyric().equals("@")) {
                     continue;
                 }*/
-                if(lyricsLine.equals("@") || lyricsLine.equals("#")) {
+                if (lyricsLine.equals("@") || lyricsLine.equals("#")) {
                     lineIndex++;
                     lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
                     first = null;
                     line = new StringBuilder();
                 }
 
-                if(first == null) {
+                if (first == null) {
                     first = event;
                 }
 
                 last = event;
                 line.append(((Lyrics) event).getLyric());
 
-                if(lyricsLine.replaceAll(" ", "").equals(line.toString())) {
+                if (lyricsLine.replaceAll(" ", "").equals(line.toString())) {
                     tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricsLine, first.getTick(), last.getTick()));
 
                     lineIndex++;
@@ -131,8 +132,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 }
             }
 
-            for(MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
-                if(!(event instanceof Lyrics)) {
+            for (MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
+                if (!(event instanceof Lyrics)) {
                     continue;
                 }
             }
@@ -145,13 +146,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     /**
-     *
      * @param lyrics
-     * @param tick 실제 mills가 건너온다.
+     * @param tick   실제 mills가 건너온다.
      */
     @Override
     public void notifyMeasureChanged(ArrayList<String> lyrics, long tick) {
-        if(lyrics.size() == 0) {
+        if (lyrics.size() == 0) {
             return;
         }
 
@@ -161,8 +161,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             text += "\r\n";
         }
 
-        for(KSALyrics lyricss : tv_lyrics.KSALyricsArray) {
-            if(tick >= lyricss.startTick &&
+        for (KSALyrics lyricss : tv_lyrics.KSALyricsArray) {
+            if (tick >= lyricss.startTick &&
                     tick <= lyricss.endTick) {
                 final String finalText = lyricss.lyricLine;
                 runOnUiThread(new Runnable() {
@@ -230,7 +230,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         int mi = c.get(Calendar.MINUTE);
         int ss = c.get(Calendar.SECOND);
 
-        return String.format(Locale.getDefault(), "%04d-%02d-%02d %02d-%02d-%02d", yy, mm, dd, hh, mi, ss);
+        return String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
 
     }
 
@@ -238,7 +238,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         if (recorder != null) {
             recorder.stop();
             releaseMediaRecorder();
-            Toast.makeText(getApplicationContext(), "Video captured!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -253,7 +253,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             public void run() {
                 try {
                     is_recording = true;
-                    //recorder.start();
+                    recorder.start();
                 } catch (final Exception ex) {
                     ex.printStackTrace();
                 }
@@ -309,7 +309,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         RelativeLayout layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
         preview = new CameraPreview(this, getApplicationContext(), camera);
-        preview.setLayoutParams(new LinearLayout.LayoutParams(1, 1));
+        preview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         layoutCamera.addView(preview);
         is_recording = false;
     }
