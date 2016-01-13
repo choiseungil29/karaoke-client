@@ -65,7 +65,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         ButterKnife.bind(this);
 
-        initRecodeView();
+        //initRecodeView();
 
         ClefSymbol.LoadImages(this);
         TimeSignatureSymbol.LoadImages(this);
@@ -83,7 +83,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
             tv_lyrics.lyricsTrack = scoreView.lyricsTrack;
             tv_lyrics.lyricsArray = scoreView.lyricsArray;
-            //tv_lyrics.KSALyricsArray.add
 
             int lineIndex = 0;
             String lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
@@ -146,29 +145,37 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     /**
-     * @param lyrics
+     * @param nowMeasureLyrics
      * @param tick   실제 mills가 건너온다.
      */
     @Override
-    public void notifyMeasureChanged(ArrayList<String> lyrics, long tick) {
-        if (lyrics.size() == 0) {
+    public void notifyMeasureChanged(ArrayList<String> nowMeasureLyrics, long tick) {
+        if (nowMeasureLyrics.size() == 0) {
             return;
         }
 
-        String text = "";
-        for (String lyric : lyrics) {
-            text += lyric;
-            text += "\r\n";
-        }
+        for(int i=0; i<tv_lyrics.KSALyricsArray.size(); i++) {
+            KSALyrics lyrics = tv_lyrics.KSALyricsArray.get(i);
 
-        for (KSALyrics lyricss : tv_lyrics.KSALyricsArray) {
-            if (tick >= lyricss.startTick &&
-                    tick <= lyricss.endTick) {
-                final String finalText = lyricss.lyricLine;
+            if(tick >= lyrics.startTick &&
+                    tick <= lyrics.endTick) {
+                String text = lyrics.lyricLine;
+                String tail = "";
+                String head = "";
+                if(i%2 == 0) {
+                    if(i < tv_lyrics.KSALyricsArray.size()-1) {
+                        tail = tv_lyrics.KSALyricsArray.get(i+1).lyricLine;
+                        text = text + "\n" + tail;
+                    }
+                } else {
+                    head = tv_lyrics.KSALyricsArray.get(i+1).lyricLine;
+                    text = head + "\n" + text;
+                }
+
+                final String finalText = text;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //tv_lyrics.setText(finalText);
                         tv_lyrics.setText(finalText);
                     }
                 });
@@ -181,22 +188,22 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (camera == null) {
+        /*if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-        }
+        }*/
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        releaseCamera();
+        //releaseCamera();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopRecord();
+        //stopRecord();
     }
 
 
@@ -231,7 +238,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         int ss = c.get(Calendar.SECOND);
 
         return String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
-
     }
 
     public void stopRecord() {
@@ -271,7 +277,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setCamera(camera);
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
 
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(600000 * 10); // Set max duration 60 sec.
