@@ -39,6 +39,6 @@ public class Lyrics extends TextualMetaEvent
 
     @Override
     public String toString() {
-            return this.getClass().getSimpleName() + ", " + mText.length() + ", Tick " + getTick();
+            return this.getClass().getSimpleName() + ", " + mText.length() + ", Tick " + getTick() + ", Lyric : " + getLyric();
     }
 }

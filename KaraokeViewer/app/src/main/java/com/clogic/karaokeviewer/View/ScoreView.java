@@ -55,11 +55,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public static int DEFAULT_C = 128; // 가장 기본이 되는 도의 위치. 중간에 계산되어지고 변경된다.
     public static final int MEASURE_LIMIT = 4;
 
-    public static int resolution = 0;
+    public static int resolution = 0; // 한 박자의 단위길이
 
     private MusicListener listener;
 
     private ScoreThread thread = new ScoreThread();
+    private LyricsThread lyricsThread = new LyricsThread();
 
     private MediaPlayer player = new MediaPlayer();
 
@@ -340,6 +341,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         //nowMeasures = measures.subList(0, 2);
         callOnDraw();
         thread.start();
+        lyricsThread.start();
     }
 
     @Override
@@ -426,7 +428,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             long tick = 0;
             while (true) {
                 if (System.currentTimeMillis() - currentMillis >
-                        ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
+                        ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) { // 1마디초당 한번씩
                     Logger.i("CHECK TIME", "times : " + (System.currentTimeMillis() - currentMillis));
                     Logger.i("CHECK TIME", "ticks : " + tick);
 
@@ -446,7 +448,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     for(int i=0; i<MEASURE_LIMIT; i++) {
                         list.add(nowMeasures[measureIndex].get(i).lyrics);
                     }
-                    //listener.notifyMeasureChanged(list, currentMillis - startMills);
                     listener.notifyMeasureChanged(list, tick);
 
                     Paint paint = new Paint();
@@ -456,6 +457,30 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                     measureCount++;
                     tick = nowMeasure.endTicks;
+                }
+            }
+        }
+    }
+
+    public class LyricsThread extends Thread {
+
+        @Override
+        public void run() {
+            long currentMillis = System.currentTimeMillis();
+
+            long tick = 0;
+            while (true) {
+                if (System.currentTimeMillis() - currentMillis >
+                        1000) { // 0.2초마다 들어온당
+
+                    float plusTick = ((nowMeasure.BPM/60 * resolution) / 1000) * (System.currentTimeMillis() - currentMillis);
+                    listener.notifyCurrentTick(tick);
+                    //tick = nowMeasure.endTicks;
+                    //tick += System.currentTimeMillis() - currentMillis; // mills to tick 코드가 필요하당..
+                    tick += plusTick;
+                    Logger.i("TEST! tick : " + tick);
+                    Logger.i("TEST! plus tick : " + plusTick);
+                    currentMillis = System.currentTimeMillis();
                 }
             }
         }

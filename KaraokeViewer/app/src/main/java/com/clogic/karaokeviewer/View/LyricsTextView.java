@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clogic.karaokeviewer.Midi.MidiTrack;
+import com.clogic.karaokeviewer.Model.KSALyric;
 import com.clogic.karaokeviewer.Model.KSALyrics;
 import com.clogic.karaokeviewer.R;
 
@@ -21,13 +22,11 @@ import butterknife.ButterKnife;
  */
 public class LyricsTextView extends LinearLayout {
 
-    @Bind(R.id.tv_lyrics) TextView tv_lyrics;
+    @Bind(R.id.tv_lyrics) OutlineTextView tv_lyrics;
     @Bind(R.id.tv_count) TextView tv_count;
 
-    public MidiTrack lyricsTrack;
     public ArrayList<KSALyrics> KSALyricsArray;
     public ArrayList<String> lyricsArray;
-    public HashMap<String, Long> lyricsTimeTable;
 
     public LyricsTextView(Context context) {
         this(context, null);
@@ -50,10 +49,28 @@ public class LyricsTextView extends LinearLayout {
         ButterKnife.bind(this);
 
         KSALyricsArray = new ArrayList<>();
-        lyricsTimeTable = new HashMap<>();
     }
 
     public void setText(String text) {
         tv_lyrics.setText(text);
+    }
+
+    public void setTick(long tick) {
+        for(int i=0; i<KSALyricsArray.size(); i++) {
+            KSALyrics ksaLyrics = KSALyricsArray.get(i);
+
+            for(int j=0; j<ksaLyrics.lyricList.size(); j++) {
+                KSALyric ksaLyric = ksaLyrics.lyricList.get(j);
+
+                if(ksaLyric.startTick <= tick && ksaLyric.endTick >= tick) {
+                    try {
+                        tv_lyrics.setTick(i % 2, tick, ksaLyrics);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+            }
+        }
     }
 }

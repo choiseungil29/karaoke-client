@@ -50,6 +50,6 @@ public class NoteOn extends ChannelEvent
 
     @Override
     public String toString() {
-        return "Ticks " + getTick() + ", Note " + getNoteValue() + ", Delta " + getDelta() + ", Velocity : " + getVelocity();
+        return "NoteOn, " + "Ticks " + getTick() + ", Note " + getNoteValue() + ", Delta " + getDelta() + ", Velocity : " + getVelocity();
     }
 }
