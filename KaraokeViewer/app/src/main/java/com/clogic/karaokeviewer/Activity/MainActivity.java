@@ -1,7 +1,6 @@
 package com.clogic.karaokeviewer.Activity;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -22,6 +21,7 @@ import android.widget.VideoView;
 
 import com.clogic.karaokeviewer.Dialog.ChooseSongDialog;
 import com.clogic.karaokeviewer.R;
+import com.clogic.karaokeviewer.Util.Prefs;
 import com.midisheetmusic.FileUri;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private BluetoothSPP bt;
+    private BluetoothSPP bt;
 
     VideoView vv_background;
     ArrayList<FileUri> list;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //initBluetooth();
+//        initBluetooth();
         RelativeLayout rv_parent = (RelativeLayout) findViewById(R.id.rv_parent);
         rv_parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         vv_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseSong("7");
+//                chooseSong("7");
             }
         });
 
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    private void chooseSong(String sendData) {
+    private void chooseSong(String str) {
         if (!dialog.isShowing()) {
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
             params.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -148,7 +149,12 @@ public class MainActivity extends AppCompatActivity {
             dialog.getWindow().setAttributes(params);
             dialog.show();
         }
-        //dialog.setData(sendData);
+//        J0240노래 바로실행
+//        Uri uri = Uri.parse("file:///android_asset/" + "J0240" + ".mid");
+//        FileUri file = new FileUri(uri, "J0240" + ".mid");
+//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
+//        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
+//        startActivity(intent);
     }
 
     @Override
@@ -174,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initBluetooth() {
-        /*bt = new BluetoothSPP(this);
+        bt = new BluetoothSPP(this);
 
         if (!bt.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext()
@@ -185,7 +191,15 @@ public class MainActivity extends AppCompatActivity {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                chooseSong(message);
+//                chooseSong(message);
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                if (message != null) {
+                    Uri uri = Uri.parse("file:///android_asset/" + "J" + message + ".mid");
+                    FileUri file = new FileUri(uri, "J" + message + ".mid");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
+                    intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -212,34 +226,34 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(getApplicationContext(), DeviceList.class);
             startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-        }*/
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //bt.stopService();
+//        bt.stopService();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        /*if (!bt.isBluetoothEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-        } else {
-            if (!bt.isServiceAvailable()) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
-                bluetoothSetUp();
-            }
-        }*/
+//        if (!bt.isBluetoothEnabled()) {
+//            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+//        } else {
+//            if (!bt.isServiceAvailable()) {
+//                bt.setupService();
+//                bt.startService(BluetoothState.DEVICE_ANDROID);
+//                bluetoothSetUp();
+//            }
+//        }
 
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK)
                 bt.connect(data);
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
@@ -253,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                         , Toast.LENGTH_SHORT).show();
                 finish();
             }
-        }*/
+        }
     }
 
     private void bluetoothSetUp() {
