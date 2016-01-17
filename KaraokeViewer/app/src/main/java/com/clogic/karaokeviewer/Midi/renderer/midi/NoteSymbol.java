@@ -7,7 +7,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 
 import com.clogic.karaokeviewer.Midi.util.MidiUtil;
-import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.View.ScoreView;
 
 /**
@@ -37,7 +36,13 @@ public class NoteSymbol extends MidiSymbol {
         int r = ScoreView.resolution;
         //int y = 높이 구해주는 함수 MidiUtil에 생성
         int y = MidiUtil.getHeightFromNoteValue(noteValue);
-        Logger.i("test", "y : " + y);
+
+        /*if(y > ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4 ||
+                y < ScoreView.FIRST_LINE_HEIGHT) {
+
+            canvas.drawLine(-ScoreView.STEM_HEIGHT / 3 + 2, y,
+                    ScoreView.STEM_HEIGHT / 3 - 2, y, paint);
+        }*/
 
         if(duration == MidiUtil.Whole(r)) {
             drawWhole(canvas, paint, y);
@@ -45,9 +50,9 @@ public class NoteSymbol extends MidiSymbol {
             drawDotHalf(canvas, paint, y);
         } else if(duration == MidiUtil.Half(r)) {
             drawHalf(canvas, paint, y);
-        /*} else if(duration == MidiUtil.DotQuarter(r)) {
+        } else if(duration == MidiUtil.DotQuarter(r)) {
             drawDotQuarter(canvas, paint, y);
-        */} else if(duration == MidiUtil.Quarter(r)) {
+        } else if(duration == MidiUtil.Quarter(r)) {
             drawQuarter(canvas, paint, y);
         /*} else if(duration == MidiUtil.DotEighth(r)) {
             drawDotEighth(canvas, paint, y);

@@ -16,11 +16,8 @@
 
 package com.clogic.karaokeviewer.Midi.event.meta;
 
-import android.util.Log;
-
 import com.clogic.karaokeviewer.Midi.event.MidiEvent;
 import com.clogic.karaokeviewer.Midi.util.VariableLengthInt;
-import com.clogic.karaokeviewer.Util.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;

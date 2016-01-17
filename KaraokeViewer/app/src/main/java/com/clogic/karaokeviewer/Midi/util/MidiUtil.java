@@ -16,11 +16,8 @@
 
 package com.clogic.karaokeviewer.Midi.util;
 
-import com.clogic.karaokeviewer.Midi.renderer.StaffSymbol;
-import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.View.ScoreView;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

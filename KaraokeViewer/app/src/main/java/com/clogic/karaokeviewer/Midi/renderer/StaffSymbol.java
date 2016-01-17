@@ -7,16 +7,10 @@ import android.graphics.Paint;
 
 import com.clogic.karaokeviewer.Midi.MidiTrack;
 import com.clogic.karaokeviewer.Midi.event.MidiEvent;
-import com.clogic.karaokeviewer.Midi.event.meta.KeySignature;
 import com.clogic.karaokeviewer.Midi.event.meta.Tempo;
-import com.clogic.karaokeviewer.Midi.event.meta.TimeSignature;
-import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.View.ScoreView;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * Created by clogic on 2015. 12. 10..

@@ -1,12 +1,10 @@
 package com.clogic.karaokeviewer.Midi.renderer;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.clogic.karaokeviewer.Midi.event.meta.KeySignature;
 import com.clogic.karaokeviewer.Midi.renderer.accidental.FlatSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.accidental.SharpSymbol;
-import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.View.ScoreView;
 
 /**

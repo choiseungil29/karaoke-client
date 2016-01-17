@@ -21,7 +21,6 @@ import com.clogic.karaokeviewer.Midi.event.meta.Lyrics;
 import com.clogic.karaokeviewer.Model.KSALyric;
 import com.clogic.karaokeviewer.Model.KSALyrics;
 import com.clogic.karaokeviewer.R;
-import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.Util.Prefs;
 import com.clogic.karaokeviewer.View.LyricsTextView;
 import com.clogic.karaokeviewer.View.ScoreView;
@@ -33,10 +32,8 @@ import com.midisheetmusic.TimeSignatureSymbol;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -79,7 +76,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         try {
             AssetManager assetManager = getResources().getAssets();
             InputStream stream = assetManager.open(uri.getLastPathSegment());
-            Logger.i("File name : " + uri.getLastPathSegment());
             scoreView.setMidiFile(new MidiFile(stream), getIntent().getStringExtra(Prefs.MIDI_FILE_NAME));
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
@@ -91,7 +87,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             for(MidiEvent event : scoreView.lyricsTrack.getEvents()) {
                 if(event instanceof Lyrics) {
                     list.add((Lyrics) event);
-                    Logger.i(event.toString());
                 }
             }
 

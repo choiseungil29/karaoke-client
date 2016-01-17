@@ -17,6 +17,7 @@ import com.clogic.karaokeviewer.Activity.TestActivity;
 import com.clogic.karaokeviewer.Midi.MidiFile;
 import com.clogic.karaokeviewer.Midi.MidiTrack;
 import com.clogic.karaokeviewer.Midi.event.MidiEvent;
+import com.clogic.karaokeviewer.Midi.event.NoteOn;
 import com.clogic.karaokeviewer.Midi.event.PitchBend;
 import com.clogic.karaokeviewer.Midi.event.meta.Lyrics;
 import com.clogic.karaokeviewer.Midi.event.meta.TimeSignature;
@@ -25,6 +26,9 @@ import com.clogic.karaokeviewer.Midi.renderer.MeasureSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.StaffSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.Symbol;
 import com.clogic.karaokeviewer.Midi.renderer.TimeSignatureSymbol;
+import com.clogic.karaokeviewer.Midi.renderer.midi.MidiSymbol;
+import com.clogic.karaokeviewer.Midi.renderer.midi.NoteSymbol;
+import com.clogic.karaokeviewer.Midi.renderer.midi.RestSymbol;
 import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.Util.Resources;
 
@@ -99,7 +103,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         Resources.initResources(context);
         renderTracks = new ArrayList<>();
         measures = new ArrayList<>();
-        //player.set
     }
 
     public void setFileUri(Uri uri) {
@@ -115,14 +118,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         this.midi = midi;
         this.fileName = fileName;
 
-        Logger.i("filename : " + this.fileName);
-
         signTrack = this.midi.getTracks().get(0);
 
         MidiTrack testTrack = null;
         for (int i = 0; i < midi.getTracks().size(); i++) {
             Iterator<MidiEvent> it = midi.getTracks().get(i).getEvents().iterator();
-            int save = -1;
             while (it.hasNext()) {
                 MidiEvent event = it.next();
 
@@ -130,7 +130,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                         event.toString().toLowerCase().contains("melody")) {
                     renderTracks.add(midi.getTracks().get(i));
                     testTrack = midi.getTracks().get(i);
-                    save = i;
                 }
 
                 if (event.toString().contains("TrackName") &&
@@ -138,21 +137,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     //renderTracks.add(midi.getTracks().get(i));
                     lyricsTrack = midi.getTracks().get(i);
                 }
-
-                if (save != -1 &&
-                        !(event instanceof PitchBend)) {
-                    Logger.i("TEST", event.toString());
-                }
             }
         }
 
-        Logger.i("TEST TRACK");
         for(MidiEvent event : testTrack.getEvents()) {
             Logger.i(event.toString());
-        }
-
-        for (MidiEvent event : renderTracks.get(0).getEvents()) {
-            Logger.i("KASA Event : " + event.toString());
         }
 
         try {
@@ -160,8 +149,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             for (String path : assets.list("")) {
                 if (path.endsWith(".KSA") && path.startsWith(fileName)) {
                     Uri uri = Uri.parse("file:///android_asset/" + path);
-                    Logger.i("file uri : " + uri.getLastPathSegment());
-                    Logger.i("file uri : " + uri.toString());
                     InputStream is = getResources().getAssets().open(path);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
                     String line;
@@ -249,12 +236,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                     ((Lyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)));
 
-                    Logger.i("lyrics " + ((Lyrics) event).getLyric());
 
                     lyricsIndex++;
-                }
-                else {
-                    Logger.i("else : " + event.toString());
                 }
             }
         } catch (Exception e) {
@@ -392,6 +375,33 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 measure.endTicks = nowTicks + measureLength;
                 measure.addSymbol(e);
             }
+        }
+        // 여기서 마디 넘어가는애들 다시 정리해줘야됨
+
+        for(int i=0; i<measures.size(); i++) {
+            MeasureSymbol item = measures.get(i);
+            Logger.i("" + i + "번째 마디 시작");
+            Logger.i("start tick : " + item.startTicks);
+
+            Iterator<MidiSymbol> iter = item.getAllMidiSymbols().iterator();
+            while (iter.hasNext()) {
+                MidiSymbol symbol = iter.next();
+
+                Logger.i("---------------------------------");
+                if(symbol instanceof NoteSymbol) {
+                    Logger.i("note symbol start ");
+                } else {
+                    Logger.i("rest symbol start ");
+                }
+                Logger.i("symbol start tick : " + symbol.getStartTicks());
+                Logger.i("symbol end   tick : " + (symbol.getStartTicks() + symbol.getDuration()));
+                Logger.i("symbol duration   : " + symbol.getDuration());
+                Logger.i("---------------------------------");
+            }
+
+            Logger.i("end tick : " +item.endTicks);
+            Logger.i("" + i + "번째 마디 끝");
+            Logger.i("==================================");
         }
 
         Logger.i("created measure count : " + measures.size());

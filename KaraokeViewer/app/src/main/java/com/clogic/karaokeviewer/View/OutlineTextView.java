@@ -1,21 +1,15 @@
 package com.clogic.karaokeviewer.View;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.clogic.karaokeviewer.Model.KSALyric;
 import com.clogic.karaokeviewer.Model.KSALyrics;
-import com.clogic.karaokeviewer.Util.Logger;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by clogic on 2016. 1. 15..
@@ -68,7 +62,6 @@ public class OutlineTextView extends TextView {
             String line = lines;
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         }
-
     }
 
     public void setTick(int index, long tick, KSALyrics ksaLyrics) {
@@ -109,8 +102,6 @@ public class OutlineTextView extends TextView {
         getPaint().getTextBounds(nowLyric.lyric, 0, 1, nowLetterBounds);
 
         width += percent * nowLetterBounds.width();
-        Logger.i("width : " + width);
-        Logger.i("width full : " + fullBounds.width());
     }
 
     public void callOnDraw() {

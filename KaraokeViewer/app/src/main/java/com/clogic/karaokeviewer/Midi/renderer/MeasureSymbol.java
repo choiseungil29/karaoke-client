@@ -27,8 +27,8 @@ import java.util.List;
  */
 public class MeasureSymbol extends Symbol {
 
-    private ArrayList<Symbol> symbols;
-    private ArrayList<MidiSymbol> notes;
+    public ArrayList<Symbol> symbols;
+    public ArrayList<MidiSymbol> notes;
 
     public int startTicks;
     public int endTicks;
@@ -123,7 +123,6 @@ public class MeasureSymbol extends Symbol {
             }
             return null;
         } else if (e instanceof Lyrics) {
-            Logger.i(e.toString());
             LyricSymbol symbol = new LyricSymbol((Lyrics) e);
             lyricsList.add(symbol);
             return symbol;
@@ -192,9 +191,9 @@ public class MeasureSymbol extends Symbol {
                 if(lhs.getStartTicks() < rhs.getStartTicks()) {
                     return -1;
                 }
-                if(lhs.getStartTicks() == rhs.getStartTicks()) {
+                /*if(lhs.getStartTicks() == rhs.getStartTicks()) {
                     throw new RuntimeException("what's happend?");
-                }
+                }*/
                 if(lhs.getStartTicks() > rhs.getStartTicks()) {
                     return 1;
                 }
@@ -218,26 +217,6 @@ public class MeasureSymbol extends Symbol {
             }
         });
 
-        Logger.i("measure created, startTicks : " + startTicks + ", endTicks : " + endTicks);
-        for(Symbol symbol : symbols) {
-            if(symbol instanceof KeySignatureSymbol) {
-                Logger.i("Key Signature");
-            }
-            if(symbol instanceof TimeSignatureSymbol) {
-                Logger.i("Time Signature");
-            }
-            if(symbol instanceof NoteSymbol) {
-                Logger.i("Note -> Tick : " + ((NoteSymbol) symbol).getStartTicks()
-                        + ", Duration : " + ((NoteSymbol) symbol).getDuration()
-                        + ", NoteValue : " + ((NoteSymbol) symbol).getNoteValue()
-                        + ", Tie : " + ((NoteSymbol) symbol).isTie());
-            }
-            if(symbol instanceof RestSymbol) {
-                Logger.i("Rest -> Tick : " + ((RestSymbol) symbol).getStartTicks()
-                        + ", Duration : " + ((RestSymbol) symbol).getDuration());
-            }
-        }
-
         for(LyricSymbol symbol : lyricsList) {
             lyrics += symbol.lyrics.getLyric();
         }
@@ -246,21 +225,15 @@ public class MeasureSymbol extends Symbol {
     private void addRests(List<MidiSymbol> roundNotes) {
         NoteSymbol prev = null;
 
-        List<Integer> scales = MidiUtil.getBeatScale(ScoreView.resolution);
-
         List<MidiSymbol> rests = new ArrayList<>();
 
         for(MidiSymbol symbol : roundNotes) {
             NoteSymbol note = (NoteSymbol) symbol;
 
             if(prev == null) {
-                if(!(note.getStartTicks() - this.startTicks == 0)) {
-                    rests.add(new RestSymbol(this.startTicks, note.getStartTicks() - this.startTicks));
-                }
+                rests.add(new RestSymbol(this.startTicks, note.getStartTicks() - this.startTicks));
             } else {
-                if(!(prev.getStartTicks() + prev.getDuration() == note.getStartTicks())) {
-                    rests.add(new RestSymbol(prev.getStartTicks() + prev.getDuration(), note.getStartTicks() - prev.getStartTicks()));
-                }
+                rests.add(new RestSymbol(prev.getStartTicks() + prev.getDuration(), note.getStartTicks() - prev.getStartTicks() - prev.getDuration()));
             }
 
             prev = note;
@@ -268,55 +241,16 @@ public class MeasureSymbol extends Symbol {
 
         if(prev == null) {
             rests.add(new RestSymbol(this.startTicks, this.endTicks - this.startTicks));
+        } else {
+            rests.add(new RestSymbol(prev.getStartTicks() + prev.getDuration(), this.endTicks - prev.getStartTicks() - prev.getDuration()));
         }
 
-        /*for(Symbol symbol : roundNotes) {
-            if(!(symbol instanceof NoteSymbol)) {
-                continue;
-            }
-
-            NoteSymbol note = (NoteSymbol) symbol;
-
-            if(prev == null &&
-                    this.startTicks != note.getStartTicks()) {
-                startTicks = this.startTicks;
-                int restDuration = note.getStartTicks() - startTicks;
-                rests.add(new RestSymbol(startTicks, restDuration));
-            }
-
-            if(prev != null &&
-                    (prev.getStartTicks() + prev.getDuration()) != note.getStartTicks()) {
-                int restDuration = note.getStartTicks() - (prev.getStartTicks() + prev.getDuration());
-                startTicks = prev.getStartTicks() + prev.getDuration();
-                rests.add(new RestSymbol(startTicks, restDuration));
-            }
-
-            prev = note;
-        }
-
-        if(prev != null && (endTicks - (prev.getStartTicks() + prev.getDuration()) > 0)) {
-            int duration = endTicks - (prev.getStartTicks() + prev.getDuration());
-            int restStartTicks = prev.getStartTicks() + prev.getDuration();
-            for(int i=0; i<scales.size(); i++) {
-                if(duration/scales.get(i) > 0) {
-                    duration -= scales.get(i);
-                    rests.add(new RestSymbol(restStartTicks, scales.get(i)));
-                    restStartTicks += scales.get(i);
-                }
+        for(int i=rests.size()-1; i>=0; i--) {
+            RestSymbol symbol = (RestSymbol) rests.get(i);
+            if(symbol.getDuration() == 0) {
+                rests.remove(symbol);
             }
         }
-        if(prev == null) {
-            int duration = endTicks - this.startTicks;
-            int restStartTicks = this.startTicks;
-            for(int i=0; i<scales.size(); i++) {
-                if(duration/scales.get(i) > 0) {
-                    duration -= scales.get(i);
-                    rests.add(new RestSymbol(restStartTicks, scales.get(i)));
-                    restStartTicks += scales.get(i);
-                    i--;
-                }
-            }
-        }*/
 
         roundNotes.addAll(rests);
     }
@@ -332,24 +266,10 @@ public class MeasureSymbol extends Symbol {
         List<Integer> scales = MidiUtil.getBeatScale(ScoreView.resolution);
         // 30 이하의 애들을 어떻게 처리할지..
 
-        if(note.getStartTicks() == 10738) {
-            Logger.i("Check");
-        }
-
+        note.roundStartTicks();
         int duration = note.getDuration();
         int startTicks = note.getStartTicks();
-        NoteSymbol symbol = null;
         for(int i=0; i<scales.size(); i++) {
-            /*if(duration / scales.get(i) > 0) {
-                if(symbol != null) {
-                    symbol.needToTie();
-                }
-                duration %= scales.get(i);
-                symbol = new NoteSymbol(startTicks, note.getNoteValue(), note.getChannel());
-                symbol.setEndTicks(startTicks + scales.get(i));
-                notes.add(symbol);
-                startTicks += scales.get(i);
-            }*/
             if(duration / scales.get(i) > 0) { // duration 90 -> 120으로 맞춰준다
                 try {
                     note.setEndTicks(startTicks + scales.get(i - 1));
@@ -357,8 +277,22 @@ public class MeasureSymbol extends Symbol {
                     e.printStackTrace();
                     note.setEndTicks(startTicks + scales.get(0));
                 }
-                notes.add(note);
+                if(note.getStartTicks() + note.getDuration() > this.endTicks) {
+                    note.setEndTicks(this.endTicks);
+                    note.needToTie();
+                }
                 break;
+            }
+        }
+
+        duration = note.getDuration();
+        for(int i=0; i<scales.size(); i++) {
+            if(duration/scales.get(i) > 0) {
+                duration %= scales.get(i);
+                NoteSymbol symbol = new NoteSymbol(note.getStartTicks(), note.getNoteValue(), note.getChannel());
+                symbol.setEndTicks(note.getStartTicks() + scales.get(i));
+                notes.add(symbol);
+                note.setStartTicks(note.getStartTicks() + scales.get(i));
             }
         }
 

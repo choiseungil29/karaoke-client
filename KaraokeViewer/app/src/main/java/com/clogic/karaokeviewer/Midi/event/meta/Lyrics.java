@@ -16,10 +16,6 @@
 
 package com.clogic.karaokeviewer.Midi.event.meta;
 
-import com.clogic.karaokeviewer.Util.Logger;
-
-import java.io.UnsupportedEncodingException;
-
 public class Lyrics extends TextualMetaEvent
 {
     public Lyrics(long tick, long delta, String lyric)
