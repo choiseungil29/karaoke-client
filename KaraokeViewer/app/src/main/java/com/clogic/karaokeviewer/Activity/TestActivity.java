@@ -33,8 +33,10 @@ import com.midisheetmusic.TimeSignatureSymbol;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,11 +85,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             scoreView.setListener(this);
 
             tv_lyrics.lyricsArray = scoreView.lyricsArray;
-
-            MidiEvent first = null;
-            MidiEvent last = null;
-
-            MidiEvent prev = null;
             ArrayList<KSALyric> lyricList = new ArrayList<>();
 
             List<Lyrics> list = new ArrayList<>();
@@ -114,6 +111,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                     continue;
                 }
 
+                //Logger.i("asdasdasd : " + 60/scoreView.nowMeasure);
+
                 String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
                 while(lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
                     lineIndex++;
@@ -134,98 +133,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             }
             tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList));
 
-            //lyricList.add(new KSALyric(list.get(i).getLyric(), list.get(i).getTick(), list.get(i).getTick() + scoreView.resolution * 2));
-
-            /*for(MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
-                if (!(event instanceof Lyrics)) {
-                    continue;
-                }
-
-                if (((Lyrics) event).getLyric().equals("\r")) {
-                    continue;
-                }
-                if (((Lyrics) event).getLyric().equals("\n")) {
-                    continue;
-                }
-                if (((Lyrics) event).getLyric().equals("")) {
-                    continue;
-                }
-
-                if(prev != null) {
-                    long endTick = event.getTick() - last.getTick();
-                    if(endTick > scoreView.resolution * 2) {
-                        endTick = 240;
-                    }
-                    lyricList.add(new KSALyric(((Lyrics)prev).getLyric(), prev.getTick(), prev.getTick() + endTick));
-                }
-
-                if(last != null) {
-                    long endTick = event.getTick() - last.getTick();
-                    if(endTick > scoreView.resolution * 2) {
-                        endTick = 240;
-                    }
-                    lyricList.add(new KSALyric(((Lyrics)last).getLyric(), last.getTick(), last.getTick() + endTick);
-                }
-
-                if (lyricsLine.equals("@") || lyricsLine.equals("#")) {
-                    lineIndex++;
-                    lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
-                    first = null;
-                    line = new StringBuilder();
-                }
-
-                prev = event;
-            }*/
-
-            /*for (MidiEvent event : tv_lyrics.lyricsTrack.getEvents()) {
-                if (!(event instanceof Lyrics)) {
-                    continue;
-                }
-
-                if (((Lyrics) event).getLyric().equals("\r")) {
-                    continue;
-                }
-                if (((Lyrics) event).getLyric().equals("\n")) {
-                    continue;
-                }
-                if (((Lyrics) event).getLyric().equals("")) {
-                    continue;
-                }
-
-                if (lyricsLine.equals("@") || lyricsLine.equals("#")) {
-                    lineIndex++;
-                    lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
-                    first = null;
-                    line = new StringBuilder();
-                }
-
-                if (first == null) {
-                    first = event;
-                }
-
-                if(last != null) {
-                    long endTick = event.getTick() - last.getTick();
-                    if(endTick > scoreView.resolution * 2) {
-                        endTick = 240;
-                    }
-                    lyricList.add(new KSALyric(((Lyrics)last).getLyric(), last.getTick(), last.getTick() + endTick);
-                }
-
-                last = event;
-                line.append(((Lyrics) event).getLyric());
-
-                if (lyricsLine.replaceAll(" ", "").equals(line.toString())) {
-                    //tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricsLine, first.getTick(), last.getTick()));
-                    tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList));
-                    lyricList = new ArrayList<>();
-
-                    lineIndex++;
-                    lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
-                    first = null;
-                    line = new StringBuilder();
-                }
-            }*/
-
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -243,34 +150,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             return;
         }
 
-        /*for(int i=0; i<tv_lyrics.KSALyricsArray.size(); i++) {
-            KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(i);
-
-            for(int j=0; j<ksaLyrics.lyricList.size(); j++) {
-                KSALyric ksaLyric = ksaLyrics.lyricList.get(j);
-
-                if(ksaLyric.startTick <= tick && ksaLyric.endTick >= tick) {
-                    String tail = "";
-                    String head = "";
-                    String text = tv_lyrics.lyricsArray.get(i);
-                    int index = 0;
-                    if(i < tv_lyrics.KSALyricsArray.size()-1) {
-                        if(i%2 == 0) {
-                            tail = tv_lyrics.lyricsArray.get(i+1);
-                            text = text + "\n" + tail;
-                            index = 0;
-                        } else {
-                            head = tv_lyrics.lyricsArray.get(i+1);
-                            text = head + "\n" + text;
-                            index = 1;
-                        }
-                    }
-                    tv_lyrics.setText(text);
-                    //tv_lyrics.setTick(index, tick, ksaLyrics);
-                    return;
-                }
-            }
-        }*/
     }
 
     @Override
@@ -283,8 +162,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 KSALyric ksaLyric = ksaLyrics.lyricList.get(j);
 
                 if(ksaLyric.startTick <= tick && ksaLyric.endTick >= tick) {
-                    String tail = "";
-                    String head = "";
+                    String tail;
+                    String head;
                     String text = tv_lyrics.lyricsArray.get(i);
                     if(i < tv_lyrics.KSALyricsArray.size()-1) {
                         if(i%2 == 0) {
@@ -300,15 +179,13 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             }
         }
         final String passText = lyric;
-        tv_lyrics.setTick(tick);
-        final long checkStart = System.currentTimeMillis();
-        /*runOnUiThread(new Runnable() {
+        //tv_lyrics.setTick(tick);
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 tv_lyrics.setText(passText);
-                Logger.i("runOnUiThread runningTime : " + (System.currentTimeMillis() - checkStart));
             }
-        });*/
+        });
     }
 
     @Override

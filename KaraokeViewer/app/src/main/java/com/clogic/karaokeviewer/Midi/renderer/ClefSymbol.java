@@ -38,11 +38,14 @@ public class ClefSymbol extends Symbol {
         trebleRes = BitmapFactory.decodeResource(context.getResources(), R.mipmap.treble);
         bassRes = BitmapFactory.decodeResource(context.getResources(), R.mipmap.bass);
 
-        if(totalPitch / totalCount > 60) {
+        if(totalPitch / totalCount > 48) {
             clef = trebleRes;
         } else {
             clef = bassRes;
         }
+        // C4는 48.
+        // 높은음자리표는. G4 52를 찾기위해 존재
+        clef = trebleRes;
 
         this.setLeftMargin(10);
         width = clef.getWidth();
@@ -53,10 +56,8 @@ public class ClefSymbol extends Symbol {
 
         Rect src = new Rect(0, 0, getWidth(), clef.getHeight());
         Rect dst = new Rect(0, 0, getWidth(), ScoreView.LINE_SPACE_HEIGHT * 6);
-        //canvas.translate(getLeftMargin(), ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT);
         canvas.translate(0, ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT);
         canvas.drawBitmap(clef, src, dst, paint);
-        //canvas.translate(-getLeftMargin(), -(ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT));
         canvas.translate(0, -(ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT));
     }
 }

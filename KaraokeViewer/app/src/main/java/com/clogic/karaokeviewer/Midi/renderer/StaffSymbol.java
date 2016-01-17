@@ -29,6 +29,7 @@ public class StaffSymbol extends Symbol {
 
     private ClefSymbol clef;
 
+    // C5 (60)
     public StaffSymbol(Context context, int staffWidth, int staffHeight, MidiTrack track, List<MeasureSymbol> measures) {
         this.width = staffWidth;
         this.height = staffHeight;

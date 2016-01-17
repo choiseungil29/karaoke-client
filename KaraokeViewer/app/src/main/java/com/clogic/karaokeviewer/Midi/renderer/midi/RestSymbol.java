@@ -33,13 +33,13 @@ public class RestSymbol extends MidiSymbol {
             drawDotHalf(canvas, paint);
         } else if(duration == MidiUtil.Half(r)) {
             drawHalf(canvas, paint);
-        } else if(duration == MidiUtil.DotQuarter(r)) {
+        /*} else if(duration == MidiUtil.DotQuarter(r)) {
             drawDotQuarter(canvas, paint);
-        } else if(duration == MidiUtil.Quarter(r)) {
+        */} else if(duration == MidiUtil.Quarter(r)) {
             drawQuarter(canvas, paint);
-        } else if(duration == MidiUtil.DotEighth(r)) {
+        /*} else if(duration == MidiUtil.DotEighth(r)) {
             drawDotEighth(canvas, paint);
-        } else if(duration == MidiUtil.Eighth(r)) {
+        */} else if(duration == MidiUtil.Eighth(r)) {
             drawEighth(canvas, paint);
         } else if(duration == MidiUtil.Sixteenth(r)) {
             drawSixteenth(canvas, paint);

@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.clogic.karaokeviewer.Midi.event.MidiEvent;
 import com.clogic.karaokeviewer.Midi.event.NoteOn;
+import com.clogic.karaokeviewer.Midi.event.PitchBend;
 import com.clogic.karaokeviewer.Midi.event.meta.KeySignature;
 import com.clogic.karaokeviewer.Midi.event.meta.Lyrics;
 import com.clogic.karaokeviewer.Midi.event.meta.Tempo;
@@ -103,21 +104,22 @@ public class MeasureSymbol extends Symbol {
         return notes;
     }
 
+    int pitchBendDelta = 0;
     private Symbol eventToSymbol(MidiEvent e) {
         if(e instanceof KeySignature) {
             return new KeySignatureSymbol((KeySignature) e);
         } else if (e instanceof TimeSignature) {
             return new TimeSignatureSymbol((TimeSignature) e);
         } else if (e instanceof NoteOn) {
-            /*Logger.i("NoteOn    NoteValue : " + ((NoteOn) e).getNoteValue() + ", Tick : "
-             + e.getTick() + ", Velocity : " + ((NoteOn) e).getVelocity() + ", Delta : " + e.getDelta());*/
             if((((NoteOn) e).getNoteValue()/12) * 12 < ScoreView.DEFAULT_C) {
                 ScoreView.DEFAULT_C = (((NoteOn) e).getNoteValue()/12) * 12;
             }
             if(((NoteOn) e).getVelocity() > 0) {
                 addNoteOn((NoteOn) e);
             } else if(((NoteOn) e).getVelocity() == 0) {
+                e.setDelta(e.getDelta() + pitchBendDelta);
                 addNoteOff((NoteOn) e);
+                pitchBendDelta = 0;
             }
             return null;
         } else if (e instanceof Lyrics) {
@@ -125,6 +127,8 @@ public class MeasureSymbol extends Symbol {
             LyricSymbol symbol = new LyricSymbol((Lyrics) e);
             lyricsList.add(symbol);
             return symbol;
+        } else if (e instanceof PitchBend) {
+            pitchBendDelta += e.getDelta();
         }
         return null;
     }
@@ -245,8 +249,28 @@ public class MeasureSymbol extends Symbol {
         List<Integer> scales = MidiUtil.getBeatScale(ScoreView.resolution);
 
         List<MidiSymbol> rests = new ArrayList<>();
-        int startTicks;
-        for(Symbol symbol : roundNotes) {
+
+        for(MidiSymbol symbol : roundNotes) {
+            NoteSymbol note = (NoteSymbol) symbol;
+
+            if(prev == null) {
+                if(!(note.getStartTicks() - this.startTicks == 0)) {
+                    rests.add(new RestSymbol(this.startTicks, note.getStartTicks() - this.startTicks));
+                }
+            } else {
+                if(!(prev.getStartTicks() + prev.getDuration() == note.getStartTicks())) {
+                    rests.add(new RestSymbol(prev.getStartTicks() + prev.getDuration(), note.getStartTicks() - prev.getStartTicks()));
+                }
+            }
+
+            prev = note;
+        }
+
+        if(prev == null) {
+            rests.add(new RestSymbol(this.startTicks, this.endTicks - this.startTicks));
+        }
+
+        /*for(Symbol symbol : roundNotes) {
             if(!(symbol instanceof NoteSymbol)) {
                 continue;
             }
@@ -292,22 +316,31 @@ public class MeasureSymbol extends Symbol {
                     i--;
                 }
             }
-        }
+        }*/
 
         roundNotes.addAll(rests);
     }
 
+    /**
+     * 반올림
+     * @param note
+     * @return
+     */
     public List<NoteSymbol> roundNote(NoteSymbol note) {
         List<NoteSymbol> notes = new ArrayList<>();
 
         List<Integer> scales = MidiUtil.getBeatScale(ScoreView.resolution);
         // 30 이하의 애들을 어떻게 처리할지..
 
+        if(note.getStartTicks() == 10738) {
+            Logger.i("Check");
+        }
+
         int duration = note.getDuration();
         int startTicks = note.getStartTicks();
         NoteSymbol symbol = null;
         for(int i=0; i<scales.size(); i++) {
-            if(duration / scales.get(i) > 0) {
+            /*if(duration / scales.get(i) > 0) {
                 if(symbol != null) {
                     symbol.needToTie();
                 }
@@ -316,6 +349,16 @@ public class MeasureSymbol extends Symbol {
                 symbol.setEndTicks(startTicks + scales.get(i));
                 notes.add(symbol);
                 startTicks += scales.get(i);
+            }*/
+            if(duration / scales.get(i) > 0) { // duration 90 -> 120으로 맞춰준다
+                try {
+                    note.setEndTicks(startTicks + scales.get(i - 1));
+                } catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                    note.setEndTicks(startTicks + scales.get(0));
+                }
+                notes.add(note);
+                break;
             }
         }
 

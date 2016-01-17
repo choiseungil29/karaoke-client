@@ -165,7 +165,7 @@ public class MidiUtil
         scales.add(Half);
         scales.add(DotQuarter);
         scales.add(Quarter);
-        scales.add(DotEighth);
+        //scales.add(DotEighth);
         scales.add(Eighth);
         scales.add(Sixteenth);
 
@@ -204,16 +204,16 @@ public class MidiUtil
         return getBeatScale(resolution).get(4);
     }
 
-    public static int DotEighth(int resolution) {
+    /*public static int DotEighth(int resolution) {
+        return getBeatScale(resolution).get(5);
+    }*/
+
+    public static int Eighth(int resolution) {
         return getBeatScale(resolution).get(5);
     }
 
-    public static int Eighth(int resolution) {
-        return getBeatScale(resolution).get(6);
-    }
-
     public static int Sixteenth(int resolution) {
-        return getBeatScale(resolution).get(7);
+        return getBeatScale(resolution).get(6);
     }
 
     public static int getHeightFromNoteValue(int noteValue) {
@@ -222,9 +222,6 @@ public class MidiUtil
         int defaultHeight = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 5;
         if(ScoreView.DEFAULT_C <= noteValue) {
             int remainder = noteValue%ScoreView.DEFAULT_C;
-            /*if(isSharp(noteValue)) {
-                remainder -= 1;
-            }*/
 
             HashMap<Integer, Integer> scale = new HashMap<>();
             scale.put(0, 0);
@@ -240,12 +237,7 @@ public class MidiUtil
             scale.put(10, 5);
             scale.put(11, 6);
 
-            height = defaultHeight - (ScoreView.LINE_SPACE_HEIGHT/2)*(scale.get(remainder%octave) + 7 * (remainder/octave));
-        } else {
-            /*if(isSharp(noteValue)) {
-                noteValue -= 1;
-            }*/
-
+            height = defaultHeight - (ScoreView.LINE_SPACE_HEIGHT/2)*(scale.get(remainder%octave) + 6 * (remainder/octave));
         }
         return height;
     }

@@ -60,13 +60,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     private MusicListener listener;
 
     private ScoreThread thread = new ScoreThread();
-    private LyricsThread lyricsThread = new LyricsThread();
-
     private MediaPlayer player = new MediaPlayer();
 
     private List<MeasureSymbol> measures;
     private List<MeasureSymbol> nowMeasures[] = new List[2];
-    private MeasureSymbol nowMeasure;
+    public MeasureSymbol nowMeasure;
 
     private String fileName;
     private StringBuilder lyrics;
@@ -79,8 +77,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public int measureLength;
 
     private Uri uri = null;
-
-    private TestActivity activity;
 
     public ScoreView(Context context) {
         this(context, null);
@@ -96,7 +92,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void init(Context context) {
-        activity = (TestActivity) context;
+        TestActivity activity = (TestActivity) context;
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
 
@@ -123,6 +119,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         signTrack = this.midi.getTracks().get(0);
 
+        MidiTrack testTrack = null;
         for (int i = 0; i < midi.getTracks().size(); i++) {
             Iterator<MidiEvent> it = midi.getTracks().get(i).getEvents().iterator();
             int save = -1;
@@ -132,12 +129,13 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 if (event.toString().contains("TrackName") &&
                         event.toString().toLowerCase().contains("melody")) {
                     renderTracks.add(midi.getTracks().get(i));
+                    testTrack = midi.getTracks().get(i);
                     save = i;
                 }
 
                 if (event.toString().contains("TrackName") &&
                         event.toString().toLowerCase().contains("kasa")) {
-                    renderTracks.add(midi.getTracks().get(i));
+                    //renderTracks.add(midi.getTracks().get(i));
                     lyricsTrack = midi.getTracks().get(i);
                 }
 
@@ -146,6 +144,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     Logger.i("TEST", event.toString());
                 }
             }
+        }
+
+        Logger.i("TEST TRACK");
+        for(MidiEvent event : testTrack.getEvents()) {
+            Logger.i(event.toString());
         }
 
         for (MidiEvent event : renderTracks.get(0).getEvents()) {
@@ -200,7 +203,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         Iterator<MidiEvent> lyricsIt = lyricsTrack.getEvents().iterator();
         int lyricsIndex = 0;
-        int eventCount = 0;
         startTick = 10000000;
         try {
             while (lyricsIt.hasNext()) {
@@ -250,7 +252,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     Logger.i("lyrics " + ((Lyrics) event).getLyric());
 
                     lyricsIndex++;
-                    eventCount++;
                 }
                 else {
                     Logger.i("else : " + event.toString());
@@ -314,11 +315,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
         this.resolution = midi.getResolution();
 
-        try {
-            createMeasures(renderTrack);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        createMeasures(renderTrack);
         settingMeasures();
 
         try {
@@ -341,7 +338,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         //nowMeasures = measures.subList(0, 2);
         callOnDraw();
         thread.start();
-        lyricsThread.start();
+        //lyricsThread.start();
+
+
     }
 
     @Override
@@ -423,27 +422,28 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         @Override
         public void run() {
             long currentMillis = System.currentTimeMillis();
-            long startMills = currentMillis;
-            long endMills;
+            long currentMillis2 = System.currentTimeMillis();
             long tick = 0;
             while (true) {
                 if (System.currentTimeMillis() - currentMillis >
                         ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) { // 1마디초당 한번씩
-                    Logger.i("CHECK TIME", "times : " + (System.currentTimeMillis() - currentMillis));
-                    Logger.i("CHECK TIME", "ticks : " + tick);
 
                     currentMillis = System.currentTimeMillis();
                     if (measureCount >= measures.size()) {
-                        endMills = System.currentTimeMillis();
-
-                        Logger.i("duration : " + (endMills - startMills));
                         return;
                     }
                     nowMeasure = measures.get(measureCount);
 
                     int measureIndex = (measureCount/MEASURE_LIMIT)%2;
                     int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
-                    nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
+                    try {
+                        nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasures.length);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     ArrayList<String> list = new ArrayList<>();
                     for(int i=0; i<MEASURE_LIMIT; i++) {
                         list.add(nowMeasures[measureIndex].get(i).lyrics);
@@ -458,29 +458,14 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     measureCount++;
                     tick = nowMeasure.endTicks;
                 }
-            }
-        }
-    }
 
-    public class LyricsThread extends Thread {
+                if (System.currentTimeMillis() - currentMillis2 >
+                        100) { // 0.1초마다 들어온당
 
-        @Override
-        public void run() {
-            long currentMillis = System.currentTimeMillis();
-
-            long tick = 0;
-            while (true) {
-                if (System.currentTimeMillis() - currentMillis >
-                        1000) { // 0.2초마다 들어온당
-
-                    float plusTick = ((nowMeasure.BPM/60 * resolution) / 1000) * (System.currentTimeMillis() - currentMillis);
-                    listener.notifyCurrentTick(tick);
-                    //tick = nowMeasure.endTicks;
-                    //tick += System.currentTimeMillis() - currentMillis; // mills to tick 코드가 필요하당..
+                    float plusTick = ((nowMeasure.BPM/60 * resolution) / 1000) * (System.currentTimeMillis() - currentMillis2);
                     tick += plusTick;
-                    Logger.i("TEST! tick : " + tick);
-                    Logger.i("TEST! plus tick : " + plusTick);
-                    currentMillis = System.currentTimeMillis();
+                    listener.notifyCurrentTick(tick);
+                    currentMillis2 = System.currentTimeMillis();
                 }
             }
         }

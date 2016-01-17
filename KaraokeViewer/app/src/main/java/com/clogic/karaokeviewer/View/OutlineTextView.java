@@ -14,6 +14,9 @@ import com.clogic.karaokeviewer.Model.KSALyric;
 import com.clogic.karaokeviewer.Model.KSALyrics;
 import com.clogic.karaokeviewer.Util.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by clogic on 2016. 1. 15..
  */
@@ -37,7 +40,6 @@ public class OutlineTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        long currentMillis = System.currentTimeMillis();
         getPaint().setStyle(Paint.Style.STROKE);
         getPaint().setStrokeWidth(3);
         getPaint().setColor(Color.GREEN);
@@ -67,29 +69,25 @@ public class OutlineTextView extends TextView {
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         }
 
-        Logger.i("draw term : " + (System.currentTimeMillis() - currentMillis));
     }
 
     public void setTick(int index, long tick, KSALyrics ksaLyrics) {
-        long currentMillis = System.currentTimeMillis();
         this.index = index;
         this.tick = tick;
 
         width = 0;
 
-        //long deltaTick
         KSALyric nowLyric = null;
         int i;
         for(i=0; i<ksaLyrics.lyricList.size(); i++) {
             KSALyric lyric = ksaLyrics.lyricList.get(i);
-            //width += getPaint().getTextWid
             if(lyric.startTick <= tick && lyric.endTick >= tick) {
                 nowLyric = lyric;
                 break;
             }
         }
 
-        String line = null;
+        String line;
         try {
             line = getText().toString().split("\n")[index];
         } catch (Exception e) {
@@ -97,13 +95,12 @@ public class OutlineTextView extends TextView {
             line = getText().toString();
         }
 
-        long term = tick - nowLyric.startTick; // term이 점점 커진다.
-        long delta = nowLyric.endTick - nowLyric.startTick;
-
-        Logger.i("width tick : " + tick);
-        Logger.i("width startTick : " + nowLyric.startTick);
+        float term = tick - nowLyric.startTick; // term이 점점 커진다.
+        float delta = nowLyric.endTick - nowLyric.startTick;
 
         Rect lineBounds = new Rect();
+        Rect fullBounds = new Rect();
+        getPaint().getTextBounds(line, 0, line.length(), fullBounds);
         getPaint().getTextBounds(line.substring(0, i), 0, i, lineBounds);
         width += lineBounds.width();
 
@@ -112,10 +109,8 @@ public class OutlineTextView extends TextView {
         getPaint().getTextBounds(nowLyric.lyric, 0, 1, nowLetterBounds);
 
         width += percent * nowLetterBounds.width();
-        //Logger.i("width percent : " + percent);
-
-        //callOnDraw();
-        Logger.i("setTick term : " + (System.currentTimeMillis() - currentMillis));
+        Logger.i("width : " + width);
+        Logger.i("width full : " + fullBounds.width());
     }
 
     public void callOnDraw() {
