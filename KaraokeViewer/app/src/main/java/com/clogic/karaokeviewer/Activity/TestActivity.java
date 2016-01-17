@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -64,11 +66,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_test);
 
         ButterKnife.bind(this);
 
-        //initRecodeView();
+        initRecodeView();
 
         ClefSymbol.LoadImages(this);
         TimeSignatureSymbol.LoadImages(this);
@@ -80,6 +83,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             AssetManager assetManager = getResources().getAssets();
             InputStream stream = assetManager.open(uri.getLastPathSegment());
             Logger.i("File name : " + uri.getLastPathSegment());
+
+            scoreView.setActivity(this);
             scoreView.setMidiFile(new MidiFile(stream), getIntent().getStringExtra(Prefs.MIDI_FILE_NAME));
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
@@ -88,8 +93,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             ArrayList<KSALyric> lyricList = new ArrayList<>();
 
             List<Lyrics> list = new ArrayList<>();
-            for(MidiEvent event : scoreView.lyricsTrack.getEvents()) {
-                if(event instanceof Lyrics) {
+            for (MidiEvent event : scoreView.lyricsTrack.getEvents()) {
+                if (event instanceof Lyrics) {
                     list.add((Lyrics) event);
                     Logger.i(event.toString());
                 }
@@ -99,7 +104,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             StringBuilder line = new StringBuilder();
             int lineIndex = 0;
             int i;
-            for(i=0; i<list.size(); i++) {
+            for (i = 0; i < list.size(); i++) {
                 Lyrics event = list.get(i);
                 if (event.getLyric().equals("\r")) {
                     continue;
@@ -114,17 +119,17 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 //Logger.i("asdasdasd : " + 60/scoreView.nowMeasure);
 
                 String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-                while(lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
+                while (lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
                     lineIndex++;
                     lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
                 }
 
-                if(i < list.size()-1) {
+                if (i < list.size() - 1) {
                     lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
                     line.append(event.getLyric());
                 }
 
-                if(lyricLine.equals(line.toString())) {
+                if (lyricLine.equals(line.toString())) {
                     lineIndex++;
                     tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList));
                     lyricList = new ArrayList<>();
@@ -142,71 +147,72 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
     /**
      * @param nowMeasureLyrics
-     * @param tick   실제 mills가 건너온다.
+     * @param tick             실제 mills가 건너온다.
      */
     @Override
     public void notifyMeasureChanged(ArrayList<String> nowMeasureLyrics, long tick) {
         if (nowMeasureLyrics.size() == 0) {
             return;
         }
-
     }
 
     @Override
     public void notifyCurrentTick(final long tick) {
         String lyric = "";
-        for(int i=0; i<tv_lyrics.KSALyricsArray.size(); i++) {
+        for (int i = 0; i < tv_lyrics.KSALyricsArray.size(); i++) {
             KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(i);
 
-            for(int j=0; j<ksaLyrics.lyricList.size(); j++) {
+            for (int j = 0; j < ksaLyrics.lyricList.size(); j++) {
                 KSALyric ksaLyric = ksaLyrics.lyricList.get(j);
 
-                if(ksaLyric.startTick <= tick && ksaLyric.endTick >= tick) {
+                if (ksaLyric.startTick <= tick && ksaLyric.endTick >= tick) {
                     String tail;
                     String head;
                     String text = tv_lyrics.lyricsArray.get(i);
-                    if(i < tv_lyrics.KSALyricsArray.size()-1) {
-                        if(i%2 == 0) {
-                            tail = tv_lyrics.lyricsArray.get(i+1);
+                    if (i < tv_lyrics.KSALyricsArray.size() - 1) {
+                        if (i % 2 == 0) {
+                            tail = tv_lyrics.lyricsArray.get(i + 1);
                             lyric = text + "\n" + tail;
                         } else {
-                            head = tv_lyrics.lyricsArray.get(i+1);
+                            head = tv_lyrics.lyricsArray.get(i + 1);
                             lyric = head + "\n" + text;
                         }
                     }
                     break;
                 }
             }
+            final String passText = lyric;
+            //tv_lyrics.setTick(tick);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("kkk",passText);
+                    tv_lyrics.setText(passText);
+                }
+            });
+
         }
-        final String passText = lyric;
-        //tv_lyrics.setTick(tick);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tv_lyrics.setText(passText);
-            }
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /*if (camera == null) {
+        if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-        }*/
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //releaseCamera();
+        releaseCamera();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //stopRecord();
+        stopRecord();
     }
 
 
@@ -282,9 +288,10 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
 
+        recorder.setVideoEncodingBitRate(10000000);
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
-        recorder.setMaxDuration(600000 * 10); // Set max duration 60 sec.
-        recorder.setMaxFileSize(50000000 * 20); // Set max file size 50M
+        recorder.setMaxDuration(6000000 * 10); // Set max duration 60 sec.
+        recorder.setMaxFileSize(300000000 * 20); // Set max file size 50M
 
 
         try {
@@ -307,7 +314,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             recorder.reset();
             recorder.release();
             recorder = null;
-//            camera.lock();
         }
     }
 

@@ -3,27 +3,71 @@ package karaokeclicker.kkk.com.karaokeclicker.activity;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 import karaokeclicker.kkk.com.karaokeclicker.R;
+import karaokeclicker.kkk.com.karaokeclicker.activity.database.dao.Song;
 
 public class NumberActivity extends Activity implements View.OnClickListener {
 
-    private BluetoothSPP bt;
+    public static BluetoothSPP bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_number);
 
-        initBluetooth();
+        getDefaultData();
+//        initBluetooth();
+        setUp();
+    }
 
+    private String readText(String file) throws IOException {
+        InputStream is = getAssets().open(file);
+
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+
+        String text = new String(buffer);
+
+        return text;
+    }
+
+    void getDefaultData() {
+        if (Song.listAll(Song.class).size() == 0) {
+            try {
+                JSONObject jsonObject = new JSONObject(readText("song.json"));
+                JSONArray songs = jsonObject.getJSONArray("songs");
+                for (int i = 0; i < songs.length(); i++) {
+                    JSONObject jo = songs.getJSONObject(i);
+                    Song song = new Song(jo.getString("songNumber"), jo.getString("song"), jo.getString("singer"), jo.getString("createDate"));
+                    song.save();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     void setUp() {
@@ -37,6 +81,7 @@ public class NumberActivity extends Activity implements View.OnClickListener {
         ImageView btnNum7 = (ImageView) findViewById(R.id.btn_num_7);
         ImageView btnNum8 = (ImageView) findViewById(R.id.btn_num_8);
         ImageView btnNum9 = (ImageView) findViewById(R.id.btn_num_9);
+        ImageView btnSearch = (ImageView) findViewById(R.id.btn_search);
         ImageView btnStart = (ImageView) findViewById(R.id.btn_start);
         ImageView btnReservation = (ImageView) findViewById(R.id.btn_reservation);
         ImageView btnTempoPlus = (ImageView) findViewById(R.id.btn_tempo_plus);
@@ -53,6 +98,7 @@ public class NumberActivity extends Activity implements View.OnClickListener {
         btnNum7.setOnClickListener(this);
         btnNum8.setOnClickListener(this);
         btnNum9.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
         btnStart.setOnClickListener(this);
         btnReservation.setOnClickListener(this);
         btnTempoPlus.setOnClickListener(this);
@@ -106,43 +152,43 @@ public class NumberActivity extends Activity implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bt.stopService();
+//        bt.stopService();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!bt.isBluetoothEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-        } else {
-            if (!bt.isServiceAvailable()) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
-                setUp();
-            }
-        }
+//        if (!bt.isBluetoothEnabled()) {
+//            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+//        } else {
+//            if (!bt.isServiceAvailable()) {
+//                bt.setupService();
+//                bt.startService(BluetoothState.DEVICE_ANDROID);
+//                setUp();
+//            }
+//        }
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == Activity.RESULT_OK)
-                bt.connect(data);
-        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
-                setUp();
-            } else {
-                Toast.makeText(getApplicationContext()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+//            if (resultCode == Activity.RESULT_OK)
+//                bt.connect(data);
+//        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                bt.setupService();
+//                bt.startService(BluetoothState.DEVICE_ANDROID);
+//                setUp();
+//            } else {
+//                Toast.makeText(getApplicationContext()
+//                        , "Bluetooth was not enabled."
+//                        , Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
@@ -182,7 +228,9 @@ public class NumberActivity extends Activity implements View.OnClickListener {
                 sendData = "start";
                 break;
             case R.id.btn_reservation:
-                sendData = "reservation";
+//                sendData = "reservation";
+                sendData = "noData";
+                startActivity(new Intent(NumberActivity.this, BackgroundSelectActivity.class));
                 break;
             case R.id.btn_tempo_plus:
                 sendData = "tempo_plus";
@@ -196,7 +244,18 @@ public class NumberActivity extends Activity implements View.OnClickListener {
             case R.id.btn_key_minus:
                 sendData = "key_minus";
                 break;
+            case R.id.btn_search:
+                sendData = "noData";
+                startActivity(new Intent(NumberActivity.this, SearchActivity.class));
+                break;
         }
-        bt.send(sendData, true);
+        if (!sendData.equals("noData")) {
+            bt.send(sendData, true);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

@@ -41,6 +41,8 @@ import java.util.List;
  */
 public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
+    private TestActivity activity;
+
     private MidiFile midi = null;
 
     private ArrayList<MidiTrack> renderTracks;
@@ -147,7 +149,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         Logger.i("TEST TRACK");
-        for(MidiEvent event : testTrack.getEvents()) {
+        for (MidiEvent event : testTrack.getEvents()) {
             Logger.i(event.toString());
         }
 
@@ -182,10 +184,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                             default:
                                 break;
                         }
-                        if(count == 0) {
+                        if (count == 0) {
                             songName = line;
                         }
-                        if(count == 1) {
+                        if (count == 1) {
 
                         }
                         if (count < 4) {
@@ -209,21 +211,21 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 MidiEvent event = lyricsIt.next();
                 if (event instanceof Lyrics) {
 
-                    if(((Lyrics) event).getLyric().equals("\r")) {
+                    if (((Lyrics) event).getLyric().equals("\r")) {
                         continue;
                     }
-                    if(((Lyrics) event).getLyric().equals("\n")) {
+                    if (((Lyrics) event).getLyric().equals("\n")) {
                         continue;
                     }
-                    if(((Lyrics) event).getLyric().equals("")) {
+                    if (((Lyrics) event).getLyric().equals("")) {
                         continue;
                     }
 
-                    if(startTick > event.getTick()) {
+                    if (startTick > event.getTick()) {
                         startTick = event.getTick();
                     }
 
-                    if(lyrics.charAt(lyricsIndex) == '@' ||
+                    if (lyrics.charAt(lyricsIndex) == '@' ||
                             lyrics.charAt(lyricsIndex) == '#') {
                         lyricsIndex++;
                     }
@@ -235,14 +237,14 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     String english = "";
                     while ((lyrics.charAt(lyricsIndex) >= 'a' && lyrics.charAt(lyricsIndex) <= 'z') ||
                             (lyrics.charAt(lyricsIndex) >= 'A' && lyrics.charAt(lyricsIndex) <= 'Z')) {
-                        if(english.trim().length() < ((Lyrics)event).getLyric().trim().length()) {
+                        if (english.trim().length() < ((Lyrics) event).getLyric().trim().length()) {
                             english += lyrics.charAt(lyricsIndex);
                             lyricsIndex++;
                         } else {
                             break;
                         }
                     }
-                    if(english.length() != 0) {
+                    if (english.length() != 0) {
                         ((Lyrics) event).setLyric(english);
                         continue;
                     }
@@ -252,8 +254,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     Logger.i("lyrics " + ((Lyrics) event).getLyric());
 
                     lyricsIndex++;
-                }
-                else {
+                } else {
                     Logger.i("else : " + event.toString());
                 }
             }
@@ -301,10 +302,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
         staffSymbol.draw(canvas);
 
-        canvas.translate(0, height/2);
+        canvas.translate(0, height / 2);
         StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
         staffSymbol1.draw(canvas);
-        canvas.translate(0, -(height/2));
+        canvas.translate(0, -(height / 2));
     }
 
     @Override
@@ -325,11 +326,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             afd.close();
             player.prepare();
             player.start();
-            //activity.startRecord();
+//            activity.startRecord();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
         nowMeasure = measures.get(0);
@@ -434,7 +434,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     nowMeasure = measures.get(measureCount);
 
-                    int measureIndex = (measureCount/MEASURE_LIMIT)%2;
+                    int measureIndex = (measureCount / MEASURE_LIMIT) % 2;
                     int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
                     try {
                         nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
@@ -445,7 +445,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                         e.printStackTrace();
                     }
                     ArrayList<String> list = new ArrayList<>();
-                    for(int i=0; i<MEASURE_LIMIT; i++) {
+                    for (int i = 0; i < MEASURE_LIMIT; i++) {
                         list.add(nowMeasures[measureIndex].get(i).lyrics);
                     }
                     listener.notifyMeasureChanged(list, tick);
@@ -462,12 +462,20 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 if (System.currentTimeMillis() - currentMillis2 >
                         100) { // 0.1초마다 들어온당
 
-                    float plusTick = ((nowMeasure.BPM/60 * resolution) / 1000) * (System.currentTimeMillis() - currentMillis2);
+                    float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (System.currentTimeMillis() - currentMillis2);
                     tick += plusTick;
                     listener.notifyCurrentTick(tick);
                     currentMillis2 = System.currentTimeMillis();
                 }
             }
         }
+    }
+
+    public TestActivity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(TestActivity activity) {
+        this.activity = activity;
     }
 }
