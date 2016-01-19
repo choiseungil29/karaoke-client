@@ -273,7 +273,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     private boolean prepareMediaRecorder() {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang/");
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/");
         if (!dir.exists()) {
             dir.mkdirs();
         }
