@@ -17,8 +17,6 @@ import com.clogic.karaokeviewer.Activity.TestActivity;
 import com.clogic.karaokeviewer.Midi.MidiFile;
 import com.clogic.karaokeviewer.Midi.MidiTrack;
 import com.clogic.karaokeviewer.Midi.event.MidiEvent;
-import com.clogic.karaokeviewer.Midi.event.NoteOn;
-import com.clogic.karaokeviewer.Midi.event.PitchBend;
 import com.clogic.karaokeviewer.Midi.event.meta.Lyrics;
 import com.clogic.karaokeviewer.Midi.event.meta.TimeSignature;
 import com.clogic.karaokeviewer.Midi.renderer.KeySignatureSymbol;
@@ -28,7 +26,6 @@ import com.clogic.karaokeviewer.Midi.renderer.Symbol;
 import com.clogic.karaokeviewer.Midi.renderer.TimeSignatureSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.midi.MidiSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.midi.NoteSymbol;
-import com.clogic.karaokeviewer.Midi.renderer.midi.RestSymbol;
 import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.Util.Resources;
 
@@ -80,7 +77,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public String singer;
 
     public long startTick;
-    public int measureLength;
+    public static int measureLength;
 
     private Uri uri = null;
 
@@ -191,7 +188,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         Iterator<MidiEvent> lyricsIt = lyricsTrack.getEvents().iterator();
         int lyricsIndex = 0;
-        startTick = 10000000;
         try {
             while (lyricsIt.hasNext()) {
                 MidiEvent event = lyricsIt.next();
@@ -205,10 +201,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     if (((Lyrics) event).getLyric().equals("")) {
                         continue;
-                    }
-
-                    if (startTick > event.getTick()) {
-                        startTick = event.getTick();
                     }
 
                     if (lyrics.charAt(lyricsIndex) == '@' ||
@@ -309,11 +301,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             afd.close();
             player.prepare();
             player.start();
-//            activity.startRecord();
+            activity.startRecord();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         nowMeasure = measures.get(0);
         nowMeasures[0] = measures.subList(0, 4);
@@ -321,9 +312,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         //nowMeasures = measures.subList(0, 2);
         callOnDraw();
         thread.start();
-        //lyricsThread.start();
-
-
     }
 
     @Override
@@ -409,7 +397,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void settingMeasures() {
         for (MeasureSymbol measure : measures) {
-            measure.setWidth(getMeasuredWidth() / ScoreView.MEASURE_LIMIT);
+            measure.setWidth((getMeasuredWidth() - getPaddingRight() - getPaddingLeft()) / ScoreView.MEASURE_LIMIT);
             for (Symbol symbol : measure.getAllSymbols()) {
                 if (symbol instanceof KeySignatureSymbol) {
                     measure.paddingLeft += symbol.getWidth();
@@ -431,14 +419,16 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
-            long currentMillis = System.currentTimeMillis();
-            long currentMillis2 = System.currentTimeMillis();
+            long currentMillis = player.getCurrentPosition();
+            long currentMillis2 = player.getCurrentPosition();
             long tick = 0;
+            long startTime = System.currentTimeMillis();
             while (true) {
-                if (System.currentTimeMillis() - currentMillis >
-                        ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) { // 1마디초당 한번씩
 
-                    currentMillis = System.currentTimeMillis();
+                if(player.getCurrentPosition() - currentMillis >
+                        ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
+                    currentMillis = player.getCurrentPosition();
+
                     if (measureCount >= measures.size()) {
                         return;
                     }
@@ -469,13 +459,14 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     tick = nowMeasure.endTicks;
                 }
 
-                if (System.currentTimeMillis() - currentMillis2 >
-                        100) { // 0.1초마다 들어온당
+                int term = 5;
+                if (player.getCurrentPosition() - currentMillis2 >
+                        term) { // 0.1초마다 들어온당
 
-                    float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (System.currentTimeMillis() - currentMillis2);
+                    float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
                     tick += plusTick;
-                    listener.notifyCurrentTick(tick);
-                    currentMillis2 = System.currentTimeMillis();
+                    listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
+                    currentMillis2 = player.getCurrentPosition();
                 }
             }
         }

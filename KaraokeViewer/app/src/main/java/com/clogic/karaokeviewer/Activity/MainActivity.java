@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -56,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
         vv_background = (VideoView) findViewById(R.id.vv_background);
         Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
         vv_background.setMediaController(new MediaController(this));
+        vv_background.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+
         vv_background.setVideoURI(video);
         vv_background.start();
 

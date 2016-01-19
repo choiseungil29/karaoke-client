@@ -5,11 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.clogic.karaokeviewer.Model.KSALyric;
 import com.clogic.karaokeviewer.Model.KSALyrics;
+import com.clogic.karaokeviewer.Util.Logger;
+
+import java.util.ArrayList;
 
 /**
  * Created by clogic on 2016. 1. 15..
@@ -19,6 +25,9 @@ public class OutlineTextView extends TextView {
     public float width = 0;
     public int index = 0;
     public long tick = 0;
+
+    public ArrayList<KSALyrics> KSALyricsArray;
+    public ArrayList<String> lyricsArray;
 
     public OutlineTextView(Context context) {
         this(context, null);
@@ -30,13 +39,15 @@ public class OutlineTextView extends TextView {
 
     public OutlineTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        KSALyricsArray = new ArrayList<>();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         getPaint().setStyle(Paint.Style.STROKE);
         getPaint().setStrokeWidth(3);
-        getPaint().setColor(Color.GREEN);
+        getPaint().setColor(Color.BLACK);
         setTextColor(Color.BLACK);
 
         String lines = getText().toString();
@@ -50,7 +61,7 @@ public class OutlineTextView extends TextView {
         getPaint().getTextBounds(getText().toString(), 0, getText().length(), textRect);
 
         getPaint().setStyle(Paint.Style.FILL);
-        getPaint().setColor(Color.BLACK);
+        getPaint().setColor(Color.BLUE);
 
         canvas.clipRect(0, 0, width, 1000);
 
@@ -64,47 +75,60 @@ public class OutlineTextView extends TextView {
         }
     }
 
-    public void setTick(int index, long tick, KSALyrics ksaLyrics) {
-        this.index = index;
-        this.tick = tick;
+    public void setTick(long tick, int lyricsIndex) {
+        KSALyrics lyrics = KSALyricsArray.get(lyricsIndex);
 
-        width = 0;
-
-        KSALyric nowLyric = null;
-        int i;
-        for(i=0; i<ksaLyrics.lyricList.size(); i++) {
-            KSALyric lyric = ksaLyrics.lyricList.get(i);
-            if(lyric.startTick <= tick && lyric.endTick >= tick) {
-                nowLyric = lyric;
-                break;
+        index = lyricsIndex%2;
+        KSALyric target = lyrics.lyricList.get(0);
+        StringBuilder builder = new StringBuilder();
+        int i=0;
+        for(KSALyric lyric : lyrics.lyricList) {
+            if(lyric.startTick <= tick) {
+                target = lyric;
+                builder.append(lyric.lyric);
+                i++;
             }
         }
+        Logger.i("string check : " + builder.toString());
 
-        String line;
+        Rect completeRect = new Rect();
+        Rect letterRect = new Rect();
+        Rect spaceRect = new Rect();
+
+        getPaint().getTextBounds(" ", 0, 1, spaceRect);
+
+        int spaceCount = builder.toString().length() - builder.toString().replaceAll(" ", "").length();
+
         try {
-            line = getText().toString().split("\n")[index];
+            getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
+            getPaint().getTextBounds(target.lyric, 0, 1, letterRect);
+            width = spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
         } catch (Exception e) {
             e.printStackTrace();
-            line = getText().toString();
         }
 
-        float term = tick - nowLyric.startTick; // term이 점점 커진다.
-        float delta = nowLyric.endTick - nowLyric.startTick;
+        if(lyrics.lyricLine.equals("Let's get out out")) {
+            Logger.i("Let's get out out");
+            Logger.i("start tick : " + lyrics.startTick + " end tick : " + lyrics.endTick);
+            Logger.i("builder : " + builder.toString());
+        }
 
-        Rect lineBounds = new Rect();
-        Rect fullBounds = new Rect();
-        getPaint().getTextBounds(line, 0, line.length(), fullBounds);
-        getPaint().getTextBounds(line.substring(0, i), 0, i, lineBounds);
-        width += lineBounds.width();
-
-        float percent = term/delta; // 현재 단어의 진행도(percent)를 구함.
-        Rect nowLetterBounds = new Rect();
-        getPaint().getTextBounds(nowLyric.lyric, 0, 1, nowLetterBounds);
-
-        width += percent * nowLetterBounds.width();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        });
     }
 
     public void callOnDraw() {
-        this.invalidate();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        });
     }
 }

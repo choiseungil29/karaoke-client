@@ -1,5 +1,7 @@
 package com.clogic.karaokeviewer.Model;
 
+import com.clogic.karaokeviewer.Util.Logger;
+
 import java.util.ArrayList;
 
 /**
@@ -18,7 +20,20 @@ public class KSALyrics {
         this.endTick = endTick;
     }
 
-    public KSALyrics(ArrayList<KSALyric> lyricList) {
+    public KSALyrics(ArrayList<KSALyric> lyricList, String lyricLine) {
         this.lyricList = lyricList;
+        long startTick = 1000000;
+        long endTick = 0;
+        for(KSALyric lyric : lyricList) {
+            if(lyric.startTick < startTick) {
+                startTick = lyric.startTick;
+                this.startTick = startTick;
+            }
+            if(lyric.endTick > endTick) {
+                endTick = lyric.endTick;
+                this.endTick = endTick;
+            }
+        }
+        this.lyricLine = lyricLine;
     }
 }

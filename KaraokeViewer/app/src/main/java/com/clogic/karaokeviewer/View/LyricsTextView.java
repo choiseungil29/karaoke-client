@@ -64,7 +64,7 @@ public class LyricsTextView extends LinearLayout {
 
                 if(ksaLyric.startTick <= tick && ksaLyric.endTick >= tick) {
                     try {
-                        tv_lyrics.setTick(i % 2, tick, ksaLyrics);
+                        //tv_lyrics.setTick(i % 2, tick, ksaLyrics);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -72,5 +72,9 @@ public class LyricsTextView extends LinearLayout {
                 }
             }
         }
+    }
+
+    public void callOnDraw() {
+        tv_lyrics.invalidate();
     }
 }

@@ -14,7 +14,4 @@ public class KSALyric {
         this.startTick = startTick;
         this.endTick = endTick;
     }
-
-    public KSALyric(String lyric) {
-    }
 }

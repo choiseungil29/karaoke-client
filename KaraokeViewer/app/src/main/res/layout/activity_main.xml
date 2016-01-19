@@ -3,20 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.MainActivity"
+    android:background="@android:color/black"
     android:id="@+id/rv_parent" >
 
     <VideoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:id="@+id/vv_background" />
 
-    <TextView
+    <com.clogic.karaokeviewer.View.CustomTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="선곡해주세요!"
         android:textSize="36sp"
         android:textStyle="bold"
-        android:textColor="#1E1C1B"
         android:layout_centerInParent="true" />
 
 </RelativeLayout>
