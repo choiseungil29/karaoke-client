@@ -281,7 +281,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     private boolean prepareMediaRecorder() {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang/");
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -292,7 +292,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
 
-        recorder.setVideoEncodingBitRate(10000000);
+        recorder.setVideoEncodingBitRate(9000000);
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(6000000 * 10); // Set max duration 60 sec.
         recorder.setMaxFileSize(300000000 * 20); // Set max file size 50M
