@@ -10,12 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:clickable="false"
         android:id="@+id/vv_background" />
 
     <com.clogic.karaokeviewer.View.CustomTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/textView_song_selected"
         android:text="선곡해주세요!"
+        android:gravity="center"
         android:textSize="36sp"
         android:textStyle="bold"
         android:layout_centerInParent="true" />

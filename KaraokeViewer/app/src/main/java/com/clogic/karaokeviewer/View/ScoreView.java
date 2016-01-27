@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -30,6 +31,9 @@ import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.Util.Resources;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -295,10 +299,15 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         settingMeasures();
 
         try {
-            AssetFileDescriptor afd = getContext().getResources().getAssets().openFd(uri.getLastPathSegment());
+            FileDescriptor fd = null;
+            String audioPath = "/mnt/sdcard" + "/J0300" + ".mid";
+            FileInputStream fis = new FileInputStream(audioPath);
+            fd = fis.getFD();
+//            AssetFileDescriptor afd = getContext().getResources().getAssets().openFd(uri.getLastPathSegment());
             player.reset();
-            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-            afd.close();
+            player.setDataSource(fd);
+//            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+//            afd.close();
             player.prepare();
             player.start();
             activity.startRecord();
@@ -366,7 +375,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
         // 여기서 마디 넘어가는애들 다시 정리해줘야됨
 
-        for(int i=0; i<measures.size(); i++) {
+        for (int i = 0; i < measures.size(); i++) {
             MeasureSymbol item = measures.get(i);
             Logger.i("" + i + "번째 마디 시작");
             Logger.i("start tick : " + item.startTicks);
@@ -376,7 +385,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 MidiSymbol symbol = iter.next();
 
                 Logger.i("---------------------------------");
-                if(symbol instanceof NoteSymbol) {
+                if (symbol instanceof NoteSymbol) {
                     Logger.i("note symbol start ");
                 } else {
                     Logger.i("rest symbol start ");
@@ -387,7 +396,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 Logger.i("---------------------------------");
             }
 
-            Logger.i("end tick : " +item.endTicks);
+            Logger.i("end tick : " + item.endTicks);
             Logger.i("" + i + "번째 마디 끝");
             Logger.i("==================================");
         }
@@ -425,7 +434,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             long startTime = System.currentTimeMillis();
             while (true) {
 
-                if(player.getCurrentPosition() - currentMillis >
+                if (player.getCurrentPosition() - currentMillis >
                         ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
                     currentMillis = player.getCurrentPosition();
 

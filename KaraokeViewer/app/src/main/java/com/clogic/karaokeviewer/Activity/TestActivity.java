@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ import com.midisheetmusic.MidiPlayer;
 import com.midisheetmusic.TimeSignatureSymbol;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -76,13 +78,17 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         MidiPlayer.LoadImages(this);
 
         Uri uri = this.getIntent().getData();
-
+        Log.e("kkk",uri.getPath());
+        Log.e("kkk",uri.getLastPathSegment());
         try {
-            AssetManager assetManager = getResources().getAssets();
-            InputStream stream = assetManager.open(uri.getLastPathSegment());
+//            AssetManager assetManager = getResources().getAssets();
+//            InputStream stream = assetManager.open(uri.getLastPathSegment());
+//            File externalStorageDirectory = Environment.getExternalStorageDirectory();
+            InputStream stream = new FileInputStream(uri.getPath());
 
             scoreView.setActivity(this);
-            scoreView.setMidiFile(new MidiFile(stream), getIntent().getStringExtra(Prefs.MIDI_FILE_NAME));
+            MidiFile midiFile = new MidiFile(stream);
+            scoreView.setMidiFile(midiFile, getIntent().getStringExtra(Prefs.MIDI_FILE_NAME));
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
 
@@ -254,7 +260,9 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     public void stopRecord() {
+        Log.d("kkk","recode end");
         if (recorder != null) {
+            Log.d("kkk","recode end2");
             recorder.stop();
             releaseMediaRecorder();
             Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
@@ -262,7 +270,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     public void startRecord() {
-        Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
         if (!prepareMediaRecorder()) {
             Toast.makeText(getApplicationContext(), "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
             finish();
@@ -273,6 +280,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 try {
                     is_recording = true;
                     recorder.start();
+                    Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
                 } catch (final Exception ex) {
                     ex.printStackTrace();
                 }
@@ -293,7 +301,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
 
         recorder.setVideoEncodingBitRate(9000000);
-        recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
+        recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(6000000 * 10); // Set max duration 60 sec.
         recorder.setMaxFileSize(300000000 * 20); // Set max file size 50M
 

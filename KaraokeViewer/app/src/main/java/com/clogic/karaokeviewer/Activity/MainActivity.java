@@ -1,6 +1,7 @@
 package com.clogic.karaokeviewer.Activity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -8,15 +9,13 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -25,6 +24,7 @@ import com.clogic.karaokeviewer.R;
 import com.clogic.karaokeviewer.Util.Prefs;
 import com.midisheetmusic.FileUri;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,14 +45,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        initBluetooth();
-        RelativeLayout rv_parent = (RelativeLayout) findViewById(R.id.rv_parent);
-        rv_parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseSong("1");
-            }
-        });
+
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        
+        initBluetooth();
 
         vv_background = (VideoView) findViewById(R.id.vv_background);
         Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
@@ -67,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         vv_background.setVideoURI(video);
         vv_background.start();
 
-        vv_background.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.textView_song_selected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                chooseSong("7");
+                chooseSong();
             }
         });
 
@@ -149,20 +148,21 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    private void chooseSong(String str) {
-        if (!dialog.isShowing()) {
-            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setAttributes(params);
-            dialog.show();
-        }
+    private void chooseSong() {
+//        if (!dialog.isShowing()) {
+//            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+//            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+//            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+//            dialog.getWindow().setAttributes(params);
+//            dialog.show();
+//        }
 //        J0240노래 바로실행
 //        Uri uri = Uri.parse("file:///android_asset/" + "J0240" + ".mid");
-//        FileUri file = new FileUri(uri, "J0240" + ".mid");
-//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
-//        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
-//        startActivity(intent);
+        Uri uri = Uri.parse("/mnt/sdcard" + "/J0300" + ".mid");
+        FileUri file = new FileUri(uri, "J0300" + ".mid");
+        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
+        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
+        startActivity(intent);
     }
 
     @Override
@@ -240,22 +240,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        bt.stopService();
+        bt.stopService();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-//        if (!bt.isBluetoothEnabled()) {
-//            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-//        } else {
-//            if (!bt.isServiceAvailable()) {
-//                bt.setupService();
-//                bt.startService(BluetoothState.DEVICE_ANDROID);
-//                bluetoothSetUp();
-//            }
-//        }
+        if (!bt.isBluetoothEnabled()) {
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+        } else {
+            if (!bt.isServiceAvailable()) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_ANDROID);
+                bluetoothSetUp();
+            }
+        }
 
     }
 
