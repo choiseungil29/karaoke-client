@@ -318,7 +318,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         nowMeasure = measures.get(0);
         nowMeasures[0] = measures.subList(0, 4);
         nowMeasures[1] = measures.subList(4, 8);
-        //nowMeasures = measures.subList(0, 2);
         callOnDraw();
         thread.start();
     }
@@ -387,6 +386,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 Logger.i("---------------------------------");
                 if (symbol instanceof NoteSymbol) {
                     Logger.i("note symbol start ");
+                    Logger.i("prev is : " + ((NoteSymbol) symbol).prev);
+                    Logger.i("next is : " + ((NoteSymbol) symbol).next);
+                    Logger.i("tie is : " + ((NoteSymbol) symbol).isTie());
                 } else {
                     Logger.i("rest symbol start ");
                 }

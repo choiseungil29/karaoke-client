@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        
+
         initBluetooth();
 
         vv_background = (VideoView) findViewById(R.id.vv_background);

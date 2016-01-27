@@ -19,6 +19,9 @@ public class NoteSymbol extends MidiSymbol {
 
     private boolean tie = false;
 
+    public NoteSymbol prev = null;
+    public NoteSymbol next = null;
+
     public NoteSymbol(int startTicks, int noteValue, int channel) {
         this.startTicks = startTicks;
         this.noteValue = noteValue;
