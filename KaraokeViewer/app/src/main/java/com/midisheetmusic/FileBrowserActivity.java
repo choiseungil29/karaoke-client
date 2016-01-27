@@ -22,7 +22,7 @@ import android.util.Log;
 import android.view.*;
 import android.content.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 
 public class FileBrowserActivity extends ListActivity {

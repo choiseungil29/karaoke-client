@@ -20,7 +20,7 @@ import android.content.*;
 import android.content.res.*;
 import android.graphics.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 /**
  * @class IconArrayAdapter

@@ -16,7 +16,7 @@ import android.graphics.*;
 import android.content.*;
 import android.content.res.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 
 /** @class TimeSignatureSymbol

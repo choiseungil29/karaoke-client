@@ -24,9 +24,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.widget.TabHost;
 
-import com.clogic.karaokeviewer.Activity.TestActivity;
-import com.clogic.karaokeviewer.R;
-import com.clogic.karaokeviewer.Util.Prefs;
+import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.R;
+import com.karaokepang.Util.Prefs;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

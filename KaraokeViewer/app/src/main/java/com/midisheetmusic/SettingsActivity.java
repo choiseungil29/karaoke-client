@@ -20,7 +20,7 @@ import android.preference.*;
 import android.graphics.*;
 import android.graphics.drawable.ColorDrawable;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 
 /** @class SettingsActivity

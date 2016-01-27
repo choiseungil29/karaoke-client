@@ -19,7 +19,7 @@ import android.widget.*;
 import android.content.*;
 import android.content.res.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 /** @class MidiSheetMusicActivity
  * This is the launch activity for MidiSheetMusic.

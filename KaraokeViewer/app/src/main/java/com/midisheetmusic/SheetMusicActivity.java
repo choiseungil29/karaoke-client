@@ -24,8 +24,8 @@ import android.content.*;
 import android.content.res.*;
 import android.media.*;
 
-import com.clogic.karaokeviewer.R;
-import com.clogic.karaokeviewer.Util.Prefs;
+import com.karaokepang.R;
+import com.karaokepang.Util.Prefs;
 
 import java.util.zip.CRC32;
 

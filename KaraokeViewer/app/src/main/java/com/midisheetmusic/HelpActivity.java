@@ -16,7 +16,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 /** @class HelpActivity
  *  The HelpActivity displays the help.html file in the assets directory.

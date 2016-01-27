@@ -24,7 +24,7 @@ import android.widget.*;
 import android.os.*;
 import android.media.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 
 /** @class MidiPlayer

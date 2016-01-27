@@ -26,7 +26,7 @@ import android.provider.*;
 import android.database.*;
 import android.text.*;
 
-import com.clogic.karaokeviewer.R;
+import com.karaokepang.R;
 
 
 /** @class ScanMidiFiles
