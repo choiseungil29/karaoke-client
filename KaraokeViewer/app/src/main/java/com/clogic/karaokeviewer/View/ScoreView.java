@@ -301,7 +301,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             afd.close();
             player.prepare();
             player.start();
-            activity.startRecord();
+            //activity.startRecord();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -309,7 +309,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         nowMeasure = measures.get(0);
         nowMeasures[0] = measures.subList(0, 4);
         nowMeasures[1] = measures.subList(4, 8);
-        //nowMeasures = measures.subList(0, 2);
         callOnDraw();
         thread.start();
     }
@@ -366,7 +365,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
         // 여기서 마디 넘어가는애들 다시 정리해줘야됨
 
-        for(int i=0; i<measures.size(); i++) {
+        /*for(int i=0; i<measures.size(); i++) {
             MeasureSymbol item = measures.get(i);
             Logger.i("" + i + "번째 마디 시작");
             Logger.i("start tick : " + item.startTicks);
@@ -378,6 +377,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 Logger.i("---------------------------------");
                 if(symbol instanceof NoteSymbol) {
                     Logger.i("note symbol start ");
+                    Logger.i("prev is : " + ((NoteSymbol) symbol).prev);
+                    Logger.i("next is : " + ((NoteSymbol) symbol).next);
+                    Logger.i("tie is : " + ((NoteSymbol) symbol).isTie());
                 } else {
                     Logger.i("rest symbol start ");
                 }
@@ -390,7 +392,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             Logger.i("end tick : " +item.endTicks);
             Logger.i("" + i + "번째 마디 끝");
             Logger.i("==================================");
-        }
+        }*/
 
         Logger.i("created measure count : " + measures.size());
     }

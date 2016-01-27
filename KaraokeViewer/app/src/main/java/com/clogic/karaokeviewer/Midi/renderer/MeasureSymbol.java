@@ -14,7 +14,6 @@ import com.clogic.karaokeviewer.Midi.renderer.midi.MidiSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.midi.NoteSymbol;
 import com.clogic.karaokeviewer.Midi.renderer.midi.RestSymbol;
 import com.clogic.karaokeviewer.Midi.util.MidiUtil;
-import com.clogic.karaokeviewer.Util.Logger;
 import com.clogic.karaokeviewer.View.ScoreView;
 
 import java.util.ArrayList;
@@ -220,6 +219,26 @@ public class MeasureSymbol extends Symbol {
         for(LyricSymbol symbol : lyricsList) {
             lyrics += symbol.lyrics.getLyric();
         }
+
+        /*boolean isEightNote = false;
+        for(int i=0; i<getAllMidiSymbols().size(); i++) {
+            MidiSymbol symbol = getAllMidiSymbols().get(i);
+            if(symbol instanceof RestSymbol) {
+                isEightNote = false;
+                continue;
+            }
+
+            if(MidiUtil.Eighth(ScoreView.resolution) == symbol.getDuration()) {
+                if(isEightNote) {
+                    ((NoteSymbol) symbol).prev = (NoteSymbol) getAllMidiSymbols().get(i-1);
+                    ((NoteSymbol) symbol).prev.next = (NoteSymbol) symbol;
+                }
+                isEightNote = true;
+            } else {
+                isEightNote = false;
+            }
+        }*/
+
     }
 
     private void addRests(List<MidiSymbol> roundNotes) {

@@ -56,9 +56,9 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     public boolean is_recording;
 
     private MidiFile midi = null;
-    @Bind(R.id.sv_score)
+    //@Bind(R.id.sv_score)
     ScoreView scoreView;
-    @Bind(R.id.tv_lyric)
+    //@Bind(R.id.tv_lyric)
     OutlineTextView tv_lyrics;
 
     @Override
@@ -67,7 +67,10 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_test);
 
-        ButterKnife.bind(this);
+        //ButterKnife.bind(this);
+
+        tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
+        scoreView = (ScoreView) findViewById(R.id.sv_score);
 
         initRecodeView();
 
@@ -216,7 +219,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopRecord();
+        //stopRecord();
     }
 
 

@@ -89,7 +89,6 @@ public class OutlineTextView extends TextView {
                 i++;
             }
         }
-        Logger.i("string check : " + builder.toString());
 
         Rect completeRect = new Rect();
         Rect letterRect = new Rect();
@@ -105,12 +104,6 @@ public class OutlineTextView extends TextView {
             width = spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if(lyrics.lyricLine.equals("Let's get out out")) {
-            Logger.i("Let's get out out");
-            Logger.i("start tick : " + lyrics.startTick + " end tick : " + lyrics.endTick);
-            Logger.i("builder : " + builder.toString());
         }
 
         Handler handler = new Handler(Looper.getMainLooper());
