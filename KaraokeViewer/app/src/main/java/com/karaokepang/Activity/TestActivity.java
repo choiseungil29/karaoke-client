@@ -1,7 +1,6 @@
 package com.karaokepang.Activity;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
@@ -23,9 +22,7 @@ import com.karaokepang.Midi.event.meta.Lyrics;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
-import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Prefs;
-import com.karaokepang.View.LyricsTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
@@ -42,9 +39,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by clogic on 2015. 12. 10..
  */
@@ -54,13 +48,9 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     private Camera camera;
     private CameraPreview preview;
     private MediaRecorder recorder;
-    private boolean is_holder_created;
     public boolean is_recording;
 
-    private MidiFile midi = null;
-    //@Bind(R.id.sv_score)
     ScoreView scoreView;
-    //@Bind(R.id.tv_lyric)
     OutlineTextView tv_lyrics;
 
     @Override
@@ -68,8 +58,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_test);
-
-        //ButterKnife.bind(this);
 
         tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
         scoreView = (ScoreView) findViewById(R.id.sv_score);
@@ -81,8 +69,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         MidiPlayer.LoadImages(this);
 
         Uri uri = this.getIntent().getData();
-        Log.e("kkk",uri.getPath());
-        Log.e("kkk",uri.getLastPathSegment());
+        Log.e("kkk", uri.getPath());
+        Log.e("kkk", uri.getLastPathSegment());
         try {
 //            AssetManager assetManager = getResources().getAssets();
 //            InputStream stream = assetManager.open(uri.getLastPathSegment());
@@ -105,7 +93,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 }
             }
 
-            //String lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
+//            String lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
             StringBuilder line = new StringBuilder();
             int lineIndex = 0;
             int i;
@@ -160,34 +148,35 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     int nowLyricsIndex = 0;
+
     @Override
     public void notifyCurrentTick(long tick, int term, int measureLength) {
         String lyric = "";
 
         String head = "";
         String tail = "";
-        if(nowLyricsIndex == 0) {
+        if (nowLyricsIndex == 0) {
             KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(0);
-            if(tick > ksaLyrics.startTick - measureLength) {
+            if (tick > ksaLyrics.startTick - measureLength) {
                 head = ksaLyrics.lyricLine;
                 tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
             }
-            if(tick >= ksaLyrics.endTick + scoreView.resolution/2) {
-                head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex+2).lyricLine;
-                tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex+1).lyricLine;
+            if (tick >= ksaLyrics.endTick + scoreView.resolution / 2) {
+                head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
+                tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
                 nowLyricsIndex++;
                 tv_lyrics.width = 0;
                 tv_lyrics.callOnDraw();
             }
         } else {
             KSALyrics nowLyrics = tv_lyrics.KSALyricsArray.get(nowLyricsIndex);
-            if(tick >= nowLyrics.endTick + scoreView.resolution/2) {
-                if(nowLyricsIndex%2 == 0) {
-                    head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex+2).lyricLine;
-                    tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex+1).lyricLine;
+            if (tick >= nowLyrics.endTick + scoreView.resolution / 2) {
+                if (nowLyricsIndex % 2 == 0) {
+                    head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
+                    tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
                 } else {
-                    head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex+1).lyricLine;
-                    tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex+2).lyricLine;
+                    head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
+                    tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
                 }
                 nowLyricsIndex++;
                 tv_lyrics.width = 0;
@@ -196,7 +185,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         }
 
         final String text = head + "\n" + tail;
-        if(!text.equals("\n")) {
+        if (!text.equals("\n")) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -225,7 +214,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //stopRecord();
+        stopRecord();
     }
 
 
@@ -263,9 +252,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     public void stopRecord() {
-        Log.d("kkk","recode end");
         if (recorder != null) {
-            Log.d("kkk","recode end2");
             recorder.stop();
             releaseMediaRecorder();
             Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
@@ -292,7 +279,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     private boolean prepareMediaRecorder() {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/");
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang/");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -304,9 +291,9 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
 
         recorder.setVideoEncodingBitRate(9000000);
-        recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/" + getNewFileName() + ".mp4");
-        recorder.setMaxDuration(6000000 * 10); // Set max duration 60 sec.
-        recorder.setMaxFileSize(300000000 * 20); // Set max file size 50M
+        recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
+        recorder.setMaxDuration(6000000 * 10);
+        recorder.setMaxFileSize(300000000 * 20);
 
 
         try {
@@ -338,6 +325,10 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
         RelativeLayout layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutCamera.setLayoutParams(layoutParams);
         preview = new CameraPreview(this, getApplicationContext(), camera);
         preview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         layoutCamera.addView(preview);

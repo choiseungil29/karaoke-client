@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -22,10 +22,10 @@ import android.widget.VideoView;
 import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.R;
 import com.karaokepang.Util.Prefs;
+import com.karaokepang.ftp.FtpService;
 import com.midisheetmusic.FileUri;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothSPP bt;
 
+
+    private ArrayList<String> localFiles = new ArrayList<>();
+
     VideoView vv_background;
     ArrayList<FileUri> list;
     ChooseSongDialog dialog;
@@ -45,11 +48,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/vpang/");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
 
         initBluetooth();
 
@@ -73,10 +71,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        list = new ArrayList<FileUri>();
-        loadAssetMidiFiles();
-        loadMidiFilesFromProvider(MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
-        loadMidiFilesFromProvider(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        list = new ArrayList<>();
+        loadSdcardMidiFiles();
+//모든 미디파일 다 불러오기
+//        loadMidiFilesFromProvider(MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+//        loadMidiFilesFromProvider(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 
         // Sort the songList by name
         if (list.size() > 0) {
@@ -95,21 +94,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         dialog = new ChooseSongDialog(this, list);
+
+        initDefaultData();
     }
 
-    void loadAssetMidiFiles() {
-        try {
-            AssetManager assets = this.getResources().getAssets();
-            String[] files = assets.list("");
-            for (String path : files) {
-                if (path.endsWith(".mid")) {
-                    Uri uri = Uri.parse("file:///android_asset/" + path);
-                    FileUri file = new FileUri(uri, path);
-                    list.add(file);
-                }
+    void initDefaultData() {
+        new FtpService(MainActivity.this,localFiles).execute();
+    }
+
+    public void loadSdcardMidiFiles() {
+        File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+        if (fileList == null)
+            return;
+        for (File file : fileList) {
+            localFiles.add(file.getName());
+            if (file.getName().endsWith(".mid")) {
+                Uri uri = Uri.parse(file.getAbsolutePath());
+                FileUri fileUri = new FileUri(uri, file.getName());
+                list.add(fileUri);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -149,20 +152,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void chooseSong() {
-//        if (!dialog.isShowing()) {
-//            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-//            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-//            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-//            dialog.getWindow().setAttributes(params);
-//            dialog.show();
-//        }
+        if (!dialog.isShowing()) {
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setAttributes(params);
+            dialog.show();
+        }
 //        J0240노래 바로실행
 //        Uri uri = Uri.parse("file:///android_asset/" + "J0240" + ".mid");
-        Uri uri = Uri.parse("/mnt/sdcard" + "/J0300" + ".mid");
-        FileUri file = new FileUri(uri, "J0300" + ".mid");
-        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
-        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
-        startActivity(intent);
+//        Uri uri = Uri.parse("/mnt/sdcard" + "/J0300" + ".mid");
+//        FileUri file = new FileUri(uri, "J0300" + ".mid");
+//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
+//        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
+//        startActivity(intent);
     }
 
     @Override

@@ -150,7 +150,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             AssetManager assets = this.getResources().getAssets();
             for (String path : assets.list("")) {
                 if (path.endsWith(".KSA") && path.startsWith(fileName)) {
-                    Uri uri = Uri.parse("file:///android_asset/" + path);
                     InputStream is = getResources().getAssets().open(path);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
                     String line;
@@ -300,8 +299,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         try {
             FileDescriptor fd = null;
-            String audioPath = "/mnt/sdcard" + "/J0300" + ".mid";
-            FileInputStream fis = new FileInputStream(audioPath);
+//            String audioPath = "/mnt/sdcard" + "/J0300" + ".mid";
+            FileInputStream fis = new FileInputStream(uri.getPath());
             fd = fis.getFD();
 //            AssetFileDescriptor afd = getContext().getResources().getAssets().openFd(uri.getLastPathSegment());
             player.reset();
