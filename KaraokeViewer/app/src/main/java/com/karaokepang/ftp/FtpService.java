@@ -75,7 +75,8 @@ public class FtpService extends AsyncTask<Void, Void, Void> {
                 }
                 Log.e("kkk_ftp", ftpFiles.toString());
                 Log.e("kkk_local", localFiles.toString());
-                if (!(ftpFiles.toString().equals(localFiles.toString()))) {
+                if (!(ftpFiles.toString().equals(localFiles.toString())) || ftpFiles.size()==0 || localFiles.size()==0) {
+                    Log.e("kkk","fuck");
                     for (int i = 0; i < ftpdirs.length; i++) {
                         FileOutputStream fileOutputStream = new FileOutputStream("/mnt/sdcard/vpang_mid/" + ftpdirs[i].getName());
                         boolean result = client.retrieveFile("/vpang_mid/" + ftpdirs[i].getName(), fileOutputStream);

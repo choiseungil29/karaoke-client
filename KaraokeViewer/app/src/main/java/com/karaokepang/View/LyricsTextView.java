@@ -73,8 +73,4 @@ public class LyricsTextView extends LinearLayout {
             }
         }
     }
-
-    public void callOnDraw() {
-        tv_lyrics.invalidate();
-    }
 }
