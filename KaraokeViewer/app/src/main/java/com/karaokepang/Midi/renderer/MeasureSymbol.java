@@ -40,6 +40,8 @@ public class MeasureSymbol extends Symbol {
 
     public float BPM;
 
+    public static int segment;
+
     public final ArrayList<LyricSymbol> lyricsList;
     public String lyrics = "";
 
@@ -55,15 +57,16 @@ public class MeasureSymbol extends Symbol {
     public void draw(Canvas canvas) {
         int x = 0;
         int notesFullWidth = this.width - paddingLeft;
-        int segment = notesFullWidth/(notes.size()+1);
+        segment = notesFullWidth/(notes.size()+1);
         /**
          * calculating segment..
          */
 
+        int nowX = segment;
         for(Symbol symbol : symbols) {
             if(symbol instanceof MidiSymbol) {
-                symbol.draw(canvas, segment);
-                segment += notesFullWidth/(notes.size()+1);
+                symbol.draw(canvas, nowX);
+                nowX += segment;
             } else {
                 symbol.draw(canvas, x);
                 x += symbol.getWidth();
@@ -220,7 +223,7 @@ public class MeasureSymbol extends Symbol {
             lyrics += symbol.lyrics.getLyric();
         }
 
-        /*boolean isEightNote = false;
+        boolean isEightNote = false;
         for(int i=0; i<getAllMidiSymbols().size(); i++) {
             MidiSymbol symbol = getAllMidiSymbols().get(i);
             if(symbol instanceof RestSymbol) {
@@ -237,8 +240,7 @@ public class MeasureSymbol extends Symbol {
             } else {
                 isEightNote = false;
             }
-        }*/
-
+        }
     }
 
     private void addRests(List<MidiSymbol> roundNotes) {

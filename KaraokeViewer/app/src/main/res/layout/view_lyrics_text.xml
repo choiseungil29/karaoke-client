@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:id="@+id/tv_lyrics"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="60sp"
         android:text="가사"/>
 
     <TextView

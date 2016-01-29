@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.view.View;
 
+import com.karaokepang.Midi.renderer.MeasureSymbol;
 import com.karaokepang.Midi.util.MidiUtil;
 import com.karaokepang.View.ScoreView;
 
@@ -22,10 +24,13 @@ public class NoteSymbol extends MidiSymbol {
     public NoteSymbol prev = null;
     public NoteSymbol next = null;
 
+    private int y = 0;
+
     public NoteSymbol(int startTicks, int noteValue, int channel) {
         this.startTicks = startTicks;
         this.noteValue = noteValue;
         this.channel = channel;
+        y = MidiUtil.getHeightFromNoteValue(noteValue);
     }
 
     @Override
@@ -37,32 +42,37 @@ public class NoteSymbol extends MidiSymbol {
         paint.setStyle(Paint.Style.STROKE);
 
         int r = ScoreView.resolution;
-        //int y = 높이 구해주는 함수 MidiUtil에 생성
-        int y = MidiUtil.getHeightFromNoteValue(noteValue);
 
-        /*if(y > ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4 ||
-                y < ScoreView.FIRST_LINE_HEIGHT) {
-
-            canvas.drawLine(-ScoreView.STEM_HEIGHT / 3 + 2, y,
-                    ScoreView.STEM_HEIGHT / 3 - 2, y, paint);
-        }*/
-
-        if(duration == MidiUtil.Whole(r)) {
-            drawWhole(canvas, paint, y);
-        } else if(duration == MidiUtil.DotHalf(r)) {
-            drawDotHalf(canvas, paint, y);
-        } else if(duration == MidiUtil.Half(r)) {
-            drawHalf(canvas, paint, y);
-        } else if(duration == MidiUtil.DotQuarter(r)) {
-            drawDotQuarter(canvas, paint, y);
-        } else if(duration == MidiUtil.Quarter(r)) {
+        if(prev == null && next == null) {
+            if (duration == MidiUtil.Whole(r)) {
+                drawWhole(canvas, paint, y);
+            } else if (duration == MidiUtil.DotHalf(r)) {
+                drawDotHalf(canvas, paint, y);
+            } else if (duration == MidiUtil.Half(r)) {
+                drawHalf(canvas, paint, y);
+            } else if (duration == MidiUtil.DotQuarter(r)) {
+                drawDotQuarter(canvas, paint, y);
+            } else if (duration == MidiUtil.Quarter(r)) {
+                drawQuarter(canvas, paint, y);
+            } else if (duration == MidiUtil.Eighth(r)) {
+                drawEighth(canvas, paint, y);
+            } else if (duration == MidiUtil.Sixteenth(r)) {
+                drawSixteenth(canvas, paint, y);
+            }
+        }
+        if(next != null) {
             drawQuarter(canvas, paint, y);
-        /*} else if(duration == MidiUtil.DotEighth(r)) {
-            drawDotEighth(canvas, paint, y);
-        */} else if(duration == MidiUtil.Eighth(r)) {
-            drawEighth(canvas, paint, y);
-        } else if(duration == MidiUtil.Sixteenth(r)) {
-            drawSixteenth(canvas, paint, y);
+            paint.setStrokeWidth(5);
+            if(MidiUtil.isTailTop(noteValue)) {
+                canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT,
+                        ScoreView.LINE_SPACE_HEIGHT/2+2 + MeasureSymbol.segment, y-ScoreView.STEM_HEIGHT, paint);
+            } else {
+                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT/2-2, y,
+                        -ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT, paint);
+            }
+        }
+        if(prev != null) {
+            drawQuarter(canvas, paint, y);
         }
     }
 

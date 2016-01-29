@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initBluetooth();
+//        initBluetooth();
 
         vv_background = (VideoView) findViewById(R.id.vv_background);
         Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
@@ -159,13 +159,6 @@ public class MainActivity extends AppCompatActivity {
             dialog.getWindow().setAttributes(params);
             dialog.show();
         }
-//        J0240노래 바로실행
-//        Uri uri = Uri.parse("file:///android_asset/" + "J0240" + ".mid");
-//        Uri uri = Uri.parse("/mnt/sdcard" + "/J0300" + ".mid");
-//        FileUri file = new FileUri(uri, "J0300" + ".mid");
-//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
-//        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
-//        startActivity(intent);
     }
 
     @Override
@@ -243,22 +236,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bt.stopService();
+//        bt.stopService();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!bt.isBluetoothEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-        } else {
-            if (!bt.isServiceAvailable()) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
-                bluetoothSetUp();
-            }
-        }
+//        if (!bt.isBluetoothEnabled()) {
+//            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+//        } else {
+//            if (!bt.isServiceAvailable()) {
+//                bt.setupService();
+//                bt.startService(BluetoothState.DEVICE_ANDROID);
+//                bluetoothSetUp();
+//            }
+//        }
 
     }
 
