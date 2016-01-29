@@ -26,6 +26,7 @@ import com.karaokepang.Util.Prefs;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
+import com.karaokepang.ftp.FtpServiceUp;
 import com.midisheetmusic.ClefSymbol;
 import com.midisheetmusic.MidiPlayer;
 import com.midisheetmusic.TimeSignatureSymbol;
@@ -50,6 +51,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     private MediaRecorder recorder;
     public boolean is_recording;
 
+    private String fileName;
     ScoreView scoreView;
     OutlineTextView tv_lyrics;
 
@@ -214,7 +216,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopRecord();
+
     }
 
 
@@ -252,6 +254,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     public void stopRecord() {
+        new FtpServiceUp(this, fileName).execute();
         if (recorder != null) {
             recorder.stop();
             releaseMediaRecorder();
@@ -290,11 +293,13 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
 
-        recorder.setVideoEncodingBitRate(9000000);
+        recorder.setVideoEncodingBitRate(10000000);
+        recorder.setVideoFrameRate(30);
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(6000000 * 10);
         recorder.setMaxFileSize(300000000 * 20);
 
+        fileName = getNewFileName();
 
         try {
             recorder.prepare();
@@ -335,5 +340,10 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         is_recording = false;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopRecord();
+    }
 }
 

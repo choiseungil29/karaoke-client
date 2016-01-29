@@ -1,15 +1,14 @@
 package com.karaokepang.View;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -31,7 +30,6 @@ import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Resources;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -298,15 +296,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         settingMeasures();
 
         try {
-            FileDescriptor fd = null;
-//            String audioPath = "/mnt/sdcard" + "/J0300" + ".mid";
             FileInputStream fis = new FileInputStream(uri.getPath());
-            fd = fis.getFD();
-//            AssetFileDescriptor afd = getContext().getResources().getAssets().openFd(uri.getLastPathSegment());
+            FileDescriptor fd = fis.getFD();
             player.reset();
             player.setDataSource(fd);
-//            player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-//            afd.close();
             player.prepare();
             player.start();
             activity.startRecord();
@@ -328,7 +321,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.d("kkk","stop!!!!!!!");
         player.stop();
+        activity.stopRecord();
     }
 
     @Override
@@ -470,13 +465,18 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
                 int term = 5;
-                if (player.getCurrentPosition() - currentMillis2 >
-                        term) { // 0.1초마다 들어온당
+                try {
+                    if (player.getCurrentPosition() - currentMillis2 >
+                            term) { // 0.1초마다 들어온당
 
-                    float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
-                    tick += plusTick;
-                    listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
-                    currentMillis2 = player.getCurrentPosition();
+                        float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
+                        tick += plusTick;
+                        listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
+                        currentMillis2 = player.getCurrentPosition();
+                    }
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    break;
                 }
             }
         }
