@@ -41,13 +41,13 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
         // 계정 로그인
         try {
             client = new FTPClient();
+            client.setConnectTimeout(3000);
 
             client.setControlEncoding("euc-kr");
 
             Logger.i("FTP Client Test Program");
             Logger.i("Start~~~~~~");
 
-            // TEST서버에 접속, test서버 도메일 혹은 ip 주소입력.
             client.connect("192.168.0.12");
             Logger.i("Connected to test.com...........");
 
@@ -59,7 +59,6 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
             } else {
                 Logger.i(client.getReplyString());
 
-                // timeout을 설정
                 client.setSoTimeout(10000);
 
                 // 로그인
@@ -89,7 +88,7 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
         } catch (Exception e) {
             Logger.i("해당 ftp 로그인 실패하였습니다.");
             e.printStackTrace();
-            System.exit(-1);
+            return null;
         } finally {
             if (client != null && client.isConnected()) {
                 try {

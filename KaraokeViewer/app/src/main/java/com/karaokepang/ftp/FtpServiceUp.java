@@ -46,12 +46,12 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
             Logger.i("FTP Client Test Program");
             Logger.i("Start~~~~~~");
 
-            // TEST서버에 접속, test서버 도메일 혹은 ip 주소입력.
             client.connect("192.168.0.12");
             Logger.i("Connected to test.com...........");
 
             // 응답코드가 비정상일 경우 종료함
             int reply = client.getReplyCode();
+            Log.e("kkk","reply = "+reply);
             if (!FTPReply.isPositiveCompletion(reply)) {
                 client.disconnect();
                 Logger.i("FTP server refused connection");
