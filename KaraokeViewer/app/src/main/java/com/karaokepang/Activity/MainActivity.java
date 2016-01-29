@@ -22,7 +22,7 @@ import android.widget.VideoView;
 import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.R;
 import com.karaokepang.Util.Prefs;
-import com.karaokepang.ftp.FtpService;
+import com.karaokepang.ftp.FtpServiceDown;
 import com.midisheetmusic.FileUri;
 
 import java.io.File;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initDefaultData() {
-        new FtpService(MainActivity.this,localFiles).execute();
+        new FtpServiceDown(MainActivity.this,localFiles).execute();
     }
 
     public void loadSdcardMidiFiles() {

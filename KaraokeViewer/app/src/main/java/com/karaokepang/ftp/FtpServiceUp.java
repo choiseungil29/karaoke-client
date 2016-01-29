@@ -2,15 +2,13 @@ package com.karaokepang.ftp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
 import com.karaokepang.Activity.MainActivity;
+import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Util.Logger;
-import com.midisheetmusic.FileUri;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -18,20 +16,21 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class FtpService extends AsyncTask<Void, Void, Void> {
+public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
     private ProgressDialog progressDialog;
-    private ArrayList<String> ftpFiles = new ArrayList<>();
-    private ArrayList<String> localFiles = new ArrayList<>();
+    private String fileName;
 
-    public FtpService(Activity activity, ArrayList<String> localFiles) {
+    public FtpServiceUp(Activity activity, String fileName) {
         this.activity = activity;
-        this.localFiles = localFiles;
+        this.fileName = fileName;
+        Log.e("kkk", "fileName =" + fileName);
     }
 
     private FTPClient init() {
@@ -47,12 +46,12 @@ public class FtpService extends AsyncTask<Void, Void, Void> {
             Logger.i("FTP Client Test Program");
             Logger.i("Start~~~~~~");
 
-            // TEST서버에 접속, test서버 도메일 혹은 ip 주소입력.
             client.connect("192.168.0.12");
             Logger.i("Connected to test.com...........");
 
             // 응답코드가 비정상일 경우 종료함
             int reply = client.getReplyCode();
+            Log.e("kkk","reply = "+reply);
             if (!FTPReply.isPositiveCompletion(reply)) {
                 client.disconnect();
                 Logger.i("FTP server refused connection");
@@ -60,7 +59,7 @@ public class FtpService extends AsyncTask<Void, Void, Void> {
                 Logger.i(client.getReplyString());
 
                 // timeout을 설정
-                client.setSoTimeout(10000);
+                client.setSoTimeout(10000000);
 
                 // 로그인
                 client.login("android", "123456789");
@@ -68,20 +67,18 @@ public class FtpService extends AsyncTask<Void, Void, Void> {
 
                 client.setFileType(FTP.BINARY_FILE_TYPE);
 
-                //ftpFileList
-                FTPFile[] ftpdirs = client.listFiles("/vpang_mid");
-                for (int i = 0; i < ftpdirs.length; i++) {
-                    ftpFiles.add(ftpdirs[i].getName());
-                }
-                Log.e("kkk_ftp", ftpFiles.toString());
-                Log.e("kkk_local", localFiles.toString());
-                if (!(ftpFiles.toString().equals(localFiles.toString())) || ftpFiles.size()==0 || localFiles.size()==0) {
-                    Log.e("kkk","fuck");
-                    for (int i = 0; i < ftpdirs.length; i++) {
-                        FileOutputStream fileOutputStream = new FileOutputStream("/mnt/sdcard/vpang_mid/" + ftpdirs[i].getName());
-                        boolean result = client.retrieveFile("/vpang_mid/" + ftpdirs[i].getName(), fileOutputStream);
-                        Log.e("kkk", "ftp result = " + result);
-                    }
+                client.cwd("/"); // ftp 상의 업로드 디렉토리
+                client.mkd("vpang_video"); // public아래로 files 디렉토리를 만든다
+                client.cwd("vpang_video"); // public/files 로 이동 (이 디렉토리로 업로드가 진행)
+
+                File file = new File("/mnt/sdcard/vpang/" + fileName + ".mp4"); // 업로드 할 파일이 있는 경로(예제는 sd카드 사진 폴더)
+                if (file.isFile()) {
+                    Log.e("kkk", "============================");
+                    Log.e("kkk", file.getAbsolutePath());
+                    FileInputStream ifile = new FileInputStream(file);
+                    client.rest(file.getName());  // ftp에 해당 파일이있다면 이어쓰기
+//                    client.appendFile(file.getName(), ifile); // ftp 해당 파일이 없다면 새로쓰기
+                    client.storeFile(file.getName(),ifile);
                 }
 
 //                client.logout();
@@ -105,20 +102,11 @@ public class FtpService extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = ProgressDialog.show(activity, "", "신곡 업데이트중 입니다", true);
+        progressDialog = ProgressDialog.show(activity, "", "영상 전송중 입니다", true);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang/");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        File dir2 = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang_mid/");
-        if (!dir2.exists()) {
-            dir2.mkdirs();
-        }
 
         init();
         return null;
@@ -127,9 +115,6 @@ public class FtpService extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            ((MainActivity) activity).loadSdcardMidiFiles();
-        }
+        activity.finish();
     }
 }
