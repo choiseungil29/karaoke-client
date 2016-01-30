@@ -46,8 +46,8 @@ public class OutlineTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         getPaint().setStyle(Paint.Style.STROKE);
-        getPaint().setStrokeWidth(3);
-        getPaint().setColor(Color.BLACK);
+        getPaint().setStrokeWidth(1);
+        getPaint().setColor(Color.RED);
         setTextColor(Color.BLACK);
 
         String lines = getText().toString();
@@ -61,7 +61,7 @@ public class OutlineTextView extends TextView {
         getPaint().getTextBounds(getText().toString(), 0, getText().length(), textRect);
 
         getPaint().setStyle(Paint.Style.FILL);
-        getPaint().setColor(Color.BLUE);
+        getPaint().setColor(Color.GREEN);
 
         canvas.clipRect(0, 0, width, 1000);
 

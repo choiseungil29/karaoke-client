@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.view.View;
 
 import com.karaokepang.Midi.renderer.MeasureSymbol;
 import com.karaokepang.Midi.util.MidiUtil;
@@ -24,13 +23,20 @@ public class NoteSymbol extends MidiSymbol {
     public NoteSymbol prev = null;
     public NoteSymbol next = null;
 
+    public int standardY = 0;
+    private int append = 0;
+
     private int y = 0;
+
+    private boolean isTailTop = false;
 
     public NoteSymbol(int startTicks, int noteValue, int channel) {
         this.startTicks = startTicks;
         this.noteValue = noteValue;
         this.channel = channel;
         y = MidiUtil.getHeightFromNoteValue(noteValue);
+        isTailTop = MidiUtil.isTailTop(noteValue);
+        standardY = y;
     }
 
     @Override
@@ -60,10 +66,40 @@ public class NoteSymbol extends MidiSymbol {
                 drawSixteenth(canvas, paint, y);
             }
         }
+
+        if(prev == null && next != null) {
+            int standardY = y;
+            NoteSymbol symbol = this;
+            while (symbol != null) {
+                symbol.isTailTop = this.isTailTop;
+                if(isTailTop) {
+                    if (standardY > symbol.y) {
+                        standardY = symbol.y;
+                    }
+                } else {
+                    if (standardY < symbol.y) {
+                        standardY = symbol.y;
+                    }
+                }
+                symbol = symbol.next;
+            }
+            this.standardY = standardY;
+
+            symbol = this;
+            while(symbol != null) {
+                symbol.standardY = this.standardY;
+                if(this.isTailTop) {
+                    symbol.append = symbol.y - symbol.standardY;
+                } else {
+                    symbol.append = symbol.standardY - symbol.y;
+                }
+            }
+        }
+
         if(next != null) {
             drawQuarter(canvas, paint, y);
             paint.setStrokeWidth(5);
-            if(MidiUtil.isTailTop(noteValue)) {
+            if(isTailTop) {
                 canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT,
                         ScoreView.LINE_SPACE_HEIGHT/2+2 + MeasureSymbol.segment, y-ScoreView.STEM_HEIGHT, paint);
             } else {
@@ -97,7 +133,7 @@ public class NoteSymbol extends MidiSymbol {
                     ScoreView.LINE_SPACE_HEIGHT/2+i, ScoreView.LINE_SPACE_HEIGHT/2 + y), paint);
         }
 
-        if(MidiUtil.isTailTop(noteValue)) {
+        if(isTailTop) {
             canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+5, y,
                     ScoreView.LINE_SPACE_HEIGHT/2+5, y-ScoreView.STEM_HEIGHT, paint);
         } else {
@@ -117,12 +153,12 @@ public class NoteSymbol extends MidiSymbol {
         canvas.drawOval(new RectF(-ScoreView.LINE_SPACE_HEIGHT/2-3, -ScoreView.LINE_SPACE_HEIGHT/2 + y,
                 ScoreView.LINE_SPACE_HEIGHT/2+3, ScoreView.LINE_SPACE_HEIGHT/2 + y), paint);
 
-        if(MidiUtil.isTailTop(noteValue)) {
+        if(isTailTop) {
             canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+2, y,
-                    ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT, paint);
+                    ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT - append, paint);
         } else {
             canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT/2-2, y,
-                    -ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT, paint);
+                    -ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT + append, paint);
         }
     }
 
@@ -136,7 +172,7 @@ public class NoteSymbol extends MidiSymbol {
         drawQuarter(canvas, paint, y);
         paint.setStrokeWidth(ScoreView.LINE_STROKE*2);
         paint.setStyle(Paint.Style.STROKE);
-        if(MidiUtil.isTailTop(noteValue)) {
+        if(isTailTop) {
             // top
             int xStart = ScoreView.LINE_SPACE_HEIGHT/2+2;
             int yStart = y-ScoreView.STEM_HEIGHT;
@@ -152,7 +188,7 @@ public class NoteSymbol extends MidiSymbol {
             int yStart = y+ScoreView.STEM_HEIGHT;
             Path bezierPath = new Path();
             bezierPath.moveTo(xStart, yStart);
-            bezierPath.cubicTo(xStart, yStart -ScoreView.LINE_SPACE_HEIGHT,
+            bezierPath.cubicTo(xStart, yStart - yStart/3 - ScoreView.LINE_SPACE_HEIGHT,
                     xStart + ScoreView.LINE_SPACE_HEIGHT*2, yStart - ScoreView.LINE_SPACE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT/2,
                     xStart + ScoreView.LINE_SPACE_HEIGHT, yStart - ScoreView.LINE_SPACE_HEIGHT * 2 - ScoreView.LINE_SPACE_HEIGHT/2);
             canvas.drawPath(bezierPath, paint);
@@ -161,7 +197,7 @@ public class NoteSymbol extends MidiSymbol {
 
     public void drawSixteenth(Canvas canvas, Paint paint, int y) {
         drawEighth(canvas, paint, y);
-        if(MidiUtil.isTailTop(noteValue)) {
+        if(isTailTop) {
             int xStart = ScoreView.LINE_SPACE_HEIGHT/2+2;
             int yStart = y-ScoreView.STEM_HEIGHT + ScoreView.LINE_SPACE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT/4;
             Path bezierPath = new Path();

@@ -241,6 +241,13 @@ public class MeasureSymbol extends Symbol {
                 isEightNote = false;
             }
         }
+
+        for(int i=0; i<getAllMidiSymbols().size(); i++) {
+            MidiSymbol symbol = getAllMidiSymbols().get(i);
+            if(symbol instanceof RestSymbol) {
+                continue;
+            }
+        }
     }
 
     private void addRests(List<MidiSymbol> roundNotes) {

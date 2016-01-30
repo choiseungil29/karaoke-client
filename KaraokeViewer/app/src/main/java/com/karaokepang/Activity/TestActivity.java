@@ -10,18 +10,23 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Lyrics;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
+import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Prefs;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
@@ -40,6 +45,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.OnClick;
+
 /**
  * Created by clogic on 2015. 12. 10..
  */
@@ -51,9 +58,16 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     private MediaRecorder recorder;
     public boolean is_recording;
 
+    private RelativeLayout layoutCamera;
+
     private String fileName;
     ScoreView scoreView;
     OutlineTextView tv_lyrics;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,9 +88,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         Log.e("kkk", uri.getPath());
         Log.e("kkk", uri.getLastPathSegment());
         try {
-//            AssetManager assetManager = getResources().getAssets();
-//            InputStream stream = assetManager.open(uri.getLastPathSegment());
-//            File externalStorageDirectory = Environment.getExternalStorageDirectory();
             InputStream stream = new FileInputStream(uri.getPath());
 
             scoreView.setActivity(this);
@@ -136,6 +147,27 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             e.printStackTrace();
         }
         //scoreView.callOnDraw();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        scoreView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.i("called1");
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutCamera.setLayoutParams(params);
+                //layoutCamera.back
+            }
+        });
+
+        layoutCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.i("called2");
+                initCameraLayout();
+            }
+        });
     }
 
     /**
@@ -236,6 +268,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
     private void releaseCamera() {
         if (camera != null) {
+            camera.stopPreview();
             camera.release();
             camera = null;
         }
@@ -329,9 +362,10 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
-        RelativeLayout layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
+        layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
+
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         layoutCamera.setLayoutParams(layoutParams);
         preview = new CameraPreview(this, getApplicationContext(), camera);
@@ -345,5 +379,51 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         super.onBackPressed();
         stopRecord();
     }
-}
 
+    public void initCameraLayout() {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutCamera.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Test Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.karaokepang.Activity/http/host/path")
+        );
+        //AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Test Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.karaokepang.Activity/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+}
