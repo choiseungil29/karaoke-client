@@ -24,13 +24,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textSize="60sp" />
+                    android:textSize="80sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/camera_layout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
         </LinearLayout>
 

@@ -80,6 +80,9 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         initRecodeView();
 
+        tv_lyrics.bringToFront();
+        tv_lyrics.invalidate();
+
         ClefSymbol.LoadImages(this);
         TimeSignatureSymbol.LoadImages(this);
         MidiPlayer.LoadImages(this);

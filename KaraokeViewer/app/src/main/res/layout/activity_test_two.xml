@@ -6,23 +6,20 @@
 
     <RelativeLayout
         android:id="@+id/camera_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <com.karaokepang.View.OutlineTextView
         android:id="@+id/tv_lyric"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="20dp"
-        android:textSize="30sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        android:textSize="100sp" />
 
     <com.karaokepang.View.ScoreView
         android:id="@+id/sv_score"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
+        android:layout_width="1dp"
+        android:layout_height="1dp" />
 </RelativeLayout>
