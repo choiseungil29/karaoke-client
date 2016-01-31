@@ -150,24 +150,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-        scoreView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.i("called1");
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                layoutCamera.setLayoutParams(params);
-                //layoutCamera.back
-            }
-        });
-
-        layoutCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.i("called2");
-                initCameraLayout();
-            }
-        });
     }
 
     /**
@@ -363,13 +345,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
         layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutCamera.setLayoutParams(layoutParams);
         preview = new CameraPreview(this, getApplicationContext(), camera);
-        preview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         layoutCamera.addView(preview);
         is_recording = false;
     }
@@ -378,13 +355,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     public void onBackPressed() {
         super.onBackPressed();
         stopRecord();
-    }
-
-    public void initCameraLayout() {
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutCamera.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -423,7 +393,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.karaokepang.Activity/http/host/path")
         );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        //AppIndex.AppIndexApi.end(client, viewAction);
+        //client.disconnect();
     }
 }

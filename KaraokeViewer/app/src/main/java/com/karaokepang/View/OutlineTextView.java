@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -29,6 +30,8 @@ public class OutlineTextView extends TextView {
     public ArrayList<KSALyrics> KSALyricsArray;
     public ArrayList<String> lyricsArray;
 
+    private Typeface font;
+
     public OutlineTextView(Context context) {
         this(context, null);
     }
@@ -41,6 +44,7 @@ public class OutlineTextView extends TextView {
         super(context, attrs, defStyleAttr);
 
         KSALyricsArray = new ArrayList<>();
+        font = Typeface.createFromAsset(getContext().getAssets(), "BMJUA_ttf.ttf");
     }
 
     @Override
@@ -52,6 +56,7 @@ public class OutlineTextView extends TextView {
 
         String lines = getText().toString();
         int i=0;
+        getPaint().setTypeface(font);
         for(String line : lines.split("\n")) {
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i+1), getPaint());
             i++;

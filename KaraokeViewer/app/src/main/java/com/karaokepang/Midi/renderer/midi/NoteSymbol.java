@@ -93,9 +93,13 @@ public class NoteSymbol extends MidiSymbol {
                 } else {
                     symbol.append = symbol.standardY - symbol.y;
                 }
+                symbol = symbol.next;
             }
         }
 
+        if(prev != null) {
+            drawQuarter(canvas, paint, y);
+        }
         if(next != null) {
             drawQuarter(canvas, paint, y);
             paint.setStrokeWidth(5);
@@ -103,12 +107,9 @@ public class NoteSymbol extends MidiSymbol {
                 canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT,
                         ScoreView.LINE_SPACE_HEIGHT/2+2 + MeasureSymbol.segment, y-ScoreView.STEM_HEIGHT, paint);
             } else {
-                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT/2-2, y,
-                        -ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT, paint);
+                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT,
+                        -ScoreView.LINE_SPACE_HEIGHT/2-2 + MeasureSymbol.segment, y+ScoreView.STEM_HEIGHT, paint);
             }
-        }
-        if(prev != null) {
-            drawQuarter(canvas, paint, y);
         }
     }
 
@@ -188,7 +189,7 @@ public class NoteSymbol extends MidiSymbol {
             int yStart = y+ScoreView.STEM_HEIGHT;
             Path bezierPath = new Path();
             bezierPath.moveTo(xStart, yStart);
-            bezierPath.cubicTo(xStart, yStart - yStart/3 - ScoreView.LINE_SPACE_HEIGHT,
+            bezierPath.cubicTo(xStart, yStart -ScoreView.LINE_SPACE_HEIGHT,
                     xStart + ScoreView.LINE_SPACE_HEIGHT*2, yStart - ScoreView.LINE_SPACE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT/2,
                     xStart + ScoreView.LINE_SPACE_HEIGHT, yStart - ScoreView.LINE_SPACE_HEIGHT * 2 - ScoreView.LINE_SPACE_HEIGHT/2);
             canvas.drawPath(bezierPath, paint);
