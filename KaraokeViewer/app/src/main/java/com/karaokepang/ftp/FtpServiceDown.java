@@ -2,15 +2,12 @@ package com.karaokepang.ftp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
 import com.karaokepang.Activity.MainActivity;
 import com.karaokepang.Util.Logger;
-import com.midisheetmusic.FileUri;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;

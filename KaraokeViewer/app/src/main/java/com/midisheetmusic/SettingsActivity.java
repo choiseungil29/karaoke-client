@@ -17,8 +17,6 @@ import android.app.*;
 import android.content.*;
 import android.os.*;
 import android.preference.*;
-import android.graphics.*;
-import android.graphics.drawable.ColorDrawable;
 
 import com.karaokepang.R;
 

@@ -5,10 +5,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 
-import com.karaokepang.Midi.renderer.StaffSymbol;
 import com.karaokepang.Midi.renderer.Symbol;
 import com.karaokepang.View.ScoreView;
-import com.midisheetmusic.Staff;
 
 /**
  * Created by clogic on 2015. 12. 11..

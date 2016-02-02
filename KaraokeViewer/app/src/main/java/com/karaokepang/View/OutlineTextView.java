@@ -8,13 +8,11 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
-import com.karaokepang.Util.Logger;
 
 import java.util.ArrayList;
 
@@ -49,14 +47,15 @@ public class OutlineTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        getPaint().setStrokeWidth(1);
+        getPaint().setStrokeWidth(5);
+        //canvas.setDensity();
 
         String lines = getText().toString();
         int i=0;
         getPaint().setTypeface(font);
         for(String line : lines.split("\n")) {
             getPaint().setStyle(Paint.Style.STROKE);
-            getPaint().setColor(Color.RED);
+            getPaint().setColor(Color.WHITE);
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i+1), getPaint());
             getPaint().setStyle(Paint.Style.FILL);
             getPaint().setColor(Color.BLACK);
@@ -64,20 +63,18 @@ public class OutlineTextView extends TextView {
             i++;
         }
 
-        Rect textRect = new Rect();
-        getPaint().getTextBounds(getText().toString(), 0, getText().length(), textRect);
-
-        getPaint().setStyle(Paint.Style.FILL);
-        getPaint().setColor(Color.GREEN);
-
         canvas.clipRect(0, 0, width, 1000);
-
         try {
             String line = lines.split("\n")[index];
+
+            getPaint().setStyle(Paint.Style.FILL);
+            getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         } catch (Exception e) {
             e.printStackTrace();
             String line = lines;
+            getPaint().setStyle(Paint.Style.FILL);
+            getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         }
     }

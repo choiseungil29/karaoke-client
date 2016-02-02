@@ -467,7 +467,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 int term = 5;
                 try {
                     if (player.getCurrentPosition() - currentMillis2 >
-                            term) { // 0.1초마다 들어온당
+                            term) { // 0.005초마다 들어온당
 
                         float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
                         tick += plusTick;

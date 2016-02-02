@@ -19,7 +19,7 @@
         android:id="@+id/textView_song_selected"
         android:text="선곡해주세요!"
         android:gravity="center"
-        android:textSize="36sp"
+        android:textSize="100sp"
         android:textStyle="bold"
         android:layout_centerInParent="true" />
 

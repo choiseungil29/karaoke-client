@@ -18,7 +18,6 @@ import android.app.*;
 import android.net.Uri;
 import android.os.*;
 import android.widget.*;
-import android.util.Log;
 import android.view.*;
 import android.content.*;
 

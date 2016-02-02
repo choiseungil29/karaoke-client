@@ -1,7 +1,5 @@
 package com.karaokepang.Model;
 
-import com.karaokepang.Util.Logger;
-
 import java.util.ArrayList;
 
 /**

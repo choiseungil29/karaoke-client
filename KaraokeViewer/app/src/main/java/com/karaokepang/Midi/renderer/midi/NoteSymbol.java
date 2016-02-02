@@ -104,11 +104,11 @@ public class NoteSymbol extends MidiSymbol {
             drawQuarter(canvas, paint, y);
             paint.setStrokeWidth(5);
             if(isTailTop) {
-                canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT,
-                        ScoreView.LINE_SPACE_HEIGHT/2+2 + MeasureSymbol.segment, y-ScoreView.STEM_HEIGHT, paint);
+                canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2+2, y-ScoreView.STEM_HEIGHT - append,
+                        ScoreView.LINE_SPACE_HEIGHT/2+2 + MeasureSymbol.segment, y-ScoreView.STEM_HEIGHT - append, paint);
             } else {
-                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT,
-                        -ScoreView.LINE_SPACE_HEIGHT/2-2 + MeasureSymbol.segment, y+ScoreView.STEM_HEIGHT, paint);
+                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT/2-2, y+ScoreView.STEM_HEIGHT + append,
+                        -ScoreView.LINE_SPACE_HEIGHT/2-2 + MeasureSymbol.segment, y+ScoreView.STEM_HEIGHT + append, paint);
             }
         }
     }

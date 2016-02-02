@@ -18,7 +18,6 @@ import android.app.*;
 import android.content.*;
 import android.content.res.*;
 import android.graphics.*;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.os.*;

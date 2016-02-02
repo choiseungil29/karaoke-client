@@ -3,23 +3,17 @@ package com.karaokepang.ftp;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
-import com.karaokepang.Activity.MainActivity;
-import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Util.Logger;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 

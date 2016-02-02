@@ -2,7 +2,96 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2c7aca2-2917-471f-b174-e47d5e75a753" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_test_three.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Activity/MainActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Activity/MainActivity.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Activity/MusicListener.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Activity/MusicListener.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Activity/TestActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Activity/TestActivity.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Dialog/ChooseSongDialog.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Dialog/ChooseSongDialog.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/MidiFile.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/MidiFile.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/MidiTrack.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/MidiTrack.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/ChannelAftertouch.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/ChannelAftertouch.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/ChannelEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/ChannelEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/Controller.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/Controller.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/MidiEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/MidiEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/NoteAftertouch.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/NoteAftertouch.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/NoteOff.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/NoteOff.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/NoteOn.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/NoteOn.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/PitchBend.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/PitchBend.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/ProgramChange.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/ProgramChange.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/SystemExclusiveEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/SystemExclusiveEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/CopyrightNotice.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/CopyrightNotice.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/CuePoint.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/CuePoint.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/EndOfTrack.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/EndOfTrack.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/GenericMetaEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/GenericMetaEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/InstrumentName.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/InstrumentName.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/KeySignature.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/KeySignature.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/Lyrics.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/Lyrics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/Marker.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/Marker.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/MetaEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/MetaEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/MidiChannelPrefix.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/MidiChannelPrefix.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/SequenceNumber.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/SequenceNumber.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/SequencerSpecificEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/SequencerSpecificEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/SmpteOffset.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/SmpteOffset.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/Tempo.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/Tempo.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/Text.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/Text.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/TextualMetaEvent.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/TextualMetaEvent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/TimeSignature.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/TimeSignature.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/event/meta/TrackName.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/event/meta/TrackName.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/examples/EventPrinter.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/examples/EventPrinter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/examples/MidiFileFromScratch.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/examples/MidiFileFromScratch.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/examples/MidiManipulation.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/examples/MidiManipulation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/ClefSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/ClefSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/KeySignatureSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/KeySignatureSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/LyricSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/LyricSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/MeasureSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/MeasureSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/StaffSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/StaffSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/Symbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/Symbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/TimeSignatureSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/TimeSignatureSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/accidental/FlatSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/accidental/FlatSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/accidental/NaturalSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/accidental/NaturalSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/accidental/SharpSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/accidental/SharpSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/midi/BeatRef.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/midi/BeatRef.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/midi/MidiSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/midi/MidiSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/midi/NoteSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/midi/NoteSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/renderer/midi/RestSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/renderer/midi/RestSymbol.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/util/MetronomeTick.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/util/MetronomeTick.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/util/MidiEventListener.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/util/MidiEventListener.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/util/MidiProcessor.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/util/MidiProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/util/MidiUtil.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/util/MidiUtil.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Midi/util/VariableLengthInt.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Midi/util/VariableLengthInt.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Model/KSALyric.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Model/KSALyric.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Model/KSALyrics.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Model/KSALyrics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Util/Logger.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Util/Logger.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Util/Prefs.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Util/Prefs.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Util/Resources.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Util/Resources.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/Util/Util.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/Util/Util.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/View/CustomTextView.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/View/CustomTextView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/View/OutlineTextView.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/View/OutlineTextView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/View/OverlayTextView.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/View/OverlayTextView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/View/ScoreView.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/View/ScoreView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/camera/CameraPreview.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/camera/CameraPreview.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/ftp/FtpServiceDown.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/ftp/FtpServiceDown.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/karaokepang/ftp/FtpServiceUp.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/duetwperson/ftp/FtpServiceUp.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/.idea/misc.xml" afterPath="$PROJECT_DIR$/KaraokeViewer/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/build.gradle" afterPath="$PROJECT_DIR$/KaraokeViewer/app/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/androidTest/java/com/clogic/karaokeviewer/ApplicationTest.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/androidTest/java/com/clogic/karaokeviewer/ApplicationTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/AllSongsActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/AllSongsActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/ChooseSongActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/ChooseSongActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/ClefSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/ClefSymbol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/FileBrowserActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/FileBrowserActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/HelpActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/HelpActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/IconArrayAdapter.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/IconArrayAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/MidiPlayer.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/MidiPlayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/MidiSheetMusicActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/MidiSheetMusicActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/SettingsActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/SettingsActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/SheetMusicActivity.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/SheetMusicActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/TimeSignatureSymbol.java" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/java/com/midisheetmusic/TimeSignatureSymbol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_test.xml" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_test.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_test_two.xml" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/activity_test_two.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/view_lyrics_text.xml" afterPath="$PROJECT_DIR$/KaraokeViewer/app/src/main/res/layout/view_lyrics_text.xml" />
     </list>
     <ignored path="karaoke-client.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,14 +118,9 @@
       <projects_view />
     </option>
   </component>
-  <component name="NamedScopeManager">
-    <order />
-  </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="4" />
-    <option name="y" value="23" />
-    <option name="width" value="1436" />
-    <option name="height" value="877" />
+    <option name="width" value="1440" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -59,9 +143,13 @@
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane" />
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
@@ -70,15 +158,9 @@
               <option name="myItemId" value="karaoke-client" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="karaoke-client" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.NonAndroidModuleNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -187,38 +269,38 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1436" height="877" extended-state="6" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964131" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="JRebel for Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug with JRebel for Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug with JRebel for Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24892704" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="JRebel for Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">

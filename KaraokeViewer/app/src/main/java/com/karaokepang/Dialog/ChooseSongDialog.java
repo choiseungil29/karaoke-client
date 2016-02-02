@@ -15,14 +15,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.karaokepang.R;
 import com.karaokepang.Activity.MainActivity;
 import com.karaokepang.Activity.TestActivity;
-import com.karaokepang.R;
 import com.karaokepang.Util.Prefs;
 import com.midisheetmusic.FileUri;
 import com.midisheetmusic.IconArrayAdapter;
 import com.midisheetmusic.MidiFile;
-import com.midisheetmusic.SheetMusicActivity;
 
 import java.util.ArrayList;
 

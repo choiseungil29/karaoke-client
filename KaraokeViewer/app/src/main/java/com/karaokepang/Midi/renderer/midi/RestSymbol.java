@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.karaokepang.Midi.renderer.StaffSymbol;
 import com.karaokepang.Midi.util.MidiUtil;
 import com.karaokepang.View.ScoreView;
 

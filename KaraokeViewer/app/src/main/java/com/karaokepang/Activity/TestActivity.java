@@ -10,10 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -45,8 +43,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.OnClick;
-
 /**
  * Created by clogic on 2015. 12. 10..
  */
@@ -73,12 +69,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_test_two);
 
         tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
         scoreView = (ScoreView) findViewById(R.id.sv_score);
 
-        initRecodeView();
+        initRecordView();
 
         tv_lyrics.bringToFront();
         tv_lyrics.invalidate();
@@ -109,7 +105,44 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 }
             }
 
-//            String lyricsLine = tv_lyrics.lyricsArray.get(lineIndex);
+            /*{
+                //KSALyrics allLyrics = new KSALyrics();
+                ArrayList<KSALyric> allLyrics = new ArrayList<>();
+                StringBuilder line = new StringBuilder();
+                int lineIndex = 0;
+                int i=0;
+                for(i=0; i<list.size(); i++) {
+                    Lyrics event = list.get(i);
+                    if (event.getLyric().equals("\r")) {
+                        continue;
+                    }
+                    if (event.getLyric().equals("\n")) {
+                        continue;
+                    }
+                    if (event.getLyric().equals("")) {
+                        continue;
+                    }
+
+                    String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
+                    while (lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
+                        lineIndex++;
+                        lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
+                    }
+
+                    if (i < list.size() - 1) {
+                        lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
+                        line.append(event.getLyric());
+                    }
+
+                    if (lyricLine.equals(line.toString())) {
+                        lineIndex++;
+                        lyricList = new ArrayList<>();
+                        line = new StringBuilder();
+                    }
+                }
+
+            }*/
+
             StringBuilder line = new StringBuilder();
             int lineIndex = 0;
             int i;
@@ -145,6 +178,22 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             }
             tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));
 
+            for(KSALyrics lyrics : tv_lyrics.KSALyricsArray) {
+                Logger.i("+++++++++++++++");
+                Logger.i("lyrics start tick : " + lyrics.startTick);
+                Logger.i("lyrics end tick : " + lyrics.endTick);
+                Logger.i("lyrics line : " + lyrics.lyricLine);
+                for(KSALyric lyric : lyrics.lyricList) {
+                    Logger.i("----------------");
+                    Logger.i("lyric : " + lyric.lyric);
+                    Logger.i("lyric start tick : " + lyric.startTick);
+                    Logger.i("lyric end tick : " + lyric.endTick);
+                    Logger.i("lyric delta : " + (lyric.endTick - lyric.startTick));
+                    Logger.i("----------------");
+                }
+                Logger.i("+++++++++++++++");
+            }
+
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -170,8 +219,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
     @Override
     public void notifyCurrentTick(long tick, int term, int measureLength) {
-        String lyric = "";
-
         String head = "";
         String tail = "";
         if (nowLyricsIndex == 0) {
@@ -309,7 +356,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         recorder.setCamera(camera);
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
+        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         recorder.setVideoEncodingBitRate(10000000);
         recorder.setVideoFrameRate(30);
@@ -343,7 +391,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
 
-    void initRecodeView() {
+    void initRecordView() {
         AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 

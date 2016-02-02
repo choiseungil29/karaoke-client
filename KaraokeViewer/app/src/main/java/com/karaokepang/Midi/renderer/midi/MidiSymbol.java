@@ -3,7 +3,6 @@ package com.karaokepang.Midi.renderer.midi;
 import android.graphics.Canvas;
 
 import com.karaokepang.Midi.renderer.Symbol;
-import com.karaokepang.Util.Logger;
 
 /**
  * Created by clogic on 2015. 12. 13..

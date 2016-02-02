@@ -6,8 +6,10 @@
 
     <RelativeLayout
         android:id="@+id/camera_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <com.karaokepang.View.OutlineTextView
         android:id="@+id/tv_lyric"
@@ -17,6 +19,13 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="120dp"
         android:textSize="70sp" />
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:clickable="false"
+        android:id="@+id/vv_background" />
 
     <com.karaokepang.View.ScoreView
         android:id="@+id/sv_score"
