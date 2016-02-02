@@ -35,8 +35,6 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 public class MainActivity extends AppCompatActivity {
 
     private BluetoothSPP bt;
-
-
     private ArrayList<String> localFiles = new ArrayList<>();
 
     VideoView vv_background;

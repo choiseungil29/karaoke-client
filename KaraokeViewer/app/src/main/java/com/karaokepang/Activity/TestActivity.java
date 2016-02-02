@@ -4,6 +4,7 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -65,19 +68,18 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
      */
     private GoogleApiClient client;
 
+    private VideoView videoView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_test_two);
+        setContentView(R.layout.activity_test_three);
 
         tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
         scoreView = (ScoreView) findViewById(R.id.sv_score);
 
         initRecordView();
-
-        tv_lyrics.bringToFront();
-        tv_lyrics.invalidate();
 
         ClefSymbol.LoadImages(this);
         TimeSignatureSymbol.LoadImages(this);
@@ -104,44 +106,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                     list.add((Lyrics) event);
                 }
             }
-
-            /*{
-                //KSALyrics allLyrics = new KSALyrics();
-                ArrayList<KSALyric> allLyrics = new ArrayList<>();
-                StringBuilder line = new StringBuilder();
-                int lineIndex = 0;
-                int i=0;
-                for(i=0; i<list.size(); i++) {
-                    Lyrics event = list.get(i);
-                    if (event.getLyric().equals("\r")) {
-                        continue;
-                    }
-                    if (event.getLyric().equals("\n")) {
-                        continue;
-                    }
-                    if (event.getLyric().equals("")) {
-                        continue;
-                    }
-
-                    String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-                    while (lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
-                        lineIndex++;
-                        lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-                    }
-
-                    if (i < list.size() - 1) {
-                        lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
-                        line.append(event.getLyric());
-                    }
-
-                    if (lyricLine.equals(line.toString())) {
-                        lineIndex++;
-                        lyricList = new ArrayList<>();
-                        line = new StringBuilder();
-                    }
-                }
-
-            }*/
 
             StringBuilder line = new StringBuilder();
             int lineIndex = 0;
@@ -202,6 +166,29 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        videoView = (VideoView) findViewById(R.id.vv_background);
+        if(videoView == null) {
+            return;
+        }
+        videoView.setClickable(false);
+        videoView.setFocusable(false);
+        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
+        videoView.setMediaController(new MediaController(this));
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+
+        videoView.setVideoURI(video);
+        videoView.start();
+        videoView.bringToFront();
+        videoView.invalidate();
+
+        tv_lyrics.bringToFront();
+        tv_lyrics.invalidate();
     }
 
     /**
@@ -398,6 +385,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
         preview = new CameraPreview(this, getApplicationContext(), camera);
         preview.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(1, 1));
         layoutCamera.addView(preview);
         is_recording = false;
     }
