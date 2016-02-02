@@ -1,6 +1,7 @@
 package com.vpang.clicker.activity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class NumberActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_number);
 
         getDefaultData();
-//        initBluetooth();
+        initBluetooth();
         setUp();
     }
 
@@ -129,6 +130,7 @@ public class NumberActivity extends Activity implements View.OnClickListener {
                 Toast.makeText(getApplicationContext()
                         , "Connected to " + name + "\n" + address
                         , Toast.LENGTH_SHORT).show();
+
             }
 
             public void onDeviceDisconnected() {
@@ -159,37 +161,37 @@ public class NumberActivity extends Activity implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-//        if (!bt.isBluetoothEnabled()) {
-//            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-//        } else {
-//            if (!bt.isServiceAvailable()) {
-//                bt.setupService();
-//                bt.startService(BluetoothState.DEVICE_ANDROID);
-//                setUp();
-//            }
-//        }
+        if (!bt.isBluetoothEnabled()) {
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+        } else {
+            if (!bt.isServiceAvailable()) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_ANDROID);
+                setUp();
+            }
+        }
 
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-//            if (resultCode == Activity.RESULT_OK)
-//                bt.connect(data);
-//        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                bt.setupService();
-//                bt.startService(BluetoothState.DEVICE_ANDROID);
-//                setUp();
-//            } else {
-//                Toast.makeText(getApplicationContext()
-//                        , "Bluetooth was not enabled."
-//                        , Toast.LENGTH_SHORT).show();
-//                finish();
-//            }
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+            if (resultCode == Activity.RESULT_OK)
+                bt.connect(data);
+        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_ANDROID);
+                setUp();
+            } else {
+                Toast.makeText(getApplicationContext()
+                        , "Bluetooth was not enabled."
+                        , Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -251,6 +253,7 @@ public class NumberActivity extends Activity implements View.OnClickListener {
                 break;
         }
         if (!sendData.equals("noData")) {
+            Toast.makeText(getApplicationContext(), sendData, Toast.LENGTH_SHORT).show();
             bt.send(sendData, true);
         }
     }

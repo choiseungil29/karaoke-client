@@ -1,26 +1,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rv_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MainActivity"
     android:background="@android:color/black"
-    android:id="@+id/rv_parent" >
+    tools:context=".Activity.MainActivity">
 
-    <VideoView
+    <com.yqritc.scalablevideoview.ScalableVideoView
+        android:id="@+id/vv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:clickable="false"
-        android:id="@+id/vv_background" />
+        app:scalableType="fitCenter" />
 
     <com.karaokepang.View.CustomTextView
+        android:id="@+id/textView_song_selected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/textView_song_selected"
-        android:text="선곡해주세요!"
+        android:layout_centerInParent="true"
         android:gravity="center"
+        android:text="선곡해주세요!"
         android:textSize="100sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

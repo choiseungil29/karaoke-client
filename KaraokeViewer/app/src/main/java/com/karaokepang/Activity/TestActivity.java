@@ -36,6 +36,7 @@ import com.karaokepang.ftp.FtpServiceUp;
 import com.midisheetmusic.ClefSymbol;
 import com.midisheetmusic.MidiPlayer;
 import com.midisheetmusic.TimeSignatureSymbol;
+import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,7 +69,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
      */
     private GoogleApiClient client;
 
-    private VideoView videoView;
+    private ScalableVideoView videoView;
+//    private VideoView videoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,12 +144,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             }
             tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));
 
-            for(KSALyrics lyrics : tv_lyrics.KSALyricsArray) {
+            for (KSALyrics lyrics : tv_lyrics.KSALyricsArray) {
                 Logger.i("+++++++++++++++");
                 Logger.i("lyrics start tick : " + lyrics.startTick);
                 Logger.i("lyrics end tick : " + lyrics.endTick);
                 Logger.i("lyrics line : " + lyrics.lyricLine);
-                for(KSALyric lyric : lyrics.lyricList) {
+                for (KSALyric lyric : lyrics.lyricList) {
                     Logger.i("----------------");
                     Logger.i("lyric : " + lyric.lyric);
                     Logger.i("lyric start tick : " + lyric.startTick);
@@ -167,25 +169,26 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        videoView = (VideoView) findViewById(R.id.vv_background);
-        if(videoView == null) {
-            return;
-        }
+        videoView = (ScalableVideoView) findViewById(R.id.vv_background);
+//        if (videoView == null) {
+//            return;
+//        }
         videoView.setClickable(false);
         videoView.setFocusable(false);
-        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
-        videoView.setMediaController(new MediaController(this));
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(true);
-            }
-        });
-
-        videoView.setVideoURI(video);
-        videoView.start();
-        videoView.bringToFront();
-        videoView.invalidate();
+//        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
+        try {
+            videoView.setRawData(R.raw.produce);
+            videoView.setVolume(0, 0);
+            videoView.setLooping(true);
+            videoView.prepare(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    videoView.start();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         tv_lyrics.bringToFront();
         tv_lyrics.invalidate();
@@ -312,7 +315,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             releaseMediaRecorder();
             Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
         }
-    }
+   }
 
     public void startRecord() {
         if (!prepareMediaRecorder()) {
