@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -22,13 +23,20 @@
         android:layout_marginBottom="120dp"
         android:textSize="70sp" />
 
-    <com.yqritc.scalablevideoview.ScalableVideoView
+    <!--<com.yqritc.scalablevideoview.ScalableVideoView
         android:id="@+id/vv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:clickable="false"
-        app:scalableType="fitCenter" />
+        app:scalableType="fitCenter" />-->
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vv_background"
+        android:clickable="false"
+        android:layout_centerInParent="true" />
 
     <com.karaokepang.View.ScoreView
         android:id="@+id/sv_score"

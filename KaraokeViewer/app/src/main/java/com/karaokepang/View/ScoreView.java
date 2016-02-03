@@ -140,7 +140,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
-        for (MidiEvent event : testTrack.getEvents()) {
+        for (MidiEvent event : lyricsTrack.getEvents()) {
             Logger.i(event.toString());
         }
 

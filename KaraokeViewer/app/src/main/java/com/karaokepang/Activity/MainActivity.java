@@ -45,13 +45,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initBluetooth();
+        //initBluetooth();
 
         vv_background = (ScalableVideoView) findViewById(R.id.vv_background);
-//        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
-        Uri video = Uri.parse("/mnt/sdcard/vpang_bg/bg1.mp4");
+        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
+//        Uri video = Uri.parse("/mnt/sdcard/vpang_bg/Wildlife.wmv");
         try {
-            vv_background.setRawData(R.raw.produce);
+            //vv_background.setRawData(R.raw.produce);
+            //vv_background.setDataSource("/mnt/sdcard/vpang_bg/bg1.mp4");
+            vv_background.setDataSource(getBaseContext(), video);
             vv_background.setVolume(0, 0);
             vv_background.setLooping(true);
             vv_background.prepare(new MediaPlayer.OnPreparedListener() {
@@ -198,14 +200,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDataReceived(byte[] data, String message) {
                 Toast.makeText(getApplicationContext(), "[" + message + "]", Toast.LENGTH_SHORT).show();
                 chooseSong(message);
-//                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-//                if (message != null) {
-//                    Uri uri = Uri.parse("file:///android_asset/" + "J" + message + ".mid");
-//                    FileUri file = new FileUri(uri, "J" + message + ".mid");
-//                    Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), getApplicationContext(), TestActivity.class);
-//                    intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
-//                    startActivity(intent);
-//                }
             }
         });
 
@@ -239,20 +233,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bt.stopService();
+        if(bt != null) {
+            bt.stopService();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!bt.isBluetoothEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-        } else {
-            if (!bt.isServiceAvailable()) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
-                bluetoothSetUp();
+        if(bt != null) {
+            if (!bt.isBluetoothEnabled()) {
+                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+            } else {
+                if (!bt.isServiceAvailable()) {
+                    bt.setupService();
+                    bt.startService(BluetoothState.DEVICE_ANDROID);
+                    bluetoothSetUp();
+                }
             }
         }
 
@@ -260,6 +258,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(bt == null) {
+            return;
+        }
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK)
                 bt.connect(data);

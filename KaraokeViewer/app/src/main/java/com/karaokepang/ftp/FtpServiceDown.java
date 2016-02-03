@@ -45,7 +45,7 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
             Logger.i("FTP Client Test Program");
             Logger.i("Start~~~~~~");
 
-            client.connect("192.168.0.12");
+            client.connect("192.168.0.13");
             Logger.i("Connected to test.com...........");
 
             // 응답코드가 비정상일 경우 종료함

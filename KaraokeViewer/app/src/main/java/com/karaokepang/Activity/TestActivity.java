@@ -69,8 +69,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
      */
     private GoogleApiClient client;
 
-    private ScalableVideoView videoView;
-//    private VideoView videoView;
+//    private ScalableVideoView videoView;
+    private VideoView videoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,15 +169,25 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        videoView = (ScalableVideoView) findViewById(R.id.vv_background);
+        videoView = (VideoView) findViewById(R.id.vv_background);
 //        if (videoView == null) {
 //            return;
 //        }
         videoView.setClickable(false);
         videoView.setFocusable(false);
-//        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
-        try {
-            videoView.setRawData(R.raw.produce);
+        //Uri video = Uri.parse("/mnt/sdcard/vpang_bg/1.TS");
+        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
+        //videoView.setDataSource(getBaseContext(), video);
+        videoView.setVideoPath("/mnt/sdcard/vpang_bg/vodo.mp4");
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setVolume(0, 0);
+                mp.setLooping(true);
+            }
+        });
+        videoView.start();
+            /*videoView.setDataSource("/mnt/sdcard/vpang_bg/1.TS");
             videoView.setVolume(0, 0);
             videoView.setLooping(true);
             videoView.prepare(new MediaPlayer.OnPreparedListener() {
@@ -185,10 +195,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 public void onPrepared(MediaPlayer mp) {
                     videoView.start();
                 }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            });*/
 
         tv_lyrics.bringToFront();
         tv_lyrics.invalidate();
