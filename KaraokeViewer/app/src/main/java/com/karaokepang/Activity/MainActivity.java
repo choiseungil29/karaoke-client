@@ -16,15 +16,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.R;
 import com.karaokepang.ftp.FtpServiceDown;
 import com.midisheetmusic.FileUri;
-import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -36,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSPP bt;
     private ArrayList<String> localFiles = new ArrayList<>();
 
-    ScalableVideoView vv_background;
+    //    ScalableVideoView vv_background;
+    VideoView vv_background;
     ArrayList<FileUri> list;
     ChooseSongDialog dialog;
 
@@ -47,24 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
         //initBluetooth();
 
-        vv_background = (ScalableVideoView) findViewById(R.id.vv_background);
-        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
-//        Uri video = Uri.parse("/mnt/sdcard/vpang_bg/Wildlife.wmv");
-        try {
-            //vv_background.setRawData(R.raw.produce);
-            //vv_background.setDataSource("/mnt/sdcard/vpang_bg/bg1.mp4");
-            vv_background.setDataSource(getBaseContext(), video);
-            vv_background.setVolume(0, 0);
-            vv_background.setLooping(true);
-            vv_background.prepare(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    vv_background.start();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        vv_background = (VideoView) findViewById(R.id.vv_background);
+        vv_background.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
+        vv_background.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setVolume(0, 0);
+                mp.setLooping(true);
+            }
+        });
+        vv_background.start();
 
         findViewById(R.id.textView_song_selected).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(bt != null) {
+        if (bt != null) {
             bt.stopService();
         }
     }
@@ -241,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if(bt != null) {
+        if (bt != null) {
             if (!bt.isBluetoothEnabled()) {
                 Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
@@ -258,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(bt == null) {
+        if (bt == null) {
             return;
         }
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {

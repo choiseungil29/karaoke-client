@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
-import com.karaokepang.Activity.MainActivity;
+import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Util.Logger;
 
 import org.apache.commons.net.ftp.FTP;
@@ -125,7 +125,7 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
-            ((MainActivity) activity).loadSdcardMidiFiles();
+            ((TestActivity) activity).loadSdcardMidiFiles();
         }
     }
 }

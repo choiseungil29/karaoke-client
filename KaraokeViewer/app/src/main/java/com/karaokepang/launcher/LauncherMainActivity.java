@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.karaokepang.Activity.MainActivity;
+import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.R;
 
 public class LauncherMainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -34,7 +35,7 @@ public class LauncherMainActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_launcher_vpang:
-                startActivity(new Intent(LauncherMainActivity.this, MainActivity.class));
+                startActivity(new Intent(LauncherMainActivity.this, TestActivity.class));
                 break;
             case R.id.btn_launcher_friend:
                 Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
@@ -23,23 +22,27 @@
         android:layout_marginBottom="120dp"
         android:textSize="70sp" />
 
-    <!--<com.yqritc.scalablevideoview.ScalableVideoView
+    <VideoView
         android:id="@+id/vv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:clickable="false"
-        app:scalableType="fitCenter" />-->
+        android:clickable="false" />
 
-    <VideoView
+    <RelativeLayout
+        android:id="@+id/layout_score"
+        android:layout_width="1dp"
+        android:layout_height="1dp">
+
+    </RelativeLayout>
+
+    <com.karaokepang.View.CustomTextView
+        android:id="@+id/textView_song_selected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/vv_background"
-        android:clickable="false"
-        android:layout_centerInParent="true" />
-
-    <com.karaokepang.View.ScoreView
-        android:id="@+id/sv_score"
-        android:layout_width="1dp"
-        android:layout_height="1dp" />
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="선곡해주세요!"
+        android:textSize="100sp"
+        android:textStyle="bold" />
 </RelativeLayout>

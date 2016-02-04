@@ -1,6 +1,11 @@
 package com.karaokepang.Activity;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
@@ -9,18 +14,16 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ViewGroup;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Lyrics;
@@ -29,14 +32,16 @@ import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Prefs;
+import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
+import com.karaokepang.ftp.FtpServiceDown;
 import com.karaokepang.ftp.FtpServiceUp;
 import com.midisheetmusic.ClefSymbol;
+import com.midisheetmusic.FileUri;
 import com.midisheetmusic.MidiPlayer;
 import com.midisheetmusic.TimeSignatureSymbol;
-import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,8 +49,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothState;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Created by clogic on 2015. 12. 10..
@@ -61,16 +72,21 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     private RelativeLayout layoutCamera;
 
     private String fileName;
-    ScoreView scoreView;
-    OutlineTextView tv_lyrics;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private ScoreView scoreView;
+    private OutlineTextView tv_lyrics;
 
-//    private ScalableVideoView videoView;
     private VideoView videoView;
+
+
+    private CustomTextView textSelectSong;
+
+    //Main
+    public ChooseSongDialog dialog;
+
+    private BluetoothSPP bt;
+    private ArrayList<String> localFiles = new ArrayList<>();
+    private ArrayList<FileUri> list;
+    private boolean isbluetoothMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,16 +94,38 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_test_three);
 
-        tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
-        scoreView = (ScoreView) findViewById(R.id.sv_score);
-
+        preData();
         initRecordView();
+
+        videoView = (VideoView) findViewById(R.id.vv_background);
+        videoView.setClickable(false);
+        videoView.setFocusable(false);
+        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setVolume(0, 0);
+                mp.setLooping(true);
+            }
+        });
+        videoView.start();
+
+    }
+
+    public void initVpang(Uri uri, String midiFileName) {
+
+        textSelectSong.setVisibility(View.GONE);
+        tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
+//        scoreView = (ScoreView) findViewById(R.id.sv_score);
+        scoreView = new ScoreView(this);
+        scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        ((RelativeLayout) (findViewById(R.id.layout_score))).addView(scoreView);
+
 
         ClefSymbol.LoadImages(this);
         TimeSignatureSymbol.LoadImages(this);
         MidiPlayer.LoadImages(this);
 
-        Uri uri = this.getIntent().getData();
         Log.e("kkk", uri.getPath());
         Log.e("kkk", uri.getLastPathSegment());
         try {
@@ -95,7 +133,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
             scoreView.setActivity(this);
             MidiFile midiFile = new MidiFile(stream);
-            scoreView.setMidiFile(midiFile, getIntent().getStringExtra(Prefs.MIDI_FILE_NAME));
+            scoreView.setMidiFile(midiFile, midiFileName);
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
 
@@ -164,38 +202,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //scoreView.callOnDraw();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-        videoView = (VideoView) findViewById(R.id.vv_background);
-//        if (videoView == null) {
-//            return;
-//        }
-        videoView.setClickable(false);
-        videoView.setFocusable(false);
-        //Uri video = Uri.parse("/mnt/sdcard/vpang_bg/1.TS");
-        Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.produce);
-        //videoView.setDataSource(getBaseContext(), video);
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/vodo.mp4");
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setVolume(0, 0);
-                mp.setLooping(true);
-            }
-        });
-        videoView.start();
-            /*videoView.setDataSource("/mnt/sdcard/vpang_bg/1.TS");
-            videoView.setVolume(0, 0);
-            videoView.setLooping(true);
-            videoView.prepare(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    videoView.start();
-                }
-            });*/
 
         tv_lyrics.bringToFront();
         tv_lyrics.invalidate();
@@ -277,7 +283,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        if (isbluetoothMode) {
+            if (bt != null) {
+                bt.stopService();
+            }
+        }
     }
 
 
@@ -322,7 +332,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             releaseMediaRecorder();
             Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
         }
-   }
+    }
 
     public void startRecord() {
         if (!prepareMediaRecorder()) {
@@ -394,10 +404,182 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
         preview = new CameraPreview(this, getApplicationContext(), camera);
-        preview.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         preview.setLayoutParams(new RelativeLayout.LayoutParams(1, 1));
         layoutCamera.addView(preview);
         is_recording = false;
+    }
+
+    void preData() {
+        if (isbluetoothMode) {
+            initBluetooth();
+        }
+        textSelectSong = (CustomTextView) findViewById(R.id.textView_song_selected);
+        textSelectSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseSong("");
+            }
+        });
+
+        list = new ArrayList<>();
+        loadSdcardMidiFiles();
+
+        if (list.size() > 0) {
+            Collections.sort(list, list.get(0));
+        }
+
+        ArrayList<FileUri> origlist = list;
+        list = new ArrayList<>();
+        String prevname = "";
+        for (FileUri file : origlist) {
+            if (!file.toString().equals(prevname)) {
+                list.add(file);
+            }
+            prevname = file.toString();
+        }
+
+        dialog = new ChooseSongDialog(this, list);
+
+        initDefaultData();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (bt == null) {
+            return;
+        }
+        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+            if (resultCode == Activity.RESULT_OK)
+                bt.connect(data);
+        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_ANDROID);
+                bluetoothSetUp();
+            } else {
+                Toast.makeText(getApplicationContext()
+                        , "Bluetooth was not enabled."
+                        , Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+
+
+    }
+
+
+    void initDefaultData() {
+        new FtpServiceDown(TestActivity.this, localFiles).execute();
+    }
+
+    public void loadSdcardMidiFiles() {
+        File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+        if (fileList == null)
+            return;
+        for (File file : fileList) {
+            localFiles.add(file.getName());
+            if (file.getName().endsWith(".mid")) {
+                Uri uri = Uri.parse(file.getAbsolutePath());
+                FileUri fileUri = new FileUri(uri, file.getName());
+                list.add(fileUri);
+            }
+        }
+    }
+
+    private void loadMidiFilesFromProvider(Uri content_uri) {
+        ContentResolver resolver = getContentResolver();
+        String columns[] = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.MIME_TYPE
+        };
+        String selection = MediaStore.Audio.Media.MIME_TYPE + " LIKE '%mid%'";
+        Cursor cursor = resolver.query(content_uri, columns, selection, null, null);
+        if (cursor == null) {
+            return;
+        }
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return;
+        }
+
+        do {
+            int idColumn = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
+            int titleColumn = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int mimeColumn = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
+
+            long id = cursor.getLong(idColumn);
+            String title = cursor.getString(titleColumn);
+            String mime = cursor.getString(mimeColumn);
+
+            if (mime.endsWith("/midi") || mime.endsWith("/mid")) {
+                Uri uri = Uri.withAppendedPath(content_uri, "" + id);
+                FileUri file = new FileUri(uri, title);
+                list.add(file);
+            }
+        } while (cursor.moveToNext());
+        cursor.close();
+    }
+
+    private void chooseSong(String message) {
+        if (!dialog.isShowing()) {
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.width = MATCH_PARENT;
+            params.height = MATCH_PARENT;
+            dialog.getWindow().setAttributes(params);
+            dialog.show();
+        }
+        dialog.setData(message);
+    }
+
+    void initBluetooth() {
+        bt = new BluetoothSPP(this);
+
+        if (!bt.isBluetoothAvailable()) {
+            Toast.makeText(getApplicationContext()
+                    , "Bluetooth is not available"
+                    , Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            public void onDataReceived(byte[] data, String message) {
+                Toast.makeText(getApplicationContext(), "[" + message + "]", Toast.LENGTH_SHORT).show();
+                chooseSong(message);
+            }
+        });
+
+        bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+            public void onDeviceConnected(String name, String address) {
+                Toast.makeText(getApplicationContext()
+                        , "Connected to " + name + "\n" + address
+                        , Toast.LENGTH_SHORT).show();
+                DeviceList.deviceList.finish();
+            }
+
+            public void onDeviceDisconnected() {
+                Toast.makeText(getApplicationContext()
+                        , "Connection lost", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceConnectionFailed() {
+                Toast.makeText(getApplicationContext()
+                        , "Unable to connect", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+            bt.disconnect();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+        }
+    }
+
+
+    private void bluetoothSetUp() {
+
     }
 
     @Override
@@ -409,40 +591,24 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Test Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.karaokepang.Activity/http/host/path")
-        );
-        //AppIndex.AppIndexApi.start(client, viewAction);
+        if (isbluetoothMode) {
+            if (bt != null) {
+                if (!bt.isBluetoothEnabled()) {
+                    Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+                } else {
+                    if (!bt.isServiceAvailable()) {
+                        bt.setupService();
+                        bt.startService(BluetoothState.DEVICE_ANDROID);
+                        bluetoothSetUp();
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Test Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.karaokepang.Activity/http/host/path")
-        );
-        //AppIndex.AppIndexApi.end(client, viewAction);
-        //client.disconnect();
     }
 }

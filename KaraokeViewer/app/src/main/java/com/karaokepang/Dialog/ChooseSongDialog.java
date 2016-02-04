@@ -43,11 +43,11 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
 
     private String sendData;
     private Context context;
-    private MainActivity activity;
+    private TestActivity activity;
 
     public ChooseSongDialog(Context context, ArrayList<FileUri> list) {
         this(context, true);
-        this.activity = (MainActivity) context;
+        this.activity = (TestActivity) context;
         this.list = list;
         this.init(context);
     }
@@ -115,8 +115,11 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
             Toast.makeText(parent.getContext(), "Error: Unable to open song: " + file.toString(), Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), context, TestActivity.class);
-        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
-        context.startActivity(intent);
+//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), context, TestActivity.class);
+//        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
+        activity.dialog.dismiss();
+        activity.initVpang(file.getUri(), file.toString());
+
+//        context.startActivity(intent);
     }
 }

@@ -290,7 +290,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         LINE_STROKE = getMeasuredHeight() / 300;
         FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 3;
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
-        this.resolution = midi.getResolution();
+        resolution = midi.getResolution();
 
         createMeasures(renderTrack);
         settingMeasures();
@@ -453,7 +453,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     for (int i = 0; i < MEASURE_LIMIT; i++) {
                         list.add(nowMeasures[measureIndex].get(i).lyrics);
                     }
-                    listener.notifyMeasureChanged(list, tick);
 
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);
