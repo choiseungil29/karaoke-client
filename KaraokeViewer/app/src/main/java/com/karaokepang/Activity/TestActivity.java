@@ -156,13 +156,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         for (MidiEvent event : scoreView.lyricsTrack.getEvents()) {
             if (event instanceof Lyrics) {
                 list.add((Lyrics) event);
-                Logger.i("lyriccccccccccccccccccccccccc : " + ((Lyrics) event).getLyric());
+                //Logger.i("lyriccccccccccccccccccccccccc : " + ((Lyrics) event).getLyric());
             }
         }
 
         StringBuilder line = new StringBuilder();
         KSALyrics lyrics = new KSALyrics();
-        ArrayList<KSALyric> lyricList = new ArrayList<>();
         int lineIndex = 0;
         int i;
 
@@ -192,8 +191,12 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
             if (i < list.size() - 1) {
                 // lyricList : lyric array list. lyric한개씩 담아서 한 줄을 맞춘다
-                //lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
-                lyrics.lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i+1).getTick()));
+                long startTick = event.getTick();
+                long endTick = list.get(i+1).getTick();
+                if((endTick - startTick) > (ScoreView.resolution * 4)) {
+                    endTick = startTick + ScoreView.resolution * 4;
+                }
+                lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
                 line.append(event.getLyric());
             }
 
@@ -203,61 +206,19 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 lyrics.create();
                 tv_lyrics.KSALyricsArray.add(lyrics);
                 lineIndex++;
-                lyricList = new ArrayList<>();
                 lyrics = new KSALyrics();
                 line = new StringBuilder();
             }
         }
         lyrics.create();
         tv_lyrics.KSALyricsArray.add(lyrics);
-        /*for (i = 0; i < list.size(); i++) {
-            Lyrics event = list.get(i);
-            if (event.getLyric().equals("\r")) {
-                continue;
-            }
-            if (event.getLyric().equals("\n")) {
-                continue;
-            }
-            if (event.getLyric().equals("")) {
-                continue;
-            }
 
-            // 라인이 ""이거나 @, #이면 넘어감
-            String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-            while (lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
-                lineIndex++;
-                lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-            }
-
-            for(String word : tv_lyrics.lyricsArray.get(lineIndex).split(" ")) {
-                char start = word.charAt(0);
-                if(start >= 'a' && start <= 'z' ||
-                        start >='A' && start <= 'Z') {
-
-                }
-            }
-
-            if (i < list.size() - 1) {
-                lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
-                line.append(event.getLyric());
-            }
-
-            if (lyricLine.equals(line.toString())) {
-                tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));
-                lineIndex++;
-                lyricList = new ArrayList<>();
-                lyrics = new KSALyrics();
-                line = new StringBuilder();
-            }
-        }
-        tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));*/
-
-        /*for (KSALyrics lyrics : tv_lyrics.KSALyricsArray) {
+        for (KSALyrics log : tv_lyrics.KSALyricsArray) {
             Logger.i("Lyric", "+++++++++++++++");
-            Logger.i("Lyric", "lyrics start tick : " + lyrics.startTick);
-            Logger.i("Lyric", "lyrics end tick : " + lyrics.endTick);
-            Logger.i("Lyric", "lyrics line : " + lyrics.lyricLine);
-            for (KSALyric lyric : lyrics.lyricList) {
+            Logger.i("Lyric", "lyrics start tick : " + log.startTick);
+            Logger.i("Lyric", "lyrics end tick : " + log.endTick);
+            Logger.i("Lyric", "lyrics line : " + log.lyricLine);
+            for (KSALyric lyric : log.lyricList) {
                 Logger.i("Lyric", "----------------");
                 Logger.i("Lyric", "lyric : " + lyric.lyric);
                 Logger.i("Lyric", "lyric start tick : " + lyric.startTick);
@@ -266,7 +227,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 Logger.i("Lyric", "----------------");
             }
             Logger.i("Lyric", "+++++++++++++++");
-        }*/
+        }
     }
 
     /**
