@@ -141,7 +141,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         for (MidiEvent event : lyricsTrack.getEvents()) {
-            Logger.i(event.toString());
+            //Logger.i("lyriccccccccccccccccccccccccc : " + event.toString());
         }
 
         try {
@@ -214,7 +214,22 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     }
 
                     String english = "";
-                    while ((lyrics.charAt(lyricsIndex) >= 'a' && lyrics.charAt(lyricsIndex) <= 'z') ||
+                    char start = lyrics.charAt(lyricsIndex);
+                    if (start >= 'a' && start <= 'z' ||
+                            start >='A' && start <= 'Z') {
+                        while (lyrics.charAt(lyricsIndex) != ' ' &&
+                                lyrics.charAt(lyricsIndex) != '\n' &&
+                                lyrics.charAt(lyricsIndex) != '\r' &&
+                                lyrics.charAt(lyricsIndex) != '^') {
+                            if (english.trim().length() < ((Lyrics) event).getLyric().trim().length()) {
+                                english += lyrics.charAt(lyricsIndex);
+                                lyricsIndex++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    /*while ((lyrics.charAt(lyricsIndex) >= 'a' && lyrics.charAt(lyricsIndex) <= 'z') ||
                             (lyrics.charAt(lyricsIndex) >= 'A' && lyrics.charAt(lyricsIndex) <= 'Z')) {
                         if (english.trim().length() < ((Lyrics) event).getLyric().trim().length()) {
                             english += lyrics.charAt(lyricsIndex);
@@ -222,7 +237,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                         } else {
                             break;
                         }
-                    }
+                    }*/
                     if (english.length() != 0) {
                         ((Lyrics) event).setLyric(english);
                         continue;

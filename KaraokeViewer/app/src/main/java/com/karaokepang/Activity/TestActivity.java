@@ -138,66 +138,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
 
-            tv_lyrics.lyricsArray = scoreView.lyricsArray;
-            ArrayList<KSALyric> lyricList = new ArrayList<>();
-
-            List<Lyrics> list = new ArrayList<>();
-            for (MidiEvent event : scoreView.lyricsTrack.getEvents()) {
-                if (event instanceof Lyrics) {
-                    list.add((Lyrics) event);
-                }
-            }
-
-            StringBuilder line = new StringBuilder();
-            int lineIndex = 0;
-            int i;
-            for (i = 0; i < list.size(); i++) {
-                Lyrics event = list.get(i);
-                if (event.getLyric().equals("\r")) {
-                    continue;
-                }
-                if (event.getLyric().equals("\n")) {
-                    continue;
-                }
-                if (event.getLyric().equals("")) {
-                    continue;
-                }
-
-                String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-                while (lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
-                    lineIndex++;
-                    lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
-                }
-
-                if (i < list.size() - 1) {
-                    lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
-                    line.append(event.getLyric());
-                }
-
-                if (lyricLine.equals(line.toString())) {
-                    tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));
-                    lineIndex++;
-                    lyricList = new ArrayList<>();
-                    line = new StringBuilder();
-                }
-            }
-            tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));
-
-            for (KSALyrics lyrics : tv_lyrics.KSALyricsArray) {
-                Logger.i("+++++++++++++++");
-                Logger.i("lyrics start tick : " + lyrics.startTick);
-                Logger.i("lyrics end tick : " + lyrics.endTick);
-                Logger.i("lyrics line : " + lyrics.lyricLine);
-                for (KSALyric lyric : lyrics.lyricList) {
-                    Logger.i("----------------");
-                    Logger.i("lyric : " + lyric.lyric);
-                    Logger.i("lyric start tick : " + lyric.startTick);
-                    Logger.i("lyric end tick : " + lyric.endTick);
-                    Logger.i("lyric delta : " + (lyric.endTick - lyric.startTick));
-                    Logger.i("----------------");
-                }
-                Logger.i("+++++++++++++++");
-            }
+            createLyrics();
 
             stream.close();
         } catch (IOException e) {
@@ -206,6 +147,126 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         tv_lyrics.bringToFront();
         tv_lyrics.invalidate();
+    }
+
+    private void createLyrics() {
+        tv_lyrics.lyricsArray = scoreView.lyricsArray;
+
+        List<Lyrics> list = new ArrayList<>();
+        for (MidiEvent event : scoreView.lyricsTrack.getEvents()) {
+            if (event instanceof Lyrics) {
+                list.add((Lyrics) event);
+                Logger.i("lyriccccccccccccccccccccccccc : " + ((Lyrics) event).getLyric());
+            }
+        }
+
+        StringBuilder line = new StringBuilder();
+        KSALyrics lyrics = new KSALyrics();
+        ArrayList<KSALyric> lyricList = new ArrayList<>();
+        int lineIndex = 0;
+        int i;
+
+        for (i = 0; i < list.size(); i++) {
+            Lyrics event = list.get(i);
+            if (event.getLyric().equals("\r")) {
+                continue;
+            }
+            if (event.getLyric().equals("\n")) {
+                continue;
+            }
+            if (event.getLyric().equals("")) {
+                continue;
+            }
+
+            // 라인이 ""이거나 @, #이면 넘어감
+            //String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
+            String lyricLine = tv_lyrics.lyricsArray.get(lineIndex);
+            // lyricLine : " "를 없앤 KSA파일 기준 한 줄
+            String removeSpace = lyricLine.replaceAll(" ", "");
+            while (removeSpace.equals("@") || removeSpace.equals("#") || removeSpace.equals("")) {
+                lineIndex++;
+                //lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
+                lyricLine = tv_lyrics.lyricsArray.get(lineIndex);
+                removeSpace = lyricLine.replaceAll(" ", "");
+            }
+
+            if (i < list.size() - 1) {
+                // lyricList : lyric array list. lyric한개씩 담아서 한 줄을 맞춘다
+                //lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
+                lyrics.lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i+1).getTick()));
+                line.append(event.getLyric());
+            }
+
+            // line : string builder. 문자열 한 줄을 조립한다
+            if (lyricLine.replaceAll(" ", "").equals(line.toString())) {
+                lyrics.lyricLine = lyricLine;
+                lyrics.create();
+                tv_lyrics.KSALyricsArray.add(lyrics);
+                lineIndex++;
+                lyricList = new ArrayList<>();
+                lyrics = new KSALyrics();
+                line = new StringBuilder();
+            }
+        }
+        lyrics.create();
+        tv_lyrics.KSALyricsArray.add(lyrics);
+        /*for (i = 0; i < list.size(); i++) {
+            Lyrics event = list.get(i);
+            if (event.getLyric().equals("\r")) {
+                continue;
+            }
+            if (event.getLyric().equals("\n")) {
+                continue;
+            }
+            if (event.getLyric().equals("")) {
+                continue;
+            }
+
+            // 라인이 ""이거나 @, #이면 넘어감
+            String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
+            while (lyricLine.equals("@") || lyricLine.equals("#") || lyricLine.equals("")) {
+                lineIndex++;
+                lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
+            }
+
+            for(String word : tv_lyrics.lyricsArray.get(lineIndex).split(" ")) {
+                char start = word.charAt(0);
+                if(start >= 'a' && start <= 'z' ||
+                        start >='A' && start <= 'Z') {
+
+                }
+            }
+
+            if (i < list.size() - 1) {
+                lyricList.add(new KSALyric(event.getLyric(), event.getTick(), list.get(i + 1).getTick()));
+                line.append(event.getLyric());
+            }
+
+            if (lyricLine.equals(line.toString())) {
+                tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));
+                lineIndex++;
+                lyricList = new ArrayList<>();
+                lyrics = new KSALyrics();
+                line = new StringBuilder();
+            }
+        }
+        tv_lyrics.KSALyricsArray.add(new KSALyrics(lyricList, tv_lyrics.lyricsArray.get(lineIndex)));*/
+
+        /*for (KSALyrics lyrics : tv_lyrics.KSALyricsArray) {
+            Logger.i("Lyric", "+++++++++++++++");
+            Logger.i("Lyric", "lyrics start tick : " + lyrics.startTick);
+            Logger.i("Lyric", "lyrics end tick : " + lyrics.endTick);
+            Logger.i("Lyric", "lyrics line : " + lyrics.lyricLine);
+            for (KSALyric lyric : lyrics.lyricList) {
+                Logger.i("Lyric", "----------------");
+                Logger.i("Lyric", "lyric : " + lyric.lyric);
+                Logger.i("Lyric", "lyric start tick : " + lyric.startTick);
+                Logger.i("Lyric", "lyric end tick : " + lyric.endTick);
+                Logger.i("Lyric", "lyric delta : " + (lyric.endTick - lyric.startTick));
+                Logger.i("Lyric", "----------------");
+            }
+            Logger.i("Lyric", "+++++++++++++++");
+        }*/
     }
 
     /**
