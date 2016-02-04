@@ -55,10 +55,10 @@ public class OutlineTextView extends TextView {
         getPaint().setTypeface(font);
         for(String line : lines.split("\n")) {
             getPaint().setStyle(Paint.Style.STROKE);
-            getPaint().setColor(Color.WHITE);
+            getPaint().setColor(Color.BLACK);
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i+1), getPaint());
             getPaint().setStyle(Paint.Style.FILL);
-            getPaint().setColor(Color.BLACK);
+            getPaint().setColor(Color.WHITE);
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i+1), getPaint());
             i++;
         }
@@ -68,12 +68,14 @@ public class OutlineTextView extends TextView {
             String line = lines.split("\n")[index];
 
             getPaint().setStyle(Paint.Style.FILL);
+//            getPaint().setColor(Color.parseColor("#000000"));
             getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         } catch (Exception e) {
             e.printStackTrace();
             String line = lines;
             getPaint().setStyle(Paint.Style.FILL);
+//            getPaint().setColor(Color.parseColor("#000000"));
             getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         }
