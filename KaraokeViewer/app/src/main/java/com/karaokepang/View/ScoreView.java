@@ -118,10 +118,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public void setMidiFile(MidiFile midi, String fileName) {
         this.midi = midi;
         this.fileName = fileName;
+        resolution = midi.getResolution();
 
         signTrack = this.midi.getTracks().get(0);
 
-        MidiTrack testTrack = null;
         for (int i = 0; i < midi.getTracks().size(); i++) {
             Iterator<MidiEvent> it = midi.getTracks().get(i).getEvents().iterator();
             while (it.hasNext()) {
@@ -130,7 +130,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 if (event.toString().contains("TrackName") &&
                         event.toString().toLowerCase().contains("melody")) {
                     renderTracks.add(midi.getTracks().get(i));
-                    testTrack = midi.getTracks().get(i);
                 }
 
                 if (event.toString().contains("TrackName") &&
@@ -229,15 +228,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                             }
                         }
                     }
-                    /*while ((lyrics.charAt(lyricsIndex) >= 'a' && lyrics.charAt(lyricsIndex) <= 'z') ||
-                            (lyrics.charAt(lyricsIndex) >= 'A' && lyrics.charAt(lyricsIndex) <= 'Z')) {
-                        if (english.trim().length() < ((Lyrics) event).getLyric().trim().length()) {
-                            english += lyrics.charAt(lyricsIndex);
-                            lyricsIndex++;
-                        } else {
-                            break;
-                        }
-                    }*/
                     if (english.length() != 0) {
                         ((Lyrics) event).setLyric(english);
                         continue;
@@ -305,7 +295,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         LINE_STROKE = getMeasuredHeight() / 300;
         FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 3;
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
-        resolution = midi.getResolution();
 
         createMeasures(renderTrack);
         settingMeasures();
