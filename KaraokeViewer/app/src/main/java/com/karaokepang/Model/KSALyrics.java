@@ -20,6 +20,16 @@ public class KSALyrics {
 
     public KSALyrics(ArrayList<KSALyric> lyricList, String lyricLine) {
         this.lyricList = lyricList;
+        this.lyricLine = lyricLine;
+        create();
+    }
+
+    public KSALyrics() {
+        lyricList = new ArrayList<>();
+        lyricLine = new String();
+    }
+
+    public void create() {
         long startTick = 1000000;
         long endTick = 0;
         for(KSALyric lyric : lyricList) {
@@ -32,6 +42,5 @@ public class KSALyrics {
                 this.endTick = endTick;
             }
         }
-        this.lyricLine = lyricLine;
     }
 }

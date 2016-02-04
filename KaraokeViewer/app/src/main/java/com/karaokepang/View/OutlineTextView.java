@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.karaokepang.Model.KSALyric;
@@ -48,7 +49,6 @@ public class OutlineTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         getPaint().setStrokeWidth(5);
-        //canvas.setDensity();
 
         String lines = getText().toString();
         int i=0;
@@ -106,17 +106,13 @@ public class OutlineTextView extends TextView {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
             getPaint().getTextBounds(target.lyric, 0, 1, letterRect);
             width = spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
+            Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick)))
+            ;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                invalidate();
-            }
-        });
+        callOnDraw();
     }
 
     public void callOnDraw() {
