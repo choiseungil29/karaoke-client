@@ -33,7 +33,6 @@
         android:id="@+id/layout_score"
         android:layout_width="1dp"
         android:layout_height="1dp">
-
     </RelativeLayout>
 
     <com.karaokepang.View.CustomTextView

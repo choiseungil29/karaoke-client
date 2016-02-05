@@ -101,12 +101,23 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         videoView = (VideoView) findViewById(R.id.vv_background);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
+        videoView.setVideoPath("/mnt/sdcard/vpang_bg/2.TS");
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                videoView.resume();
+            }
+        });
+
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mp.setVolume(0, 0);
                 mp.setLooping(true);
+                mp.setVolume(0,0);
+                videoView.start();
             }
         });
         videoView.start();
@@ -287,6 +298,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 }
             });
         }
+        Logger.i("logging", "current tick : " + tick);
         tv_lyrics.setTick(tick, nowLyricsIndex);
     }
 
@@ -429,8 +441,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
         preview = new CameraPreview(this, getApplicationContext(), camera);
-        preview.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        preview.setLayoutParams(new RelativeLayout.LayoutParams(1, 1));
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
         is_recording = false;
     }
