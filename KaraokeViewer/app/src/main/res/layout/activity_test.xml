@@ -3,45 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
+
+
+    <RelativeLayout
+        android:id="@+id/camera_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <com.karaokepang.View.OutlineTextView
+        android:id="@+id/tv_lyric"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="50dp"
+        android:padding="10dp"
+        android:layout_marginBottom="120dp"
+        android:layout_toLeftOf="@+id/camera_layout"
+        android:layout_toStartOf="@+id/camera_layout"
+        android:textSize="70sp" />
+
+
+    <VideoView
+        android:id="@+id/vv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:clickable="false"
+        android:visibility="gone" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="#55000000"
-            android:layout_weight="3">
+    <RelativeLayout
+        android:id="@+id/layout_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/camera_layout" />
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4">
-
-                <com.karaokepang.View.OutlineTextView
-                    android:id="@+id/tv_lyric"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textSize="80sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/camera_layout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-        <com.karaokepang.View.ScoreView
-            android:id="@+id/sv_score"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:paddingRight="20dp" />
-    </LinearLayout>
-
+    <com.karaokepang.View.CustomTextView
+        android:id="@+id/textView_song_selected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="선곡해주세요!"
+        android:textSize="100sp"
+        android:textStyle="bold" />
 </RelativeLayout>

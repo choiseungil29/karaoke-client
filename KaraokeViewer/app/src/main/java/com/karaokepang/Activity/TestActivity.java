@@ -1,10 +1,7 @@
 package com.karaokepang.Activity;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -15,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,7 +27,6 @@ import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
-import com.karaokepang.Util.Prefs;
 import com.karaokepang.Util.Util;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
@@ -54,15 +49,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
-import app.akexorcist.bluetotohspp.library.BluetoothState;
-
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Created by clogic on 2015. 12. 10..
  */
-public class TestActivity extends AppCompatActivity implements MusicListener {
+public class TestActivity extends BluetoothActivity implements MusicListener {
 
     //녹화
     private Camera camera;
@@ -84,16 +76,23 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     //Main
     public ChooseSongDialog dialog;
 
-    private BluetoothSPP bt;
     private ArrayList<String> localFiles = new ArrayList<>();
     private ArrayList<FileUri> list;
-    private boolean isbluetoothMode = false;
+
+
+    private String mode = "noData";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_test_three);
+
+        mode = getIntent().getStringExtra("mode");
+        if(mode.equals("vpang")) {
+            setContentView(R.layout.activity_test_three);
+        }else if(mode.equals("friend")){
+            setContentView(R.layout.activity_test);
+        }
 
         preData();
         initRecordView();
@@ -103,7 +102,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         videoView.setFocusable(false);
         videoView.setVideoPath("/mnt/sdcard/vpang_bg/2.TS");
 
-        /*videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -115,11 +114,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
-                mp.setVolume(0,0);
+                mp.setVolume(0, 0);
                 videoView.start();
             }
         });
-        videoView.start();*/
+        videoView.start();
 
     }
 
@@ -176,7 +175,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         for (i = 0; i < list.size(); i++) {
             Lyrics event = list.get(i);
-            if(!Util.filterLyricText(event)) {
+            if (!Util.filterLyricText(event)) {
                 continue;
             }
 
@@ -194,19 +193,19 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             long startTick = event.getTick();
             long endTick;
             try {
-                while (!Util.filterLyricText(list.get(i+1))) {
+                while (!Util.filterLyricText(list.get(i + 1))) {
                     i++;
                 }
-                endTick = list.get(i+1).getTick();
+                endTick = list.get(i + 1).getTick();
 
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
                 endTick = list.get(i).getTick();
             }
-            if((endTick - startTick) > (ScoreView.resolution * 4)) {
+            if ((endTick - startTick) > (ScoreView.resolution * 4)) {
                 endTick = startTick + ScoreView.resolution * 4;
             }
-            if(startTick == endTick) {
+            if (startTick == endTick) {
                 Logger.i("hi!");
             }
             lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
@@ -261,7 +260,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         String tail = "";
         if (nowLyricsIndex == 0) {
             KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(0);
-            if (tick > ksaLyrics.startTick - measureLength) {
+            if (tick > ksaLyrics.startTick - (ScoreView.resolution * 4)) {
                 head = ksaLyrics.lyricLine;
                 tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
             }
@@ -319,11 +318,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isbluetoothMode) {
-            if (bt != null) {
-                bt.stopService();
-            }
-        }
     }
 
 
@@ -446,9 +440,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     }
 
     void preData() {
-        if (isbluetoothMode) {
-            initBluetooth();
-        }
         textSelectSong = (CustomTextView) findViewById(R.id.textView_song_selected);
         textSelectSong.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -477,30 +468,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         dialog = new ChooseSongDialog(this, list);
 
         initDefaultData();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (bt == null) {
-            return;
-        }
-        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == Activity.RESULT_OK)
-                bt.connect(data);
-        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
-                bluetoothSetUp();
-            } else {
-                Toast.makeText(getApplicationContext()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-
-
     }
 
 
@@ -568,55 +535,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         dialog.setData(message);
     }
 
-    void initBluetooth() {
-        bt = new BluetoothSPP(this);
-
-        if (!bt.isBluetoothAvailable()) {
-            Toast.makeText(getApplicationContext()
-                    , "Bluetooth is not available"
-                    , Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            public void onDataReceived(byte[] data, String message) {
-                Toast.makeText(getApplicationContext(), "[" + message + "]", Toast.LENGTH_SHORT).show();
-                chooseSong(message);
-            }
-        });
-
-        bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-            public void onDeviceConnected(String name, String address) {
-                Toast.makeText(getApplicationContext()
-                        , "Connected to " + name + "\n" + address
-                        , Toast.LENGTH_SHORT).show();
-                DeviceList.deviceList.finish();
-            }
-
-            public void onDeviceDisconnected() {
-                Toast.makeText(getApplicationContext()
-                        , "Connection lost", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onDeviceConnectionFailed() {
-                Toast.makeText(getApplicationContext()
-                        , "Unable to connect", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
-            bt.disconnect();
-        } else {
-            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-        }
-    }
-
-
-    private void bluetoothSetUp() {
-
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -626,20 +544,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
     @Override
     public void onStart() {
         super.onStart();
-        if (isbluetoothMode) {
-            if (bt != null) {
-                if (!bt.isBluetoothEnabled()) {
-                    Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-                } else {
-                    if (!bt.isServiceAvailable()) {
-                        bt.setupService();
-                        bt.startService(BluetoothState.DEVICE_ANDROID);
-                        bluetoothSetUp();
-                    }
-                }
-            }
-        }
     }
 
     @Override

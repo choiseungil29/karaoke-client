@@ -5,9 +5,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.vpang.clicker.R;
@@ -28,6 +31,8 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 public class NumberActivity extends Activity implements View.OnClickListener {
 
     public static BluetoothSPP bt;
+    private LinearLayout layoutMode;
+    private Button btnFriend, btnStar, btnVpang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,24 @@ public class NumberActivity extends Activity implements View.OnClickListener {
 
         getDefaultData();
         initBluetooth();
+
+        initButton();
+        initLayout();
         setUp();
+    }
+
+    private void initButton() {
+        btnVpang = (Button) findViewById(R.id.btn_vpang);
+        btnFriend = (Button) findViewById(R.id.btn_friend);
+        btnStar = (Button) findViewById(R.id.btn_star);
+
+        btnVpang.setOnClickListener(this);
+        btnFriend.setOnClickListener(this);
+        btnStar.setOnClickListener(this);
+    }
+
+    private void initLayout() {
+        layoutMode = (LinearLayout) findViewById(R.id.layout_mode);
     }
 
     private String readText(String file) throws IOException {
@@ -161,6 +183,18 @@ public class NumberActivity extends Activity implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        bt.autoConnect("vpang");
+        bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
+            public void onNewConnection(String name, String address) {
+                Log.e("kkk", "자동연결 성공");
+                // Do something when earching for new connection device
+            }
+
+            public void onAutoConnectionStarted() {
+                Log.e("kkk", "자동연결 성공2");
+                // Do something when auto connection has started
+            }
+        });
         if (!bt.isBluetoothEnabled()) {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
@@ -250,6 +284,21 @@ public class NumberActivity extends Activity implements View.OnClickListener {
             case R.id.btn_search:
                 sendData = "noData";
                 startActivity(new Intent(NumberActivity.this, SearchActivity.class));
+                break;
+
+            case R.id.btn_vpang:
+                sendData="mode_vpang";
+                layoutMode.setVisibility(LinearLayout.GONE);
+                break;
+
+            case R.id.btn_friend:
+                sendData="mode_friend";
+                layoutMode.setVisibility(LinearLayout.GONE);
+                break;
+
+            case R.id.btn_star:
+                sendData="mode_star";
+                layoutMode.setVisibility(LinearLayout.GONE);
                 break;
         }
         if (!sendData.equals("noData")) {

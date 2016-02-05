@@ -467,14 +467,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     tick = nowMeasure.endTicks;
                 }
 
-                int term = 5;
+                int term = 32;
                 try {
                     if (player.getCurrentPosition() - currentMillis2 > term) { // 0.005초마다 들어온당
 
                         float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
-                        /*if (plusTick > 12) {
-                            plusTick /= 2;
-                        }*/
                         tick += plusTick;
                         Log.e("fucking", player.getCurrentPosition() + " | " + currentMillis2 + " = " + (player.getCurrentPosition() - currentMillis2));
                         Logger.i("fucking", "plus tick : " + plusTick);

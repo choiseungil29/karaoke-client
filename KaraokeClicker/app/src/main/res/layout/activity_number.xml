@@ -6,25 +6,33 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/layout_mode"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:background="#fff"
+        android:orientation="vertical">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="듀엣" />
+            android:id="@+id/btn_vpang"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:text="팡팡노래방" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="듀엣with스타" />
+            android:id="@+id/btn_friend"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:text="친구 가족 함께" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="스타노래방" />
+            android:id="@+id/btn_star"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:text="스타와 함께" />
     </LinearLayout>
 
     <LinearLayout
