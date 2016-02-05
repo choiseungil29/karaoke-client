@@ -52,7 +52,9 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                         startActivity(intent2);
                         break;
                     case "mode_star":
-                        Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
+                        Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
+                        startActivity(intent3);
                         break;
                 }
 //                chooseSong(message);
@@ -74,7 +76,9 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                 startActivity(intent2);
                 break;
             case R.id.btn_launcher_star:
-                Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
+                Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
+                startActivity(intent3);
                 break;
         }
     }

@@ -22,13 +22,13 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:text="친구 가족 함께" />
+        android:text="듀엣노래방" />
 
     <Button
         android:id="@+id/btn_launcher_star"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:text="스타와 함께" />
+        android:text="오디션 에잇틴" />
 
 </LinearLayout>
