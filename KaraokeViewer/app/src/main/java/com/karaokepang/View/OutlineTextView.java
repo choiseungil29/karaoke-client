@@ -51,19 +51,18 @@ public class OutlineTextView extends TextView {
         getPaint().setStrokeWidth(5);
 
         String lines = getText().toString();
-        int i=0;
+        int i = 0;
         getPaint().setTypeface(font);
-        for(String line : lines.split("\n")) {
+        for (String line : lines.split("\n")) {
             getPaint().setStyle(Paint.Style.STROKE);
             getPaint().setColor(Color.BLACK);
-            canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i+1), getPaint());
+            canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i + 1), getPaint());
             getPaint().setStyle(Paint.Style.FILL);
             getPaint().setColor(Color.WHITE);
-            canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i+1), getPaint());
+            canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i + 1), getPaint());
             i++;
         }
-
-        canvas.clipRect(0, 0, width, 1000);
+            canvas.clipRect(0, 0, width, 1000);
         try {
             String line = lines.split("\n")[index];
 
@@ -84,12 +83,12 @@ public class OutlineTextView extends TextView {
     public void setTick(long tick, int lyricsIndex) {
         KSALyrics lyrics = KSALyricsArray.get(lyricsIndex);
 
-        index = lyricsIndex%2;
+        index = lyricsIndex % 2;
         KSALyric target = lyrics.lyricList.get(0);
         StringBuilder builder = new StringBuilder();
-        int i=0;
-        for(KSALyric lyric : lyrics.lyricList) {
-            if(lyric.startTick <= tick) {
+        int i = 0;
+        for (KSALyric lyric : lyrics.lyricList) {
+            if (lyric.startTick <= tick) {
                 target = lyric;
                 builder.append(lyric.lyric);
                 i++;
@@ -107,7 +106,10 @@ public class OutlineTextView extends TextView {
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
             getPaint().getTextBounds(target.lyric, 0, 1, letterRect);
-            width = spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
+            float temp = completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
+            if(width < temp) {
+                width = temp;
+            }
             Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick)))
             ;
         } catch (Exception e) {

@@ -215,7 +215,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     String english = "";
                     char start = lyrics.charAt(lyricsIndex);
                     if (start >= 'a' && start <= 'z' ||
-                            start >='A' && start <= 'Z') {
+                            start >= 'A' && start <= 'Z') {
                         while (lyrics.charAt(lyricsIndex) != ' ' &&
                                 lyrics.charAt(lyricsIndex) != '\n' &&
                                 lyrics.charAt(lyricsIndex) != '\r' &&
@@ -325,7 +325,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("kkk","stop!!!!!!!");
+        Log.d("kkk", "stop!!!!!!!");
         player.stop();
         activity.stopRecord();
     }
@@ -469,11 +469,17 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                 int term = 5;
                 try {
-                    if (player.getCurrentPosition() - currentMillis2 >
-                            term) { // 0.005초마다 들어온당
+                    if (player.getCurrentPosition() - currentMillis2 > term) { // 0.005초마다 들어온당
 
                         float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
+                        /*if (plusTick > 12) {
+                            plusTick /= 2;
+                        }*/
                         tick += plusTick;
+                        Log.e("fucking", player.getCurrentPosition() + " | " + currentMillis2 + " = " + (player.getCurrentPosition() - currentMillis2));
+                        Logger.i("fucking", "plus tick : " + plusTick);
+                        Logger.i("fucking", "tick : " + tick);
+
                         listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
                         currentMillis2 = player.getCurrentPosition();
                     }
