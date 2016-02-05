@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initBluetooth();
-
         vv_background = (VideoView) findViewById(R.id.vv_background);
         vv_background.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
         vv_background.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

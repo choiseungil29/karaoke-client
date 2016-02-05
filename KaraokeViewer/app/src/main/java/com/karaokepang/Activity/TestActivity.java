@@ -32,6 +32,7 @@ import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Prefs;
+import com.karaokepang.Util.Util;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
@@ -155,7 +156,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         for (MidiEvent event : scoreView.lyricsTrack.getEvents()) {
             if (event instanceof Lyrics) {
                 list.add((Lyrics) event);
-                //Logger.i("lyriccccccccccccccccccccccccc : " + ((Lyrics) event).getLyric());
             }
         }
 
@@ -166,18 +166,11 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         for (i = 0; i < list.size(); i++) {
             Lyrics event = list.get(i);
-            if (event.getLyric().equals("\r")) {
-                continue;
-            }
-            if (event.getLyric().equals("\n")) {
-                continue;
-            }
-            if (event.getLyric().equals("")) {
+            if(!Util.filterLyricText(event)) {
                 continue;
             }
 
             // 라인이 ""이거나 @, #이면 넘어감
-            //String lyricLine = tv_lyrics.lyricsArray.get(lineIndex).replaceAll(" ", "");
             String lyricLine = tv_lyrics.lyricsArray.get(lineIndex);
             // lyricLine : " "를 없앤 KSA파일 기준 한 줄
             String removeSpace = lyricLine.replaceAll(" ", "");
@@ -188,16 +181,26 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 removeSpace = lyricLine.replaceAll(" ", "");
             }
 
-            if (i < list.size() - 1) {
-                // lyricList : lyric array list. lyric한개씩 담아서 한 줄을 맞춘다
-                long startTick = event.getTick();
-                long endTick = list.get(i+1).getTick();
-                if((endTick - startTick) > (ScoreView.resolution * 4)) {
-                    endTick = startTick + ScoreView.resolution * 4;
+            long startTick = event.getTick();
+            long endTick;
+            try {
+                while (!Util.filterLyricText(list.get(i+1))) {
+                    i++;
                 }
-                lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
-                line.append(event.getLyric());
+                endTick = list.get(i+1).getTick();
+
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+                endTick = list.get(i).getTick();
             }
+            if((endTick - startTick) > (ScoreView.resolution * 4)) {
+                endTick = startTick + ScoreView.resolution * 4;
+            }
+            if(startTick == endTick) {
+                Logger.i("hi!");
+            }
+            lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
+            line.append(event.getLyric());
 
             // line : string builder. 문자열 한 줄을 조립한다
             if (lyricLine.replaceAll(" ", "").equals(line.toString())) {
