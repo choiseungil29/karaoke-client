@@ -103,7 +103,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         videoView.setFocusable(false);
         videoView.setVideoPath("/mnt/sdcard/vpang_bg/2.TS");
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        /*videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -112,7 +112,6 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         });
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
@@ -120,7 +119,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 videoView.start();
             }
         });
-        videoView.start();
+        videoView.start();*/
 
     }
 
@@ -266,7 +265,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
                 head = ksaLyrics.lyricLine;
                 tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
             }
-            if (tick >= ksaLyrics.endTick + scoreView.resolution / 2) {
+            if (tick >= ksaLyrics.endTick) {
                 head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
                 tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
                 nowLyricsIndex++;
@@ -275,7 +274,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             }
         } else {
             KSALyrics nowLyrics = tv_lyrics.KSALyricsArray.get(nowLyricsIndex);
-            if (tick >= nowLyrics.endTick + scoreView.resolution / 2) {
+            if (tick >= nowLyrics.endTick) {
                 if (nowLyricsIndex % 2 == 0) {
                     head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
                     tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;

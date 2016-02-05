@@ -68,14 +68,12 @@ public class OutlineTextView extends TextView {
             String line = lines.split("\n")[index];
 
             getPaint().setStyle(Paint.Style.FILL);
-//            getPaint().setColor(Color.parseColor("#000000"));
             getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         } catch (Exception e) {
             e.printStackTrace();
             String line = lines;
             getPaint().setStyle(Paint.Style.FILL);
-//            getPaint().setColor(Color.parseColor("#000000"));
             getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
         }
@@ -107,9 +105,8 @@ public class OutlineTextView extends TextView {
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
             getPaint().getTextBounds(target.lyric, 0, 1, letterRect);
-            width = spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
-            Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick)))
-            ;
+            width = completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
+            Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick)));
         } catch (Exception e) {
             e.printStackTrace();
         }
