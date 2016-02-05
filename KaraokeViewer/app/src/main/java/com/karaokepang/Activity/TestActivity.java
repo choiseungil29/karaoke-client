@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,7 +31,6 @@ import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
-import com.karaokepang.Util.Prefs;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
@@ -101,12 +99,23 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
         videoView = (VideoView) findViewById(R.id.vv_background);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.mp4");
+        videoView.setVideoPath("/mnt/sdcard/vpang_bg/2.TS");
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                videoView.resume();
+            }
+        });
+
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mp.setVolume(0, 0);
                 mp.setLooping(true);
+                mp.setVolume(0,0);
+                videoView.start();
             }
         });
         videoView.start();
@@ -192,8 +201,8 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
             if (i < list.size() - 1) {
                 // lyricList : lyric array list. lyric한개씩 담아서 한 줄을 맞춘다
                 long startTick = event.getTick();
-                long endTick = list.get(i+1).getTick();
-                if((endTick - startTick) > (ScoreView.resolution * 4)) {
+                long endTick = list.get(i + 1).getTick();
+                if ((endTick - startTick) > (ScoreView.resolution * 4)) {
                     endTick = startTick + ScoreView.resolution * 4;
                 }
                 lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
@@ -428,7 +437,7 @@ public class TestActivity extends AppCompatActivity implements MusicListener {
 
         layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
         preview = new CameraPreview(this, getApplicationContext(), camera);
-        preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth()/4, getWindowManager().getDefaultDisplay().getHeight()/4));
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
         is_recording = false;
     }
