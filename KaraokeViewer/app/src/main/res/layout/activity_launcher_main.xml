@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    android:background="@drawable/launchur_background"
+    android:padding="30dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -15,31 +16,24 @@
             android:id="@+id/btn_launcher_vpang"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="#fff"
-            android:text="팡팡노래방"
-            android:textSize="50sp" />
+            android:background="@drawable/btn_vpang" />
 
         <Button
             android:id="@+id/btn_launcher_friend"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
-            android:background="#fff"
-            android:text="듀엣노래방"
-            android:textSize="50sp" />
+            android:background="@drawable/btn_duet" />
 
         <Button
             android:id="@+id/btn_launcher_star"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="#fff"
-            android:text="오디션"
-            android:textSize="50sp" />
+            android:background="@drawable/btn_audition" />
 
     </LinearLayout>
 
@@ -53,9 +47,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:gravity="center_vertical"
             android:layout_weight="2"
-            android:background="#555">
+            android:background="@drawable/video_background"
+            android:gravity="center_vertical">
 
             <VideoView
                 android:id="@+id/videoView"
