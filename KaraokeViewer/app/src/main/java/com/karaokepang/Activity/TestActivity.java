@@ -100,7 +100,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         videoView = (VideoView) findViewById(R.id.vv_background);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/2.TS");
+        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
