@@ -2,6 +2,7 @@ package com.karaokepang.launcher;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -77,7 +78,9 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         videoView = (VideoView) findViewById(R.id.videoView);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
+//        videoView.setVideoPath("/mnt/sdcard/vpang_bg/test1est1.TS");
+        String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
+        videoView.setVideoURI(Uri.parse(path));
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
