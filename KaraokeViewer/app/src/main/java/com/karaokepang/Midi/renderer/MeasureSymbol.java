@@ -28,6 +28,7 @@ public class MeasureSymbol extends Symbol {
 
     public ArrayList<Symbol> symbols;
     public ArrayList<MidiSymbol> notes;
+    public TimeSignatureSymbol timeSignature;
 
     public int startTicks;
     public int endTicks;
@@ -37,6 +38,7 @@ public class MeasureSymbol extends Symbol {
     public int paddingLeft = 0;
 
     public Tempo tempo;
+    public List<Tempo> tempoList;
 
     public float BPM;
 
@@ -49,6 +51,7 @@ public class MeasureSymbol extends Symbol {
         symbols = new ArrayList<>();
         notes = new ArrayList<>();
         lyricsList = new ArrayList<>();
+        tempoList = new ArrayList<>();
 
         height = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4 + ScoreView.FIRST_LINE_HEIGHT;
     }
@@ -111,7 +114,9 @@ public class MeasureSymbol extends Symbol {
         if(e instanceof KeySignature) {
             return new KeySignatureSymbol((KeySignature) e);
         } else if (e instanceof TimeSignature) {
-            return new TimeSignatureSymbol((TimeSignature) e);
+            TimeSignatureSymbol symbol = new TimeSignatureSymbol((TimeSignature) e);
+            timeSignature = symbol;
+            return symbol;
         } else if (e instanceof NoteOn) {
             if((((NoteOn) e).getNoteValue()/12) * 12 < ScoreView.DEFAULT_C) {
                 ScoreView.DEFAULT_C = (((NoteOn) e).getNoteValue()/12) * 12;
@@ -199,7 +204,6 @@ public class MeasureSymbol extends Symbol {
                 if(lhs.getStartTicks() > rhs.getStartTicks()) {
                     return 1;
                 }
-
                 return 0;
             }
         });

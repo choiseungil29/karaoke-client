@@ -89,7 +89,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
 
         mode = getIntent().getStringExtra("mode");
         if(mode == null) {
-            setContentView(R.layout.activity_test_three);
+            setContentView(R.layout.activity_test);
         } else {
             if (mode.equals("vpang")) {
                 setContentView(R.layout.activity_test_three);
@@ -261,7 +261,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     int nowLyricsIndex = 0;
 
     @Override
-    public void notifyCurrentTick(long tick, int term, int measureLength) {
+    public void notifyCurrentTick(float tick, int term, int measureLength) {
         String head = "";
         String tail = "";
         if (nowLyricsIndex == 0) {
@@ -309,10 +309,10 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (camera == null) {
+        /*if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-        }
+        }*/
     }
 
     @Override

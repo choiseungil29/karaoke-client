@@ -18,6 +18,7 @@ import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.event.meta.TimeSignature;
 import com.karaokepang.Midi.renderer.KeySignatureSymbol;
 import com.karaokepang.Midi.renderer.MeasureSymbol;
@@ -299,6 +300,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         createMeasures(renderTrack);
         settingMeasures();
 
+        nowMeasure = measures.get(0);
+        nowMeasures[0] = measures.subList(0, 4);
+        nowMeasures[1] = measures.subList(4, 8);
+        callOnDraw();
+        thread.start();
+
         try {
             FileInputStream fis = new FileInputStream(uri.getPath());
             FileDescriptor fd = fis.getFD();
@@ -310,12 +317,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        nowMeasure = measures.get(0);
-        nowMeasures[0] = measures.subList(0, 4);
-        nowMeasures[1] = measures.subList(4, 8);
-        callOnDraw();
-        thread.start();
     }
 
     @Override
@@ -363,8 +364,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             if (e instanceof TimeSignature) {
-                measureLength = ScoreView.resolution * 4 * ((TimeSignature) e).getNumerator() / ((TimeSignature) e).getRealDenominator();
-                Logger.i("measure length : " + measureLength);
+                measureLength = (ScoreView.resolution/(((TimeSignature) e).getRealDenominator()/4)) * ((TimeSignature) e).getNumerator();
                 measure.startTicks = nowTicks;
                 measure.endTicks = nowTicks + measureLength;
                 measure.addSymbol(e);
@@ -430,12 +430,31 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         public void run() {
             long currentMillis = player.getCurrentPosition();
             long currentMillis2 = player.getCurrentPosition();
-            long tick = 0;
-            long startTime = System.currentTimeMillis();
+            float tick = 0;
+
+            Tempo tempo = nowMeasure.tempoList.get(0);
             while (true) {
+                if(currentMillis <= 0 || currentMillis2 <= 0) {
+                    currentMillis = player.getCurrentPosition();
+                    currentMillis2 = player.getCurrentPosition();
+                    continue;
+                }
+
+                for(Tempo t : nowMeasure.tempoList) {
+                    if(tempo.getTick() >= t.getTick()) {
+                        continue;
+                    }
+                    if(t.getTick() <
+                            tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)) {
+                        tempo = t;
+                        Logger.i("result : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
+                        Logger.i("result bpm : " + tempo.getBpm());
+                    }
+                }
 
                 if (player.getCurrentPosition() - currentMillis >
-                        ((60 / nowMeasure.BPM) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
+                        ((60 / tempo.getBpm()) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
+
                     currentMillis = player.getCurrentPosition();
 
                     if (measureCount >= measures.size()) {
@@ -464,19 +483,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     callOnDraw();
 
                     measureCount++;
-                    tick = nowMeasure.endTicks;
                 }
 
                 int term = 32;
                 try {
-                    if (player.getCurrentPosition() - currentMillis2 > term) { // 0.005초마다 들어온당
-
-                        float plusTick = ((nowMeasure.BPM / 60 * resolution) / 1000) * (player.getCurrentPosition() - currentMillis2);
-                        tick += plusTick;
-                        Log.e("fucking", player.getCurrentPosition() + " | " + currentMillis2 + " = " + (player.getCurrentPosition() - currentMillis2));
-                        Logger.i("fucking", "plus tick : " + plusTick);
-                        Logger.i("fucking", "tick : " + tick);
-
+                    if (player.getCurrentPosition() - currentMillis2 > term) {
+                        tick = tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000);
                         listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
                         currentMillis2 = player.getCurrentPosition();
                     }

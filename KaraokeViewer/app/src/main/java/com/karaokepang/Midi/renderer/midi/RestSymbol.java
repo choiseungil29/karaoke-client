@@ -103,7 +103,7 @@ public class RestSymbol extends MidiSymbol {
 
     private void drawEighth(Canvas canvas, Paint paint) {
         int y = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT/2;
-        float radius = (ScoreView.LINE_SPACE_HEIGHT-3)/2;
+        float radius = (ScoreView.LINE_SPACE_HEIGHT-3)/3;
 
         canvas.drawCircle(0, y, radius, paint);
         canvas.drawLine(0, y + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT, y - radius, paint);

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Tempo;
+import com.karaokepang.Util.Logger;
 import com.karaokepang.View.ScoreView;
 
 import java.util.List;
@@ -35,6 +36,11 @@ public class StaffSymbol extends Symbol {
                 if(event instanceof Tempo &&
                         event.getTick() <= measure.startTicks) {
                     measure.BPM = ((Tempo) event).getBpm();
+                }
+                if(event instanceof Tempo &&
+                        event.getTick() >= measure.startTicks &&
+                        event.getTick() < measure.endTicks) {
+                    measure.tempoList.add((Tempo) event);
                 }
             }
         }

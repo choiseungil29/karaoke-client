@@ -78,7 +78,7 @@ public class OutlineTextView extends TextView {
         }
     }
 
-    public void setTick(long tick, int lyricsIndex) {
+    public void setTick(float tick, int lyricsIndex) {
         KSALyrics lyrics = KSALyricsArray.get(lyricsIndex);
 
         index = lyricsIndex % 2;
@@ -104,12 +104,11 @@ public class OutlineTextView extends TextView {
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
             getPaint().getTextBounds(target.lyric, 0, 1, letterRect);
-            float temp = completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick);
+            float temp = completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick);
             if(width < temp) {
                 width = temp;
             }
-            Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * ((float) tick - target.startTick) / ((float) target.endTick - target.startTick)))
-            ;
+            Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick)));
         } catch (Exception e) {
             e.printStackTrace();
         }
