@@ -88,10 +88,14 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mode = getIntent().getStringExtra("mode");
-        if(mode.equals("vpang")) {
+        if(mode == null) {
             setContentView(R.layout.activity_test_three);
-        }else if(mode.equals("friend")){
-            setContentView(R.layout.activity_test);
+        } else {
+            if (mode.equals("vpang")) {
+                setContentView(R.layout.activity_test_three);
+            } else if (mode.equals("friend")) {
+                setContentView(R.layout.activity_test);
+            }
         }
 
         preData();
@@ -104,7 +108,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
         videoView.setVideoURI(Uri.parse(path));
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        /*videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -120,7 +124,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
                 videoView.start();
             }
         });
-        videoView.start();
+        videoView.start();*/
 
     }
 
@@ -469,7 +473,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
 
         dialog = new ChooseSongDialog(this, list);
 
-        initDefaultData();
+        //initDefaultData();
     }
 
 
