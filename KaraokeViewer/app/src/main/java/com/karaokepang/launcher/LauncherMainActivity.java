@@ -77,7 +77,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         videoView = (VideoView) findViewById(R.id.videoView);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/2.TS");
+        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
