@@ -22,7 +22,7 @@ public class BluetoothActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //initBluetooth();
+        initBluetooth();
     }
 
 

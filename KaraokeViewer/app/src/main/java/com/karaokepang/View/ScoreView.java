@@ -313,7 +313,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             player.setDataSource(fd);
             player.prepare();
             player.start();
-            //activity.startRecord();
+            activity.startRecord();
         } catch (IOException e) {
             e.printStackTrace();
         }

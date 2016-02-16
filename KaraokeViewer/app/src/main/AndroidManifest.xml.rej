@@ -1,0 +1,15 @@
+diff a/KaraokeViewer/app/src/main/AndroidManifest.xml b/KaraokeViewer/app/src/main/AndroidManifest.xml	(rejected hunks)
+@@ -42,7 +42,12 @@
+         <activity android:name="com.midisheetmusic.RecentSongsActivity" />
+         <activity
+             android:name=".Activity.TestActivity"
+-            android:screenOrientation="landscape" />
++            android:screenOrientation="landscape" >
++            <intent-filter>
++                <action android:name="android.intent.action.MAIN" />
++                <category android:name="android.intent.category.LAUNCHER" />
++            </intent-filter>
++        </activity>
+         <activity
+             android:name="com.midisheetmusic.SheetMusicActivity"
+             android:screenOrientation="landscape" />
