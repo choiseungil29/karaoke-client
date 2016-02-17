@@ -55,4 +55,33 @@
         android:textSize="120sp"
         android:textStyle="bold"
         font:typeface="BMJUA_ttf.ttf" />
+    <LinearLayout
+        android:id="@+id/layout_song_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_songName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_composer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/text_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="50sp" />
+    </LinearLayout>
 </RelativeLayout>
