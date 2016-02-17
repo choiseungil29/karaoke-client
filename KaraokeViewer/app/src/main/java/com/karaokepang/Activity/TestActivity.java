@@ -305,10 +305,10 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     @Override
     protected void onResume() {
         super.onResume();
-        /*if (camera == null) {
+        if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-        }*/
+        }
     }
 
     @Override

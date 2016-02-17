@@ -47,7 +47,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        /*try {
+        try {
             Log.d(VIEW_LOG_TAG, "1============== ");
             if (mCamera == null) {
                 Log.d(VIEW_LOG_TAG, "2============== ");
@@ -56,7 +56,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         } catch (IOException e) {
             Log.d(VIEW_LOG_TAG, "Error setting camera preview: " + e.getMessage());
-        }*/
+        }
     }
 
     public void refreshCamera(Camera camera) {
