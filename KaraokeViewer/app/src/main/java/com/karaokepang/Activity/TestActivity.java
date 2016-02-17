@@ -396,10 +396,10 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
-        recorder.setVideoEncodingBitRate(10000000);
-        recorder.setVideoFrameRate(30);
+        recorder.setVideoEncodingBitRate(1000000);
+        //recorder.setVideoFrameRate(30);
         recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(6000000 * 10);
         recorder.setMaxFileSize(300000000 * 20);
