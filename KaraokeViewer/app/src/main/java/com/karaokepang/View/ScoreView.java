@@ -267,7 +267,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas == null) {
             return;
         }
-        onDraw(canvas);
+        draw(canvas);
         holder.unlockCanvasAndPost(canvas);
     }
 
@@ -313,8 +313,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             player.setDataSource(fd);
             player.prepare();
             player.start();
-            //activity.startRecord();
+            activity.startRecord();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
             e.printStackTrace();
         }
     }
@@ -326,9 +328,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("kkk", "stop!!!!!!!");
         player.stop();
-        //activity.stopRecord();
+        activity.stopRecord();
     }
 
     @Override
@@ -364,7 +365,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             if (e instanceof TimeSignature) {
-                measureLength = (ScoreView.resolution/(((TimeSignature) e).getRealDenominator()/4)) * ((TimeSignature) e).getNumerator();
+                measureLength = (ScoreView.resolution / (((TimeSignature) e).getRealDenominator() / 4)) * ((TimeSignature) e).getNumerator();
                 measure.startTicks = nowTicks;
                 measure.endTicks = nowTicks + measureLength;
                 measure.addSymbol(e);
@@ -434,17 +435,17 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
             Tempo tempo = nowMeasure.tempoList.get(0);
             while (true) {
-                if(currentMillis <= 0 || currentMillis2 <= 0) {
+                if (currentMillis <= 0 || currentMillis2 <= 0) {
                     currentMillis = player.getCurrentPosition();
                     currentMillis2 = player.getCurrentPosition();
                     continue;
                 }
 
-                for(Tempo t : nowMeasure.tempoList) {
-                    if(tempo.getTick() >= t.getTick()) {
+                for (Tempo t : nowMeasure.tempoList) {
+                    if (tempo.getTick() >= t.getTick()) {
                         continue;
                     }
-                    if(t.getTick() <
+                    if (t.getTick() <
                             tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)) {
                         tempo = t;
                         Logger.i("result : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
@@ -488,7 +489,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 int term = 32;
                 try {
                     if (player.getCurrentPosition() - currentMillis2 > term) {
-                        tick = tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000);
+                        tick = tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000);
                         listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
                         currentMillis2 = player.getCurrentPosition();
                     }
@@ -506,5 +507,29 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setActivity(TestActivity activity) {
         this.activity = activity;
+    }
+
+    public String getSongName() {
+        return songName;
+    }
+
+    public void setSongName(String songName) {
+        this.songName = songName;
+    }
+
+    public String getComposer() {
+        return composer;
+    }
+
+    public void setComposer(String composer) {
+        this.composer = composer;
+    }
+
+    public String getSinger() {
+        return singer;
+    }
+
+    public void setSinger(String singer) {
+        this.singer = singer;
     }
 }

@@ -17,8 +17,13 @@ import com.karaokepang.Activity.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Midi.event.meta.Text;
 import com.karaokepang.R;
+import com.karaokepang.ftp.FtpServiceDown;
+import com.midisheetmusic.FileUri;
 
+import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
@@ -33,11 +38,17 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
 
     private TextView textLed;
 
+
+
+    private ArrayList<FileUri> list;
+    private ArrayList<String> localFiles = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher_main);
 
+        initDefaultData();
         initVideoView();
         initTextVIew();
 
@@ -72,6 +83,43 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
 //                chooseSong(message);
             }
         });
+    }
+
+    void initDefaultData() {
+        new FtpServiceDown(LauncherMainActivity.this, localFiles).execute();
+
+        list = new ArrayList<>();
+        loadSdcardMidiFiles();
+
+        if (list.size() > 0) {
+            Collections.sort(list, list.get(0));
+        }
+
+        ArrayList<FileUri> origlist = list;
+        list = new ArrayList<>();
+        String prevname = "";
+        for (FileUri file : origlist) {
+            if (!file.toString().equals(prevname)) {
+                list.add(file);
+            }
+            prevname = file.toString();
+        }
+
+
+    }
+
+    public void loadSdcardMidiFiles() {
+        File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+        if (fileList == null)
+            return;
+        for (File file : fileList) {
+            localFiles.add(file.getName());
+            if (file.getName().endsWith(".mid")) {
+                Uri uri = Uri.parse(file.getAbsolutePath());
+                FileUri fileUri = new FileUri(uri, file.getName());
+                list.add(fileUri);
+            }
+        }
     }
 
     private void initVideoView() {
