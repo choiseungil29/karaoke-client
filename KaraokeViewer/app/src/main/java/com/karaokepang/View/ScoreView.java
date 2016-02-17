@@ -267,7 +267,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas == null) {
             return;
         }
-        draw(canvas);
+        onDraw(canvas);
         holder.unlockCanvasAndPost(canvas);
     }
 

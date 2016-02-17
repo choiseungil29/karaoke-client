@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -21,7 +20,6 @@ import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Lyrics;
-import com.karaokepang.Midi.event.meta.Text;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
@@ -314,6 +312,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
                 public void run() {
                     if (tick + 500 > firstTime) {
                         layoutSongName.setVisibility(LinearLayout.GONE);
+                        ((RelativeLayout) (findViewById(R.id.layout_score))).setVisibility(RelativeLayout.VISIBLE);
                     }
                     tv_lyrics.setText(text);
                 }
