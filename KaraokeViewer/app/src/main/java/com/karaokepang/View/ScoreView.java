@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -37,8 +36,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by clogic on 2015. 12. 10..
@@ -85,6 +86,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public static int measureLength;
 
     private Uri uri = null;
+
+    private List<Float> alphaSeconds = new ArrayList<>();
+    private Map<Float, Float> millisToBpm = new HashMap<>();
 
     public ScoreView(Context context) {
         this(context, null);
@@ -333,6 +337,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         player.stop();
+        player.release();
         activity.stopRecord();
     }
 
@@ -438,24 +443,25 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             float tick = 0;
 
             Tempo tempo = nowMeasure.tempoList.get(0);
-            Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
-            Logger.i("result bpm : " + tempo.getBpm());
             while (true) {
-                if (currentMillis <= 0 || currentMillis2 <= 0) {
-                    currentMillis = player.getCurrentPosition();
-                    currentMillis2 = player.getCurrentPosition();
-                    continue;
-                }
-
+                float millis = 0;
                 for (Tempo t : nowMeasure.tempoList) {
                     if (tempo.getTick() >= t.getTick()) {
                         continue;
                     }
+
+                    // 현재 시간을 틱으로 바꿔서 Tempo와 매칭시키는 부분
+                    // tempo가 1번만 바뀌면 문제가 없지만, 2번이상 바뀔경우 문제가 발생한다. 템포가 중간에 안맞는 경우가 생기면 여기 코드에서 더 발전해나가야함
                     if (t.getTick() <
-                            tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)) {
+                            (tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000))) {
+                        Logger.i("player current millis : " + player.getCurrentPosition());
+                        Logger.i("result before tempo : " + tempo.getBpm());
+                        Logger.i("result after tempo : " + t.getBpm());
+                        Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000)));
+                        millis += (t.getTick() / (tempo.getBpm() / 60 * resolution));
+                        alphaSeconds.add(millis);
+                        millisToBpm.put(millis, tempo.getBpm());
                         tempo = t;
-                        Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
-                        Logger.i("result bpm : " + tempo.getBpm());
                     }
                 }
 
@@ -487,16 +493,27 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);
 
-                    //callOnDraw();
-
                     measureCount++;
                 }
 
                 int term = 32;
                 try {
                     if (player.getCurrentPosition() - currentMillis2 > term) {
-                        tick = tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000);
+                        tick = 0;
+                        float stack = 0;
+                        for(float item : alphaSeconds) {
+                            float section = item - stack;
+                            float bpm = millisToBpm.get(item);
+
+                            tick += bpm / 60 * resolution * section;
+                            stack += section;
+                            Logger.i("tick : " + tick);
+                            Logger.i("alphaSeconds size ; " + alphaSeconds.size());
+                        }
+
+                        tick += tempo.getBpm() / 60 * resolution * (((float)player.getCurrentPosition() / 1000) - stack);
                         nowTick = tick;
+                        Logger.i("test tick : " + tick);
                         listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
                         currentMillis2 = player.getCurrentPosition();
                         callOnDraw();
