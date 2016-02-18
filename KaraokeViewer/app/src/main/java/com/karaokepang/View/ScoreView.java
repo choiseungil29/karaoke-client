@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -28,18 +29,18 @@ import com.karaokepang.Midi.renderer.midi.MidiSymbol;
 import com.karaokepang.Midi.renderer.midi.NoteSymbol;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Resources;
+import com.midisheetmusic.FileUri;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by clogic on 2015. 12. 10..
@@ -64,8 +65,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int resolution = 0; // 한 박자의 단위길이
 
-    public float nowTick = 0;
-
     private MusicListener listener;
 
     private ScoreThread thread = new ScoreThread();
@@ -86,9 +85,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public static int measureLength;
 
     private Uri uri = null;
-
-    private List<Float> alphaSeconds = new ArrayList<>();
-    private Map<Float, Float> millisToBpm = new HashMap<>();
 
     public ScoreView(Context context) {
         this(context, null);
@@ -151,10 +147,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         try {
-            AssetManager assets = this.getResources().getAssets();
-            for (String path : assets.list("")) {
-                if (path.endsWith(".KSA") && path.startsWith(fileName)) {
-                    InputStream is = getResources().getAssets().open(path);
+            File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+            if (fileList == null)
+                return;
+            for (File file : fileList) {
+                if ((file.getName().endsWith(".ksa") || file.getName().endsWith(".KSA")) && file.getName().startsWith(fileName)) {
+                    InputStream is = new FileInputStream(file);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
                     String line;
                     lyrics = new StringBuilder();
@@ -288,12 +286,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(0, 0, width, height, paint);
 
         StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
-        staffSymbol.nowTick = nowTick;
         staffSymbol.draw(canvas);
 
         canvas.translate(0, height / 2);
         StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
-        staffSymbol1.nowTick = nowTick;
         staffSymbol1.draw(canvas);
         canvas.translate(0, -(height / 2));
     }
@@ -337,7 +333,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         player.stop();
-        player.release();
         activity.stopRecord();
     }
 
@@ -444,24 +439,21 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
             Tempo tempo = nowMeasure.tempoList.get(0);
             while (true) {
-                float millis = 0;
+                if (currentMillis <= 0 || currentMillis2 <= 0) {
+                    currentMillis = player.getCurrentPosition();
+                    currentMillis2 = player.getCurrentPosition();
+                    continue;
+                }
+
                 for (Tempo t : nowMeasure.tempoList) {
                     if (tempo.getTick() >= t.getTick()) {
                         continue;
                     }
-
-                    // 현재 시간을 틱으로 바꿔서 Tempo와 매칭시키는 부분
-                    // tempo가 1번만 바뀌면 문제가 없지만, 2번이상 바뀔경우 문제가 발생한다. 템포가 중간에 안맞는 경우가 생기면 여기 코드에서 더 발전해나가야함
                     if (t.getTick() <
-                            (tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000))) {
-                        Logger.i("player current millis : " + player.getCurrentPosition());
-                        Logger.i("result before tempo : " + tempo.getBpm());
-                        Logger.i("result after tempo : " + t.getBpm());
-                        Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000)));
-                        millis += (t.getTick() / (tempo.getBpm() / 60 * resolution));
-                        alphaSeconds.add(millis);
-                        millisToBpm.put(millis, tempo.getBpm());
+                            tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)) {
                         tempo = t;
+                        Logger.i("result : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
+                        Logger.i("result bpm : " + tempo.getBpm());
                     }
                 }
 
@@ -493,30 +485,17 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);
 
+                    callOnDraw();
+
                     measureCount++;
                 }
 
                 int term = 32;
                 try {
                     if (player.getCurrentPosition() - currentMillis2 > term) {
-                        tick = 0;
-                        float stack = 0;
-                        for(float item : alphaSeconds) {
-                            float section = item - stack;
-                            float bpm = millisToBpm.get(item);
-
-                            tick += bpm / 60 * resolution * section;
-                            stack += section;
-                            Logger.i("tick : " + tick);
-                            Logger.i("alphaSeconds size ; " + alphaSeconds.size());
-                        }
-
-                        tick += tempo.getBpm() / 60 * resolution * (((float)player.getCurrentPosition() / 1000) - stack);
-                        nowTick = tick;
-                        Logger.i("test tick : " + tick);
+                        tick = tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000);
                         listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
                         currentMillis2 = player.getCurrentPosition();
-                        callOnDraw();
                     }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();

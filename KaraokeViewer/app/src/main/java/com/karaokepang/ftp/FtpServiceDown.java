@@ -72,7 +72,7 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                 }
                 Log.e("kkk_ftp", ftpFiles.toString());
                 Log.e("kkk_local", localFiles.toString());
-                if (!(ftpFiles.toString().equals(localFiles.toString())) || ftpFiles.size() == 0 || localFiles.size() == 0) {
+                if (ftpFiles.size() != localFiles.size() || localFiles.size() == 0) {
                     Log.e("kkk", "fuck");
                     for (int i = 0; i < ftpdirs.length; i++) {
                         FileOutputStream fileOutputStream = new FileOutputStream("/mnt/sdcard/vpang_mid/" + ftpdirs[i].getName());
@@ -124,13 +124,13 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
     private void initDefaultFileDirCheck() {
         File dirVpang = new File("/mnt/sdcard/vpang");
         if (!dirVpang.exists()) {
-            Log.i("kkk","파일생성" + dirVpang.getAbsolutePath());
+            Log.i("kkk", "파일생성" + dirVpang.getAbsolutePath());
             dirVpang.mkdirs();
         }
 
         File dirVpangMid = new File("/mnt/sdcard/vpang_mid");
         if (!dirVpangMid.exists()) {
-            Log.i("kkk","파일생성" + dirVpangMid.getAbsolutePath());
+            Log.i("kkk", "파일생성" + dirVpangMid.getAbsolutePath());
             dirVpangMid.mkdirs();
         }
     }

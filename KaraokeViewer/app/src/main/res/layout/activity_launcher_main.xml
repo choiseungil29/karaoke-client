@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/launchur_background"
-    android:padding="30dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="30dp">
 
     <LinearLayout
         android:layout_width="0px"
@@ -59,7 +59,7 @@
                 android:clickable="false" />
         </RelativeLayout>
 
-        <TextView
+        <com.karaokepang.View.LedTextView
             android:id="@+id/text_led"
             android:layout_width="match_parent"
             android:layout_height="0px"
@@ -72,8 +72,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="팡팡 노래방에 오신것을 환영합니다. 팡팡 노래방에 오신것을 환영합니다. 팡팡 노래방에 오신것을 환영합니다."
-            android:textColor="@android:color/white"
-            android:textSize="70sp"
+            android:textSize="110sp"
             android:textStyle="bold" />
     </LinearLayout>
 

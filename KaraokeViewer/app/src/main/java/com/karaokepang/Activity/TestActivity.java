@@ -312,7 +312,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
                 public void run() {
                     if (tick + 500 > firstTime) {
                         layoutSongName.setVisibility(LinearLayout.GONE);
-                        ((RelativeLayout) (findViewById(R.id.layout_score))).setVisibility(RelativeLayout.VISIBLE);
+                        findViewById(R.id.layout_score).setVisibility(RelativeLayout.VISIBLE);
                     }
                     tv_lyrics.setText(text);
                 }

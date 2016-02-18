@@ -64,7 +64,6 @@ public class OutlineTextView extends TextView {
             i++;
         }
         canvas.clipRect(0, 0, width, 1000);
-        Log.e("kkk", "width = " + width);
         try {
             String line = lines.split("\n")[index];
             getPaint().setStyle(Paint.Style.FILL);
