@@ -103,7 +103,6 @@ public class OutlineTextView extends TextView {
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
             getPaint().getTextBounds(target.lyric, 0, target.lyric.length(), letterRect);
-            Logger.i("lyric log : " + target.lyric);
             float temp = completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick);
             if (width < temp) {
                 width = temp;
