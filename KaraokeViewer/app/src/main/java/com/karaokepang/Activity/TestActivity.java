@@ -1,8 +1,6 @@
 package com.karaokepang.Activity;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
@@ -10,12 +8,11 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -28,11 +25,10 @@ import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Util;
-import com.karaokepang.View.CustomTextView;
+import com.karaokepang.View.BMJUATextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
-import com.karaokepang.ftp.FtpServiceDown;
 import com.karaokepang.ftp.FtpServiceUp;
 import com.midisheetmusic.ClefSymbol;
 import com.midisheetmusic.FileUri;
@@ -71,7 +67,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     private VideoView videoView;
 
 
-    private CustomTextView textSelectSong;
+    private BMJUATextView textSelectSong;
 
     //Main
     public ChooseSongDialog dialog;
@@ -81,6 +77,10 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
 
 
     private String mode = "noData";
+
+    private LinearLayout layoutSongName;
+    private TextView textSong, textSinger, textComposer;
+    private long firstTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,11 +124,24 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
 
     }
 
+    private void initSongName(ScoreView scoreView) {
+
+        layoutSongName = (LinearLayout) findViewById(R.id.layout_song_name);
+        layoutSongName.setVisibility(LinearLayout.VISIBLE);
+
+        textSong = (TextView) findViewById(R.id.text_songName);
+        textComposer = (TextView) findViewById(R.id.text_composer);
+        textSinger = (TextView) findViewById(R.id.text_singer);
+
+        textSong.setText(scoreView.getSongName());
+        textComposer.setText(scoreView.getComposer());
+        textSinger.setText(scoreView.getSinger());
+    }
+
     public void initVpang(Uri uri, String midiFileName) {
 
         textSelectSong.setVisibility(View.GONE);
         tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
-//        scoreView = (ScoreView) findViewById(R.id.sv_score);
         scoreView = new ScoreView(this);
         scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         ((RelativeLayout) (findViewById(R.id.layout_score))).addView(scoreView);
@@ -138,8 +151,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         TimeSignatureSymbol.LoadImages(this);
         MidiPlayer.LoadImages(this);
 
-        Log.e("kkk", uri.getPath());
-        Log.e("kkk", uri.getLastPathSegment());
         try {
             InputStream stream = new FileInputStream(uri.getPath());
 
@@ -150,6 +161,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
             scoreView.setListener(this);
 
             createLyrics();
+            initSongName(scoreView);
 
             stream.close();
         } catch (IOException e) {
@@ -225,8 +237,12 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         }
         lyrics.create();
         tv_lyrics.KSALyricsArray.add(lyrics);
-
+        boolean isFirst = true;
         for (KSALyrics log : tv_lyrics.KSALyricsArray) {
+            if (isFirst) {
+                firstTime = log.startTick;
+                isFirst = false;
+            }
             Logger.i("Lyric", "+++++++++++++++");
             Logger.i("Lyric", "lyrics start tick : " + log.startTick);
             Logger.i("Lyric", "lyrics end tick : " + log.endTick);
@@ -257,7 +273,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     int nowLyricsIndex = 0;
 
     @Override
-    public void notifyCurrentTick(float tick, int term, int measureLength) {
+    public void notifyCurrentTick(final float tick, int term, int measureLength) {
         String head = "";
         String tail = "";
         if (nowLyricsIndex == 0) {
@@ -294,11 +310,15 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (tick + 500 > firstTime) {
+                        layoutSongName.setVisibility(LinearLayout.GONE);
+                        ((RelativeLayout) (findViewById(R.id.layout_score))).setVisibility(RelativeLayout.VISIBLE);
+                    }
                     tv_lyrics.setText(text);
                 }
             });
         }
-        Logger.i("logging", "current tick : " + tick);
+        Logger.i("logging", firstTime + " : current tick : " + tick);
         tv_lyrics.setTick(tick, nowLyricsIndex);
     }
 
@@ -386,7 +406,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     }
 
     private boolean prepareMediaRecorder() {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang/");
+        File dir = new File("/mnt/sdcard/vpang/");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -396,11 +416,11 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
-        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         recorder.setVideoEncodingBitRate(1000000);
         //recorder.setVideoFrameRate(30);
-        recorder.setOutputFile(Environment.getExternalStorageDirectory().getPath() + "/vpang/" + getNewFileName() + ".mp4");
+        recorder.setOutputFile("/mnt/sdcard/vpang/" + getNewFileName() + ".mp4");
         recorder.setMaxDuration(6000000 * 10);
         recorder.setMaxFileSize(300000000 * 20);
 
@@ -442,7 +462,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     }
 
     void preData() {
-        textSelectSong = (CustomTextView) findViewById(R.id.textView_song_selected);
+        textSelectSong = (BMJUATextView) findViewById(R.id.textView_song_selected);
         textSelectSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -468,12 +488,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         }
 
         dialog = new ChooseSongDialog(this, list);
-
-        initDefaultData();
-    }
-
-    void initDefaultData() {
-        new FtpServiceDown(TestActivity.this, localFiles).execute();
     }
 
     public void loadSdcardMidiFiles() {
@@ -488,41 +502,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
                 list.add(fileUri);
             }
         }
-    }
-
-    private void loadMidiFilesFromProvider(Uri content_uri) {
-        ContentResolver resolver = getContentResolver();
-        String columns[] = {
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.MIME_TYPE
-        };
-        String selection = MediaStore.Audio.Media.MIME_TYPE + " LIKE '%mid%'";
-        Cursor cursor = resolver.query(content_uri, columns, selection, null, null);
-        if (cursor == null) {
-            return;
-        }
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            return;
-        }
-
-        do {
-            int idColumn = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int titleColumn = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int mimeColumn = cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
-
-            long id = cursor.getLong(idColumn);
-            String title = cursor.getString(titleColumn);
-            String mime = cursor.getString(mimeColumn);
-
-            if (mime.endsWith("/midi") || mime.endsWith("/mid")) {
-                Uri uri = Uri.withAppendedPath(content_uri, "" + id);
-                FileUri file = new FileUri(uri, title);
-                list.add(file);
-            }
-        } while (cursor.moveToNext());
-        cursor.close();
     }
 
     private void chooseSong(String message) {

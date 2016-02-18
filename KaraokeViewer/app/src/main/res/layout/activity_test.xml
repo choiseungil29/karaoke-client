@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_musicsheet"
     android:orientation="vertical">
 
 
@@ -18,12 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:layout_marginLeft="50dp"
-        android:padding="10dp"
         android:layout_marginBottom="120dp"
+        android:layout_marginLeft="50dp"
         android:layout_toLeftOf="@+id/camera_layout"
         android:layout_toStartOf="@+id/camera_layout"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
         android:textSize="70sp" />
 
 
@@ -40,15 +42,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/camera_layout" />
+        android:layout_below="@+id/camera_layout"
+        android:visibility="invisible" />
 
-    <com.karaokepang.View.CustomTextView
+    <com.karaokepang.View.BMJUATextView
         android:id="@+id/textView_song_selected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="선곡해주세요!"
-        android:textSize="100sp"
-        android:textStyle="bold" />
+        android:textColor="#000"
+        android:textSize="120sp"
+        android:textStyle="bold"
+        font:typeface="BMJUA_ttf.ttf" />
+
+    <LinearLayout
+        android:id="@+id/layout_song_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_songName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_composer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/text_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="50sp" />
+    </LinearLayout>
 </RelativeLayout>

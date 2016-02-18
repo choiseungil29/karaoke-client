@@ -49,7 +49,7 @@ public class OutlineTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        getPaint().setStrokeWidth(5);
+        getPaint().setStrokeWidth(10);
 
         String lines = getText().toString();
         int i = 0;
@@ -64,6 +64,7 @@ public class OutlineTextView extends TextView {
             i++;
         }
         canvas.clipRect(0, 0, width, 1000);
+        Log.e("kkk", "width = " + width);
         try {
             String line = lines.split("\n")[index];
             getPaint().setStyle(Paint.Style.FILL);
@@ -104,7 +105,7 @@ public class OutlineTextView extends TextView {
             getPaint().getTextBounds(target.lyric, 0, target.lyric.length(), letterRect);
             Logger.i("lyric log : " + target.lyric);
             float temp = completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick);
-            if(width < temp) {
+            if (width < temp) {
                 width = temp;
             }
         } catch (Exception e) {

@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:font="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:orientation="vertical">
+
 
     <RelativeLayout
         android:id="@+id/camera_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true" />
 
     <com.karaokepang.View.OutlineTextView
         android:id="@+id/tv_lyric"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="120dp"
+        android:padding="10dp"
         android:textSize="70sp" />
 
     <VideoView
@@ -32,16 +34,48 @@
     <RelativeLayout
         android:id="@+id/layout_score"
         android:layout_width="1dp"
-        android:layout_height="1dp">
-    </RelativeLayout>
+        android:layout_height="1dp" />
 
-    <com.karaokepang.View.CustomTextView
+    <com.karaokepang.View.BMJUATextView
         android:id="@+id/textView_song_selected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="선곡해주세요!"
-        android:textSize="100sp"
-        android:textStyle="bold" />
+        android:textColor="#000"
+        android:textSize="120sp"
+        android:textStyle="bold"
+        font:typeface="BMJUA_ttf.ttf" />
+
+    <LinearLayout
+        android:id="@+id/layout_song_name"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_songName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_composer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/text_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="50sp" />
+    </LinearLayout>
 </RelativeLayout>

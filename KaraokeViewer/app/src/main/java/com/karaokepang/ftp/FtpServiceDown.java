@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Util.Logger;
+import com.karaokepang.launcher.LauncherMainActivity;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -71,8 +72,8 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                 }
                 Log.e("kkk_ftp", ftpFiles.toString());
                 Log.e("kkk_local", localFiles.toString());
-                if (!(ftpFiles.toString().equals(localFiles.toString())) || ftpFiles.size()==0 || localFiles.size()==0) {
-                    Log.e("kkk","fuck");
+                if (!(ftpFiles.toString().equals(localFiles.toString())) || ftpFiles.size() == 0 || localFiles.size() == 0) {
+                    Log.e("kkk", "fuck");
                     for (int i = 0; i < ftpdirs.length; i++) {
                         FileOutputStream fileOutputStream = new FileOutputStream("/mnt/sdcard/vpang_mid/" + ftpdirs[i].getName());
                         boolean result = client.retrieveFile("/vpang_mid/" + ftpdirs[i].getName(), fileOutputStream);
@@ -80,10 +81,10 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                     }
                 }
 
-//                client.logout();
+                client.logout();
             }
         } catch (Exception e) {
-            Logger.i("해당 ftp 로그인 실패하였습니다.");
+            Logger.i("ftp 다운중 오류");
             e.printStackTrace();
             return null;
         } finally {
@@ -101,21 +102,12 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        initDefaultFileDirCheck();
         progressDialog = ProgressDialog.show(activity, "", "신곡 업데이트중 입니다", true);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang/");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        File dir2 = new File(Environment.getExternalStorageDirectory().getPath() + "/vpang_mid/");
-        if (!dir2.exists()) {
-            dir2.mkdirs();
-        }
-
         init();
         return null;
     }
@@ -125,7 +117,21 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
-            ((TestActivity) activity).loadSdcardMidiFiles();
+            ((LauncherMainActivity) activity).loadSdcardMidiFiles();
+        }
+    }
+
+    private void initDefaultFileDirCheck() {
+        File dirVpang = new File("/mnt/sdcard/vpang");
+        if (!dirVpang.exists()) {
+            Log.i("kkk","파일생성" + dirVpang.getAbsolutePath());
+            dirVpang.mkdirs();
+        }
+
+        File dirVpangMid = new File("/mnt/sdcard/vpang_mid");
+        if (!dirVpangMid.exists()) {
+            Log.i("kkk","파일생성" + dirVpangMid.getAbsolutePath());
+            dirVpangMid.mkdirs();
         }
     }
 }
