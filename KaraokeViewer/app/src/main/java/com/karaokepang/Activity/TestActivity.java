@@ -472,7 +472,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         initDefaultData();
     }
 
-
     void initDefaultData() {
         new FtpServiceDown(TestActivity.this, localFiles).execute();
     }
