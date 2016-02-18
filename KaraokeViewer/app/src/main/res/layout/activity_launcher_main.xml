@@ -71,7 +71,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="팡팡 노래방에 오신것을 환영합니다. 팡팡 노래방에 오신것을 환영합니다. 팡팡 노래방에 오신것을 환영합니다."
+            android:text="Welcome to 팡팡    Welcome to 팡팡    Welcome to 팡팡    Welcome to 팡팡"
             android:textSize="110sp"
             android:textStyle="bold" />
     </LinearLayout>
