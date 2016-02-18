@@ -318,7 +318,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
                 }
             });
         }
-        Logger.i("logging", firstTime + " : current tick : " + tick);
         tv_lyrics.setTick(tick, nowLyricsIndex);
     }
 

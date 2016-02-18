@@ -45,9 +45,6 @@ public class StaffSymbol extends Symbol {
                         event.getTick() < measure.endTicks) {
                     measure.tempoList.add((Tempo) event);
                 }
-                /*if(event instanceof Tempo) {
-                    Logger.i("tempo log : " + event.toString());
-                }*/
             }
         }
 
