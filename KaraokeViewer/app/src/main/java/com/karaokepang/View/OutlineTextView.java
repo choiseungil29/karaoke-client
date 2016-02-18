@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
+import com.karaokepang.Util.Logger;
 
 import java.util.ArrayList;
 
@@ -62,10 +63,9 @@ public class OutlineTextView extends TextView {
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (i + 1), getPaint());
             i++;
         }
-            canvas.clipRect(0, 0, width, 1000);
+        canvas.clipRect(0, 0, width, 1000);
         try {
             String line = lines.split("\n")[index];
-
             getPaint().setStyle(Paint.Style.FILL);
             getPaint().setColor(Color.parseColor("#ff7f50"));
             canvas.drawText(line, 0, line.length(), 0, getTextSize() * (index + 1), getPaint());
@@ -99,16 +99,14 @@ public class OutlineTextView extends TextView {
 
         getPaint().getTextBounds(" ", 0, 1, spaceRect);
 
-        int spaceCount = builder.toString().length() - builder.toString().replaceAll(" ", "").length();
-
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
-            getPaint().getTextBounds(target.lyric, 0, 1, letterRect);
+            getPaint().getTextBounds(target.lyric, 0, target.lyric.length(), letterRect);
+            Logger.i("lyric log : " + target.lyric);
             float temp = completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick);
             if(width < temp) {
                 width = temp;
             }
-            Log.i("logging", "logging : " + (spaceRect.width() * spaceCount + completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick)));
         } catch (Exception e) {
             e.printStackTrace();
         }
