@@ -63,6 +63,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int resolution = 0; // 한 박자의 단위길이
 
+    public float nowTick = 0;
+
     private MusicListener listener;
 
     private ScoreThread thread = new ScoreThread();
@@ -282,10 +284,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(0, 0, width, height, paint);
 
         StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
+        staffSymbol.nowTick = nowTick;
         staffSymbol.draw(canvas);
 
         canvas.translate(0, height / 2);
         StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
+        staffSymbol1.nowTick = nowTick;
         staffSymbol1.draw(canvas);
         canvas.translate(0, -(height / 2));
     }
@@ -433,6 +437,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             float tick = 0;
 
             Tempo tempo = nowMeasure.tempoList.get(0);
+            Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
+            Logger.i("result bpm : " + tempo.getBpm());
             while (true) {
                 if(currentMillis <= 0 || currentMillis2 <= 0) {
                     currentMillis = player.getCurrentPosition();
@@ -447,7 +453,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     if(t.getTick() <
                             tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)) {
                         tempo = t;
-                        Logger.i("result : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
+                        Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * (player.getCurrentPosition() / 1000)));
                         Logger.i("result bpm : " + tempo.getBpm());
                     }
                 }
@@ -480,7 +486,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                     Paint paint = new Paint();
                     paint.setColor(Color.WHITE);
 
-                    callOnDraw();
+                    //callOnDraw();
 
                     measureCount++;
                 }
@@ -489,8 +495,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 try {
                     if (player.getCurrentPosition() - currentMillis2 > term) {
                         tick = tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000);
+                        nowTick = tick;
                         listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
                         currentMillis2 = player.getCurrentPosition();
+                        callOnDraw();
                     }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
