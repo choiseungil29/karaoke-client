@@ -48,14 +48,14 @@ public class ClefSymbol extends Symbol {
         clef = trebleRes;
 
         this.setLeftMargin(10);
-        width = clef.getWidth();
+        width = (int)(clef.getWidth() * ((float)ScoreView.LINE_SPACE_HEIGHT * 6 / clef.getHeight()));
     }
 
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
 
         Rect src = new Rect(0, 0, getWidth(), clef.getHeight());
-        Rect dst = new Rect(0, 0, getWidth(), ScoreView.LINE_SPACE_HEIGHT * 6);
+        Rect dst = new Rect(0, 0, (int)(getWidth() * ((float)ScoreView.LINE_SPACE_HEIGHT * 6 / clef.getHeight())), ScoreView.LINE_SPACE_HEIGHT * 6);
         canvas.translate(0, ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT);
         canvas.drawBitmap(clef, src, dst, paint);
         canvas.translate(0, -(ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT));

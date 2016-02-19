@@ -216,11 +216,11 @@ public class NoteSymbol extends MidiSymbol {
 
     public void drawStem(Canvas canvas, Paint paint, float y) {
         if (isTailTop) {
-            canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2, y,
-                    ScoreView.LINE_SPACE_HEIGHT / 2, y - ScoreView.STEM_HEIGHT - append, paint);
+            canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2 + 2, y,
+                    ScoreView.LINE_SPACE_HEIGHT / 2 + 2, y - ScoreView.STEM_HEIGHT - append, paint);
         } else {
-            canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2, y - 1,
-                    -ScoreView.LINE_SPACE_HEIGHT / 2, y + ScoreView.STEM_HEIGHT + append, paint);
+            canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 2, y - 1,
+                    -ScoreView.LINE_SPACE_HEIGHT / 2 - 2, y + ScoreView.STEM_HEIGHT + append, paint);
         }
     }
 
