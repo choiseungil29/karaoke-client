@@ -277,6 +277,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         holder.unlockCanvasAndPost(canvas);
     }
 
+    public void release() {
+        if(player != null) {
+            player.release();
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         Paint paint = new Paint();
@@ -353,6 +359,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         int nowTicks = 0;
         measureLength = 0;
         MeasureSymbol measure = new MeasureSymbol();
+        TimeSignature signature = null;
         while (it.hasNext()) {
             MidiEvent e = it.next();
 
@@ -362,6 +369,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 measure.created();
                 measures.add(measure);
                 measure = new MeasureSymbol();
+                if(signature != null) {
+                    measure.numerator = signature.getNumerator();
+                    measure.denominator = signature.getRealDenominator();
+                }
                 measure.startTicks = nowTicks;
                 measure.endTicks = nowTicks + measureLength;
             }
@@ -374,6 +385,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             if (e instanceof TimeSignature) {
+                signature = (TimeSignature) e;
+                measure.numerator = signature.getNumerator();
+                measure.denominator = signature.getRealDenominator();
                 measureLength = (ScoreView.resolution / (((TimeSignature) e).getRealDenominator() / 4)) * ((TimeSignature) e).getNumerator();
                 measure.startTicks = nowTicks;
                 measure.endTicks = nowTicks + measureLength;
@@ -440,87 +454,91 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         public void run() {
             long currentMillis = player.getCurrentPosition();
             long currentMillis2 = player.getCurrentPosition();
-            float tick = 0;
+            float tick;
 
             Tempo tempo = nowMeasure.tempoList.get(0);
             while (true) {
                 float millis = 0;
-                for (Tempo t : nowMeasure.tempoList) {
-                    if (tempo.getTick() >= t.getTick()) {
-                        continue;
-                    }
-
-                    // 현재 시간을 틱으로 바꿔서 Tempo와 매칭시키는 부분
-                    // tempo가 1번만 바뀌면 문제가 없지만, 2번이상 바뀔경우 문제가 발생한다. 템포가 중간에 안맞는 경우가 생기면 여기 코드에서 더 발전해나가야함
-                    if (t.getTick() <
-                            (tempo.getBpm() / 60 * resolution * ((float)player.getCurrentPosition()/1000))) {
-                        Logger.i("player current millis : " + player.getCurrentPosition());
-                        Logger.i("result before tempo : " + tempo.getBpm());
-                        Logger.i("result after tempo : " + t.getBpm());
-                        Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000)));
-                        millis += (t.getTick() / (tempo.getBpm() / 60 * resolution));
-                        alphaSeconds.add(millis);
-                        millisToBpm.put(millis, tempo.getBpm());
-                        tempo = t;
-                    }
-                }
-
-                if (player.getCurrentPosition() - currentMillis >
-                        ((60 / tempo.getBpm()) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
-
-                    currentMillis = player.getCurrentPosition();
-
-                    if (measureCount >= measures.size()) {
-                        return;
-                    }
-                    nowMeasure = measures.get(measureCount);
-
-                    int measureIndex = (measureCount / MEASURE_LIMIT) % 2;
-                    int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
-                    try {
-                        nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
-                    } catch (IndexOutOfBoundsException e) {
-                        e.printStackTrace();
-                        nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasures.length);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ArrayList<String> list = new ArrayList<>();
-                    for (int i = 0; i < MEASURE_LIMIT; i++) {
-                        list.add(nowMeasures[measureIndex].get(i).lyrics);
-                    }
-
-                    Paint paint = new Paint();
-                    paint.setColor(Color.WHITE);
-
-                    measureCount++;
-                }
-
-                int term = 32;
                 try {
-                    if (player.getCurrentPosition() - currentMillis2 > term) {
-                        tick = 0;
-                        float stack = 0;
-                        for(float item : alphaSeconds) {
-                            float section = item - stack;
-                            float bpm = millisToBpm.get(item);
-
-                            tick += bpm / 60 * resolution * section;
-                            stack += section;
-                            Logger.i("tick : " + tick);
-                            Logger.i("alphaSeconds size ; " + alphaSeconds.size());
+                    for (Tempo t : nowMeasure.tempoList) {
+                        if (tempo.getTick() >= t.getTick()) {
+                            continue;
                         }
 
-                        tick += tempo.getBpm() / 60 * resolution * (((float)player.getCurrentPosition() / 1000) - stack);
-                        nowTick = tick;
-                        Logger.i("test tick : " + tick);
-                        listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
-                        currentMillis2 = player.getCurrentPosition();
-                        callOnDraw();
+                        // 현재 시간을 틱으로 바꿔서 Tempo와 매칭시키는 부분
+                        // tempo가 1번만 바뀌면 문제가 없지만, 2번이상 바뀔경우 문제가 발생한다. 템포가 중간에 안맞는 경우가 생기면 여기 코드에서 더 발전해나가야함
+                        if (t.getTick() <
+                                (tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000))) {
+                            Logger.i("player current millis : " + player.getCurrentPosition());
+                            Logger.i("result before tempo : " + tempo.getBpm());
+                            Logger.i("result after tempo : " + t.getBpm());
+                            Logger.i("result tick : " + (tempo.getBpm() / 60 * resolution * ((float) player.getCurrentPosition() / 1000)));
+                            millis += (t.getTick() / (tempo.getBpm() / 60 * resolution));
+                            alphaSeconds.add(millis);
+                            millisToBpm.put(millis, tempo.getBpm());
+                            tempo = t;
+                        }
                     }
-                } catch (IllegalStateException e) {
+
+                    if (player.getCurrentPosition() - currentMillis >
+                            ((60 / tempo.getBpm()) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
+
+                        currentMillis = player.getCurrentPosition();
+
+                        if (measureCount >= measures.size()) {
+                            return;
+                        }
+                        nowMeasure = measures.get(measureCount);
+
+                        int measureIndex = (measureCount / MEASURE_LIMIT) % 2;
+                        int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
+                        try {
+                            nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
+                        } catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasures.length);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ArrayList<String> list = new ArrayList<>();
+                        for (int i = 0; i < MEASURE_LIMIT; i++) {
+                            list.add(nowMeasures[measureIndex].get(i).lyrics);
+                        }
+
+                        Paint paint = new Paint();
+                        paint.setColor(Color.WHITE);
+
+                        measureCount++;
+                    }
+
+                    int term = 32;
+                    try {
+                        if (player.getCurrentPosition() - currentMillis2 > term) {
+                            tick = 0;
+                            float stack = 0;
+                            for (float item : alphaSeconds) {
+                                float section = item - stack;
+                                float bpm = millisToBpm.get(item);
+
+                                tick += bpm / 60 * resolution * section;
+                                stack += section;
+                                Logger.i("tick : " + tick);
+                                Logger.i("alphaSeconds size ; " + alphaSeconds.size());
+                            }
+
+                            tick += tempo.getBpm() / 60 * resolution * (((float) player.getCurrentPosition() / 1000) - stack);
+                            nowTick = tick;
+                            Logger.i("test tick : " + tick);
+                            listener.notifyCurrentTick(tick, term, nowMeasure.endTicks - nowMeasure.startTicks);
+                            currentMillis2 = player.getCurrentPosition();
+                            callOnDraw();
+                        }
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
-                    break;
                 }
             }
         }
