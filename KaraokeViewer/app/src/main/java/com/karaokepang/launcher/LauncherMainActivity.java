@@ -151,28 +151,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
 
     private void initTextVIew() {
         textLed = (TextView) findViewById(R.id.text_led);
-        setMarqueeSpeed(textLed, 500, true);
-    }
-
-    private void setMarqueeSpeed(TextView tv, float speed, boolean speedIsMultiplier) {
-
-        try {
-            Field f = tv.getClass().getDeclaredField("mMarquee");
-            f.setAccessible(true);
-            Object marquee = f.get(tv);
-            if (marquee != null) {
-                Field mf = marquee.getClass().getDeclaredField("mScrollUnit");
-                mf.setAccessible(true);
-                float newSpeed = speed;
-                if (speedIsMultiplier) {
-                    newSpeed = mf.getFloat(marquee) * speed;
-                }
-                mf.setFloat(marquee, newSpeed);
-                Log.i(this.getClass().getSimpleName(), String.format("%s marquee speed set to %f", tv, newSpeed));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

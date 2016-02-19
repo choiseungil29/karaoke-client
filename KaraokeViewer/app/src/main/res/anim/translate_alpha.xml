@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<translate-->
+    <!--android:duration="10000"-->
+    <!--android:fromXDelta="+100%p"-->
+    <!--android:repeatCount="1000000"-->
+    <!--android:toXDelta="-100%p" />-->
+    <alpha
+        android:duration="500"
+        android:fromAlpha="0.5"
+        android:repeatCount="30000000"
+        android:toAlpha="1.0" />
+</set>

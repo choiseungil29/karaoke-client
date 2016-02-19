@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -28,13 +29,16 @@ import com.karaokepang.Midi.renderer.midi.MidiSymbol;
 import com.karaokepang.Midi.renderer.midi.NoteSymbol;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Resources;
+import com.midisheetmusic.FileUri;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,8 +68,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int resolution = 0; // 한 박자의 단위길이
 
-    public float nowTick = 0;
-
     private MusicListener listener;
 
     private ScoreThread thread = new ScoreThread();
@@ -85,8 +87,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public long startTick;
     public static int measureLength;
 
-    private Uri uri = null;
+    private float nowTick;
 
+    private Uri uri = null;
     private List<Float> alphaSeconds = new ArrayList<>();
     private Map<Float, Float> millisToBpm = new HashMap<>();
 
@@ -151,10 +154,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         try {
-            AssetManager assets = this.getResources().getAssets();
-            for (String path : assets.list("")) {
-                if (path.endsWith(".KSA") && path.startsWith(fileName)) {
-                    InputStream is = getResources().getAssets().open(path);
+            File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+            if (fileList == null)
+                return;
+            for (File file : fileList) {
+                if ((file.getName().endsWith(".ksa") || file.getName().endsWith(".KSA")) && file.getName().startsWith(fileName)) {
+                    InputStream is = new FileInputStream(file);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
                     String line;
                     lyrics = new StringBuilder();
@@ -283,6 +288,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         Paint paint = new Paint();
@@ -294,12 +300,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(0, 0, width, height, paint);
 
         StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
-        staffSymbol.nowTick = nowTick;
         staffSymbol.draw(canvas);
 
         canvas.translate(0, height / 2);
         StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
-        staffSymbol1.nowTick = nowTick;
         staffSymbol1.draw(canvas);
         canvas.translate(0, -(height / 2));
     }
@@ -343,7 +347,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         player.stop();
-        player.release();
         activity.stopRecord();
     }
 
