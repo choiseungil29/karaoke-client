@@ -44,6 +44,9 @@ public class MeasureSymbol extends Symbol {
 
     public static int segment;
 
+    public int numerator;
+    public int denominator;
+
     public final ArrayList<LyricSymbol> lyricsList;
     public String lyrics = "";
 
@@ -61,6 +64,7 @@ public class MeasureSymbol extends Symbol {
         int x = 0;
         int notesFullWidth = this.width - paddingLeft;
         segment = notesFullWidth/(notes.size()+1);
+        //segment = notesFullWidth / ((ScoreView.resolution / (denominator / 4) * numerator) / (ScoreView.resolution/2) + 1);
         /**
          * calculating segment..
          */
@@ -70,6 +74,7 @@ public class MeasureSymbol extends Symbol {
             if(symbol instanceof MidiSymbol) {
                 symbol.draw(canvas, nowX);
                 nowX += segment;
+                //nowX += segment * (ScoreView.resolution / ((MidiSymbol) symbol).getDuration());
             } else {
                 symbol.draw(canvas, x);
                 x += symbol.getWidth();

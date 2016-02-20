@@ -16,6 +16,7 @@
 
 package com.karaokepang.Midi.util;
 
+import com.karaokepang.Util.Logger;
 import com.karaokepang.View.ScoreView;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class MidiUtil
 {
+    private static String TAG = MidiUtil.class.getSimpleName();
     /**
      * MIDI Unit Conversions
      */
@@ -213,14 +215,15 @@ public class MidiUtil
         return getBeatScale(resolution).get(6);
     }
 
-    public static int getHeightFromNoteValue(int noteValue) {
+    public static float getHeightFromNoteValue(int noteValue) {
         int octave = 12;
-        int height = 0;
+        float height = 0;
         int defaultHeight = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 5;
         if(ScoreView.DEFAULT_C <= noteValue) {
             int remainder = noteValue%ScoreView.DEFAULT_C;
 
             HashMap<Integer, Integer> scale = new HashMap<>();
+            // remainder, height
             scale.put(0, 0);
             scale.put(1, 0);
             scale.put(2, 1);
@@ -234,9 +237,42 @@ public class MidiUtil
             scale.put(10, 5);
             scale.put(11, 6);
 
-            height = defaultHeight - (ScoreView.LINE_SPACE_HEIGHT/2)*(scale.get(remainder%octave) + 6 * (remainder/octave));
+            height = defaultHeight - ((float)ScoreView.LINE_SPACE_HEIGHT/2)*(scale.get(remainder%octave) + 6 * (remainder/octave));
         }
         return height;
+    }
+
+    /**
+     * 노트가 오선지 밖에 찍힌다면, ex) 낮은 도, 와 같은 자체적으로 Line이 필요한 상태라면 true를 반환.
+     * 이외에는 false 반환.
+     * @param noteValue 노트의 음정값
+     * @return
+     */
+    public static boolean needToPointLine(int noteValue) {
+        int remainder = noteValue%ScoreView.DEFAULT_C;
+        remainder %= 12;
+
+        HashMap<Integer, Integer> scale = new HashMap<>();
+        // remainder, height
+        for(int i=0, j=0; i<60; i += 12, j += 7) {
+            scale.put(i, 0 + j);
+            scale.put(i+1, 0 + j);
+            scale.put(i+2, 1 + j);
+            scale.put(i+3, 1 + j);
+            scale.put(i+4, 2 + j);
+            scale.put(i+5, 3 + j);
+            scale.put(i+6, 3 + j);
+            scale.put(i+7, 4 + j);
+            scale.put(i+8, 4 + j);
+            scale.put(i+9, 5 + j);
+            scale.put(i+10, 5 + j);
+            scale.put(i+11, 6 + j);
+        }
+
+        if (scale.get(remainder) % 2 == 0) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean isSharp(int noteValue) {

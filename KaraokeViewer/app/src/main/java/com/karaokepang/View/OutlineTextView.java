@@ -32,6 +32,8 @@ public class OutlineTextView extends TextView {
 
     private Typeface font;
 
+    private String TAG = OutlineTextView.class.getSimpleName();
+
     public OutlineTextView(Context context) {
         this(context, null);
     }
@@ -89,7 +91,7 @@ public class OutlineTextView extends TextView {
             if (lyric.startTick <= tick) {
                 target = lyric;
                 builder.append(lyric.lyric);
-                i++;
+                i += lyric.lyric.length();
             }
         }
 
@@ -105,6 +107,15 @@ public class OutlineTextView extends TextView {
             float temp = completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick);
             if (width < temp) {
                 width = temp;
+            }
+
+            if(builder.toString().contains("come") ||
+                    builder.toString().contains("on")) {
+                Logger.i(TAG, "width : " + temp);
+                Logger.i(TAG, "width full : " + completeRect.width());
+                Logger.i(TAG, "width text : " + builder.toString());
+                Logger.i(TAG, "full text width : ");
+                Logger.i(TAG, "--------------------");
             }
         } catch (Exception e) {
             e.printStackTrace();
