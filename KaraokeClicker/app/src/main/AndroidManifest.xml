@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vpang.clicker" >
+    package="com.vpang.clicker">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -11,7 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="DATABASE"
             android:value="vpang.db" />
@@ -26,9 +26,10 @@
             android:value="com.vpang.clicker.database.dao" />
 
         <activity
-            android:name="com.vpang.clicker.activity.NumberActivity"
+            android:name="com.vpang.clicker.activity.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +40,7 @@
             android:name="com.vpang.clicker.activity.ArrowActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
         <activity
-            android:name="com.vpang.clicker.activity.MainActivity"
+            android:name="com.vpang.clicker.activity.NumberActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
@@ -47,10 +48,8 @@
             android:name="com.vpang.clicker.activity.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
-        <activity android:name="com.vpang.clicker.activity.BackgroundSelectActivity" >
-        </activity>
-        <activity android:name="com.vpang.clicker.activity.FinalSendActivity" >
-        </activity>
+        <activity android:name="com.vpang.clicker.activity.BackgroundSelectActivity"></activity>
+        <activity android:name="com.vpang.clicker.activity.FinalSendActivity"></activity>
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Util;
 import com.karaokepang.View.BMJUATextView;
+import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
@@ -79,7 +80,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     private String mode = "noData";
 
     private LinearLayout layoutSongName;
-    private TextView textSong, textSinger, textComposer;
+    private CustomTextView textSong, textSinger, textComposer;
     private long firstTime = 0;
 
     @Override
@@ -129,9 +130,9 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         layoutSongName = (LinearLayout) findViewById(R.id.layout_song_name);
         layoutSongName.setVisibility(LinearLayout.VISIBLE);
 
-        textSong = (TextView) findViewById(R.id.text_songName);
-        textComposer = (TextView) findViewById(R.id.text_composer);
-        textSinger = (TextView) findViewById(R.id.text_singer);
+        textSong = (CustomTextView) findViewById(R.id.text_songName);
+        textComposer = (CustomTextView) findViewById(R.id.text_composer);
+        textSinger = (CustomTextView) findViewById(R.id.text_singer);
 
         textSong.setText(scoreView.getSongName());
         textComposer.setText(scoreView.getComposer());

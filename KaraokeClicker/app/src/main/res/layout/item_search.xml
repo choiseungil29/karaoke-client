@@ -8,17 +8,28 @@
     android:paddingRight="5dp"
     android:paddingTop="10dp">
 
+
     <TextView
         android:id="@+id/text_number"
         android:layout_width="0px"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="25sp" />
+        android:gravity="center"
+        android:text="곡번호" />
 
     <TextView
-        android:id="@+id/text_song_singer"
+        android:id="@+id/text_song_name"
         android:layout_width="0px"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="4"
-        android:textSize="25sp" />
+        android:gravity="center"
+        android:text="제목" />
+
+    <TextView
+        android:id="@+id/text_singer_name"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="가수" />
 </LinearLayout>

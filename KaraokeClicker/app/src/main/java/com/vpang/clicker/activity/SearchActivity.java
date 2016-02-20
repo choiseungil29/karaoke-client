@@ -122,10 +122,10 @@ public class SearchActivity extends Activity {
             Song song = songs.get(position);
             if (song != null) {
                 TextView textNumber = (TextView) convertView.findViewById(R.id.text_number);
-                TextView textSongSinger = (TextView) convertView.findViewById(R.id.text_song_singer);
+//                TextView textSongSinger = (TextView) convertView.findViewById(R.id.text_song_singer);
 
                 textNumber.setText(song.getSongNumber());
-                textSongSinger.setText(song.getSong() + " - " + song.getSinger());
+//                textSongSinger.setText(song.getSong() + " - " + song.getSinger());
 
             }
 
