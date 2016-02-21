@@ -113,7 +113,7 @@ public class NoteSymbol extends MidiSymbol {
             }
         }
 
-        if(MidiUtil.needToPointLine(noteValue)) {
+        if (MidiUtil.needToPointLine(noteValue)) {
             paint.setStrokeWidth(ScoreView.LINE_STROKE);
             canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
         }

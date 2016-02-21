@@ -322,26 +322,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         tv_lyrics.setTick(tick, nowLyricsIndex);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (camera == null) {
-            camera = Camera.open(findBackFacingCamera());
-            preview.refreshCamera(camera);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        releaseCamera();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
 
     private int findBackFacingCamera() {
         int cameraId = -1;
@@ -519,6 +499,27 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
     public void onBackPressed() {
         super.onBackPressed();
         stopRecord();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (camera == null) {
+            camera = Camera.open(findBackFacingCamera());
+            preview.refreshCamera(camera);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseCamera();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        scoreView.stopMusicHandler();
     }
 
     @Override

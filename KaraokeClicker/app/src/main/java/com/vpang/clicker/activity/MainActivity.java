@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.base.Strings;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 import com.vpang.clicker.R;
@@ -30,10 +31,14 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jxl.Sheet;
+import jxl.Workbook;
 
 public class MainActivity extends Activity {
 
@@ -58,8 +63,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         getDefaultData();
-        initTextView();
+        initTextView(); 
         initLinearLayout();
         initEditText();
         initButton();
@@ -68,19 +74,66 @@ public class MainActivity extends Activity {
 
     private void getDefaultData() {
         if (Song.listAll(Song.class).size() == 0) {
-            try {
-                JSONObject jsonObject = new JSONObject(readText("song.json"));
-                JSONArray songs = jsonObject.getJSONArray("songs");
-                for (int i = 0; i < songs.length(); i++) {
-                    JSONObject jo = songs.getJSONObject(i);
-                    Song song = new Song(jo.getString("songNumber"), jo.getString("song"), jo.getString("singer"), jo.getString("createDate"));
-                    song.save();
-                }
+//            try {
+//                JSONObject jsonObject = new JSONObject(readText("song.json"));
+//                JSONArray songs = jsonObject.getJSONArray("songs");
+//                for (int i = 0; i < songs.length(); i++) {
+//                    JSONObject jo = songs.getJSONObject(i);
+//                    Song song = new Song(jo.getString("songNumber"), jo.getString("song"), jo.getString("singer"), jo.getString("createDate"));
+//                    song.save();
+//                }
+//
+//            } catch (JSONException | IOException e) {
+//                e.printStackTrace();
+//            }
+            readXcel();
+        }
+    }
 
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
+    private void readXcel() {
+        Workbook workbook = null;
+        Sheet sheet = null;
+
+        try {
+            InputStream is = getBaseContext().getResources().getAssets().open("DBsample.xls");
+            workbook = Workbook.getWorkbook(is);
+
+            if (workbook != null) {
+                sheet = workbook.getSheet(0);
+
+                if (sheet != null) {
+                    int row = 0;
+                    while (true) {
+                        ++row;
+                        if (Strings.isNullOrEmpty(sheet.getCell(0, row).getContents())) {
+                            continue;
+                        }
+                        Log.i("kkk", sheet.getCell(0, row).getContents());
+                        String songNumber = sheet.getCell(0, row).getContents();
+                        String songName = sheet.getCell(1, row).getContents();
+                        String singer = sheet.getCell(2, row).getContents();
+                        String createDate = sheet.getCell(3, row).getContents();
+
+                        Song song = new Song(songNumber, songName, singer, createDate);
+                        song.save();
+
+                    }
+
+
+                } else {
+                    Log.e("kkk", "Sheet is null!!");
+                }
+            } else {
+                Log.e("kkk", "WorkBook is null!!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (workbook != null) {
+                workbook.close();
             }
         }
+
     }
 
     private String readText(String file) throws IOException {
@@ -116,7 +169,8 @@ public class MainActivity extends Activity {
     }
 
     private List<Song> searchNewSong() {
-        songs = Song.find(Song.class, "", new String[]{}, "", "CREATE_DATE", "30");
+        songs = Song.find(Song.class, "", new String[]{}, "", "CREATE_DATE", "50");
+        Collections.reverse(songs);
         return songs;
     }
 
@@ -265,7 +319,7 @@ public class MainActivity extends Activity {
             btnSongName.setTextColor(Color.BLACK);
             btnSingerName.setTextColor(Color.BLACK);
             btnFavoriteName.setTextColor(Color.BLACK);
-            
+
             searchAdapter = new SearchAdapter(searchSong(editNumber.getText().toString()));
             listSearch.setAdapter(searchAdapter);
         }
