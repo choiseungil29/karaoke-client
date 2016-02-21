@@ -1,10 +1,8 @@
-package com.karaokepang.Activity;
+package com.vpang.clicker.bluetooth;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,7 +36,7 @@ public class BluetoothActivity extends Activity {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                Log.i("kkk", "bluetooth back = " + message);
+                Log.i("kkk", "bluetooth = " + message);
 //                chooseSong(message);
             }
         });

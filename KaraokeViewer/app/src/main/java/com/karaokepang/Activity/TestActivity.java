@@ -8,11 +8,11 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -45,6 +45,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -88,6 +90,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+
         mode = getIntent().getStringExtra("mode");
         if (mode.equals("vpang")) {
             setContentView(R.layout.activity_test_three);
@@ -123,6 +126,13 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         });
         videoView.start();
 
+
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            public void onDataReceived(byte[] data, String message) {
+                Log.i("kkk", "bluetooth = " + message);
+//                initVpang();
+            }
+        });
     }
 
     private void initSongName(ScoreView scoreView) {

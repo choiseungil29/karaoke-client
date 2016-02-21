@@ -17,6 +17,7 @@ import com.karaokepang.Activity.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Midi.event.meta.Text;
 import com.karaokepang.R;
+import com.karaokepang.Util.soundfont.MidiTest;
 import com.karaokepang.ftp.FtpServiceDown;
 import com.midisheetmusic.FileUri;
 
@@ -37,7 +38,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
     private VideoView videoView;
 
     private TextView textLed;
-
 
 
     private ArrayList<FileUri> list;
@@ -167,9 +167,9 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                 startActivity(intent2);
                 break;
             case R.id.btn_launcher_star:
-//                Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
-                Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
-                startActivity(intent3);
+//                Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
+//                startActivity(intent3);
+                startActivity(new Intent(LauncherMainActivity.this, MidiTest.class));
                 break;
         }
     }
