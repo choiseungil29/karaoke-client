@@ -69,7 +69,7 @@ public class StaffSymbol extends Symbol {
 
         int y = ScoreView.FIRST_LINE_HEIGHT;
         for(int i=0; i<5; i++) {
-            canvas.drawLine(leftPadding, y, width - rightPadding, y, paint);
+            canvas.drawLine(0, y, width - rightPadding * 2, y, paint);
             y += ScoreView.LINE_SPACE_HEIGHT;
         }
     }
