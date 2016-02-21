@@ -69,7 +69,6 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
 
     private VideoView videoView;
 
-
     private BMJUATextView textSelectSong;
 
     //Main
@@ -155,6 +154,8 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
         scoreView = new ScoreView(this);
         scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        //scoreView.setLayoutParams(new RelativeLayout.MarginLayoutParams());
+        scoreView.setPadding(100, 100, 100, 100);
         ((RelativeLayout) (findViewById(R.id.layout_score))).addView(scoreView);
 
 

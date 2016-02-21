@@ -47,6 +47,8 @@ import java.util.Map;
  */
 public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
+    public static final String TAG = ScoreView.class.getSimpleName();
+
     private TestActivity activity;
 
     private MidiFile midi = null;
@@ -61,6 +63,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public static int STEM_HEIGHT;
     public static int FIRST_LINE_HEIGHT; // 오선 맨 윗줄 높이
     public static int DEFAULT_C = 128; // 가장 기본이 되는 도의 위치. 중간에 계산되어지고 변경된다.
+    public static int LOWER_NOTE_VALUE = 128;
     public static final int MEASURE_LIMIT = 4;
 
     public static int resolution = 0; // 한 박자의 단위길이
@@ -301,10 +304,16 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(0, 0, width, height, paint);
 
         StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
+        staffSymbol.nowTick = nowTick;
+        staffSymbol.leftPadding = getPaddingLeft();
+        staffSymbol.rightPadding = getPaddingRight();
         staffSymbol.draw(canvas);
 
         canvas.translate(0, height / 2);
         StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
+        staffSymbol1.nowTick = nowTick;
+        staffSymbol1.leftPadding = getPaddingLeft();
+        staffSymbol1.rightPadding = getPaddingRight();
         staffSymbol1.draw(canvas);
         canvas.translate(0, -(height / 2));
     }
@@ -410,11 +419,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         // 여기서 마디 넘어가는애들 다시 정리해줘야됨
+        //ScoreView.DEFAULT_C = (ScoreView.LOWER_NOTE_VALUE + 12) / 12;
 
         for (int i = 0; i < measures.size(); i++) {
             MeasureSymbol item = measures.get(i);
-            Logger.i("" + i + "번째 마디 시작");
-            Logger.i("start tick : " + item.startTicks);
+            Logger.i(TAG, "" + i + "번째 마디 시작");
+            Logger.i(TAG, "start tick : " + item.startTicks);
 
             Iterator<MidiSymbol> iter = item.getAllMidiSymbols().iterator();
             while (iter.hasNext()) {
@@ -422,25 +432,25 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                 Logger.i("---------------------------------");
                 if (symbol instanceof NoteSymbol) {
-                    Logger.i("note symbol start ");
-                    Logger.i("prev is : " + ((NoteSymbol) symbol).prev);
-                    Logger.i("next is : " + ((NoteSymbol) symbol).next);
-                    Logger.i("tie is : " + ((NoteSymbol) symbol).isTie());
+                    Logger.i(TAG, "note symbol start ");
+                    Logger.i(TAG, "prev is : " + ((NoteSymbol) symbol).prev);
+                    Logger.i(TAG, "next is : " + ((NoteSymbol) symbol).next);
+                    Logger.i(TAG, "tie is : " + ((NoteSymbol) symbol).isTie());
                 } else {
-                    Logger.i("rest symbol start ");
+                    Logger.i(TAG, "rest symbol start ");
                 }
-                Logger.i("symbol start tick : " + symbol.getStartTicks());
-                Logger.i("symbol end   tick : " + (symbol.getStartTicks() + symbol.getDuration()));
-                Logger.i("symbol duration   : " + symbol.getDuration());
-                Logger.i("---------------------------------");
+                Logger.i(TAG, "symbol start tick : " + symbol.getStartTicks());
+                Logger.i(TAG, "symbol end   tick : " + (symbol.getStartTicks() + symbol.getDuration()));
+                Logger.i(TAG, "symbol duration   : " + symbol.getDuration());
+                Logger.i(TAG, "---------------------------------");
             }
 
-            Logger.i("end tick : " + item.endTicks);
-            Logger.i("" + i + "번째 마디 끝");
-            Logger.i("==================================");
+            Logger.i(TAG, "end tick : " + item.endTicks);
+            Logger.i(TAG, "" + i + "번째 마디 끝");
+            Logger.i(TAG, "==================================");
         }
 
-        Logger.i("created measure count : " + measures.size());
+        Logger.i(TAG, "created measure count : " + measures.size());
     }
 
     private void settingMeasures() {
@@ -467,7 +477,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
-            long currentMillis = player.getCurrentPosition();
             long currentMillis2 = player.getCurrentPosition();
             float tick;
 
@@ -495,20 +504,28 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                         }
                     }
 
-                    if (player.getCurrentPosition() - currentMillis >
-                            ((60 / tempo.getBpm()) * ((nowMeasure.endTicks - nowMeasure.startTicks) / resolution)) * 1000) {
+                    float stack = 0.0f;
+                    tick = 0.0f;
+                    for (float item : alphaSeconds) {
+                        float section = item - stack;
+                        float bpm = millisToBpm.get(item);
 
-                        currentMillis = player.getCurrentPosition();
+                        tick += bpm / 60 * resolution * section;
+                        stack += section;
+                    }
+                    tick += tempo.getBpm() / 60 * resolution * (((float) player.getCurrentPosition() / 1000) - stack);
+                    // 위 코드는 현재까지의 진행 시간을 tick으로 나타내주는 코드이다.
 
-                        if (measureCount >= measures.size()) {
-                            return;
-                        }
-                        nowMeasure = measures.get(measureCount);
-
+                    // 플레이어 진행된 시간 vs 현재 마디의 tick
+                    //
+                    if(nowMeasure.startTicks <= tick &&
+                            nowMeasure.endTicks > tick) {
+                        // 윗줄인지 아랫줄인지
                         int measureIndex = (measureCount / MEASURE_LIMIT) % 2;
                         int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
                         try {
                             nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
+                            nowMeasures[(measureIndex+1)%2] = measures.subList(nowMeasureIndex + 4, nowMeasureIndex + 4 + MEASURE_LIMIT);
                         } catch (IndexOutOfBoundsException e) {
                             e.printStackTrace();
                             nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasures.length);
@@ -522,23 +539,25 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                         Paint paint = new Paint();
                         paint.setColor(Color.WHITE);
-
+                    } else if(nowMeasure.endTicks <= tick) {
                         measureCount++;
+                        if (measureCount >= measures.size()) {
+                            return;
+                        }
+                        nowMeasure = measures.get(measureCount);
                     }
 
                     int term = 32;
                     try {
                         if (player.getCurrentPosition() - currentMillis2 > term) {
                             tick = 0;
-                            float stack = 0;
+                            stack = 0;
                             for (float item : alphaSeconds) {
                                 float section = item - stack;
                                 float bpm = millisToBpm.get(item);
 
                                 tick += bpm / 60 * resolution * section;
                                 stack += section;
-                                Logger.i("tick : " + tick);
-                                Logger.i("alphaSeconds size ; " + alphaSeconds.size());
                             }
 
                             tick += tempo.getBpm() / 60 * resolution * (((float) player.getCurrentPosition() / 1000) - stack);
