@@ -305,15 +305,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
         StaffSymbol staffSymbol = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[0]);
         staffSymbol.nowTick = nowTick;
-        staffSymbol.leftPadding = getPaddingLeft();
-        staffSymbol.rightPadding = getPaddingRight();
         staffSymbol.draw(canvas);
 
         canvas.translate(0, height / 2);
         StaffSymbol staffSymbol1 = new StaffSymbol(getContext(), width, height / 2, renderTrack, nowMeasures[1]);
         staffSymbol1.nowTick = nowTick;
-        staffSymbol1.leftPadding = getPaddingLeft();
-        staffSymbol1.rightPadding = getPaddingRight();
         staffSymbol1.draw(canvas);
         canvas.translate(0, -(height / 2));
     }

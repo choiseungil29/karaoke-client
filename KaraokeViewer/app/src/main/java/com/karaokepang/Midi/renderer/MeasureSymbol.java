@@ -48,6 +48,8 @@ public class MeasureSymbol extends Symbol {
     public int numerator; // 6
     public int denominator; // 8
 
+    public int myIndex;
+
     public final ArrayList<LyricSymbol> lyricsList;
     public String lyrics = "";
 
@@ -86,10 +88,16 @@ public class MeasureSymbol extends Symbol {
                 x += symbol.getWidth();
             }
         }
+        
         Paint paint = new Paint();
         paint.setStrokeWidth(ScoreView.LINE_STROKE * 2);
-        canvas.drawLine(this.width-2, ScoreView.FIRST_LINE_HEIGHT,
-                        this.width-2, ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
+        if((myIndex+1) % ScoreView.MEASURE_LIMIT == 0) {
+            canvas.drawLine(this.width-4, ScoreView.FIRST_LINE_HEIGHT,
+                    this.width-4, ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
+        } else {
+            canvas.drawLine(this.width-2, ScoreView.FIRST_LINE_HEIGHT,
+                    this.width-2, ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
+        }
     }
 
     public void addSymbol(Symbol symbol) {

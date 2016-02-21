@@ -56,6 +56,9 @@ public class StaffSymbol extends Symbol {
         }
 
         this.measures = measures;
+        for(int i=0; i<measures.size(); i++) {
+            this.measures.get(i).myIndex = i;
+        }
 
         this.startTick = this.measures.get(0).startTicks;
         this.endTick = this.measures.get(measures.size()-1).endTicks;
