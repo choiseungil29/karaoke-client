@@ -38,7 +38,6 @@ public class LedTextView extends TextView {
             typeface = Typeface.createFromAsset(context.getAssets(), typefaceName);
             setTypeface(typeface);
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.translate_alpha);

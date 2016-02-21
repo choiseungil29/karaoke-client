@@ -1,5 +1,6 @@
 package com.karaokepang.launcher;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -136,7 +137,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                 break;
             case R.id.btn_launcher_friend:
                 Intent intent2 = new Intent(LauncherMainActivity.this, TestActivity.class);
-                intent2.putExtra("mode", "friend");
+                intent2.putExtra("mode", "duet");
                 startActivity(intent2);
                 break;
             case R.id.btn_launcher_star:
@@ -149,23 +150,23 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
     @Override
     public void onStart() {
         super.onStart();
-        if (bt != null) {
-            Log.e("kkk", "blue!!");
-//            bt.autoConnect("vpang");
-            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
-                public void onNewConnection(String name, String address) {
-                    Log.e("kkk", "자동연결 성공");
-                    // Do something when earching for new connection device
-                }
-
-                public void onAutoConnectionStarted() {
-                    Log.e("kkk", "자동연결 성공2");
-                    // Do something when auto connection has started
-                }
-            });
+//        if (bt != null) {
+//            Log.e("kkk", "blue!!");
+////            bt.autoConnect("vpang");
+//            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
+//                public void onNewConnection(String name, String address) {
+//                    Log.e("kkk", "자동연결 성공");
+//                    // Do something when earching for new connection device
+//                }
+//
+//                public void onAutoConnectionStarted() {
+//                    Log.e("kkk", "자동연결 성공2");
+//                    // Do something when auto connection has started
+//                }
+//            });
             if (!bt.isBluetoothEnabled()) {
-//                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
             } else {
                 if (!bt.isServiceAvailable()) {
                     bt.setupService();
@@ -173,6 +174,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                     bluetoothSetUp();
                 }
             }
-        }
+//        }
     }
 }
