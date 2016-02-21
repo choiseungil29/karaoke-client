@@ -2,16 +2,19 @@ package com.vpang.clicker.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orm.query.Condition;
@@ -23,6 +26,7 @@ import com.vpang.clicker.database.dao.Song;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +39,7 @@ public class MainActivity extends Activity {
 
 
     private EditText editSearch, editNumber;
+    private TextView textSelectNumber, textSelectSinger, textSelectSong;
     private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9,
             btnBackSpace, btnStart, btnSoundPlus, btnSoundMinus, btnKeyPlus, btnKeyMinus,
             btnTempoPlus, btnTempoMinus, btnMelody, btnReservation, btnReservationCancle, btnStop,
@@ -54,6 +59,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         getDefaultData();
+        initTextView();
         initLinearLayout();
         initEditText();
         initButton();
@@ -91,28 +97,37 @@ public class MainActivity extends Activity {
     }
 
     private List<Song> searchSong(String search) {
+
         if (mode == 0) {
-            return Select.from(Song.class)
+            songs = Select.from(Song.class)
                     .where(Condition.prop("SONG_NUMBER").like("%" + search + "%"))
                     .list();
         } else if (mode == 1) {
-            return Select.from(Song.class)
+            songs = Select.from(Song.class)
                     .where(Condition.prop("SONG").like("%" + search + "%"))
                     .list();
         } else {
-            return Select.from(Song.class)
+            songs = Select.from(Song.class)
                     .where(Condition.prop("SINGER").like("%" + search + "%"))
                     .list();
         }
+        return songs;
 
     }
 
     private List<Song> searchNewSong() {
-        return Song.find(Song.class, "", new String[]{}, "", "CREATE_DATE", "30");
+        songs = Song.find(Song.class, "", new String[]{}, "", "CREATE_DATE", "30");
+        return songs;
     }
 
     private void initLinearLayout() {
         layoutSearch = (LinearLayout) findViewById(R.id.layout_search);
+    }
+
+    private void initTextView() {
+        textSelectNumber = (TextView) findViewById(R.id.text_number);
+        textSelectSinger = (TextView) findViewById(R.id.text_singer_name);
+        textSelectSong = (TextView) findViewById(R.id.text_song_name);
     }
 
     private void initEditText() {
@@ -121,9 +136,18 @@ public class MainActivity extends Activity {
     }
 
     private void initListView() {
-        searchAdapter = new SearchAdapter();
+        searchAdapter = new SearchAdapter(searchNewSong());
         listSearch = (ListView) findViewById(R.id.list_search);
         listSearch.setAdapter(searchAdapter);
+        listSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Song song = songs.get(position);
+                textSelectNumber.setText(song.getSongNumber());
+                textSelectSinger.setText(song.getSinger());
+                textSelectSong.setText(song.getSong());
+            }
+        });
     }
 
     private void initButton() {
@@ -236,6 +260,12 @@ public class MainActivity extends Activity {
                     }
                     break;
             }
+
+            btnNewSong.setTextColor(Color.BLACK);
+            btnSongName.setTextColor(Color.BLACK);
+            btnSingerName.setTextColor(Color.BLACK);
+            btnFavoriteName.setTextColor(Color.BLACK);
+            
             searchAdapter = new SearchAdapter(searchSong(editNumber.getText().toString()));
             listSearch.setAdapter(searchAdapter);
         }
@@ -288,6 +318,11 @@ public class MainActivity extends Activity {
                     editNumber.setText("");
 
 
+                    btnNewSong.setTextColor(Color.RED);
+                    btnSongName.setTextColor(Color.BLACK);
+                    btnSingerName.setTextColor(Color.BLACK);
+                    btnFavoriteName.setTextColor(Color.BLACK);
+
                     searchAdapter = new SearchAdapter(searchNewSong());
                     listSearch.setAdapter(searchAdapter);
                     break;
@@ -296,18 +331,33 @@ public class MainActivity extends Activity {
                     mode = 1;
                     layoutSearch.setVisibility(LinearLayout.VISIBLE);
                     editNumber.setText("");
+
+                    btnNewSong.setTextColor(Color.BLACK);
+                    btnSongName.setTextColor(Color.RED);
+                    btnSingerName.setTextColor(Color.BLACK);
+                    btnFavoriteName.setTextColor(Color.BLACK);
                     break;
 
                 case R.id.btn_singer_name:
                     mode = 2;
                     layoutSearch.setVisibility(LinearLayout.VISIBLE);
                     editNumber.setText("");
+
+                    btnNewSong.setTextColor(Color.BLACK);
+                    btnSongName.setTextColor(Color.BLACK);
+                    btnSingerName.setTextColor(Color.RED);
+                    btnFavoriteName.setTextColor(Color.BLACK);
                     break;
 
                 case R.id.btn_favorite_song:
                     layoutSearch.setVisibility(LinearLayout.GONE);
                     editSearch.setText("");
                     editNumber.setText("");
+
+                    btnNewSong.setTextColor(Color.BLACK);
+                    btnSongName.setTextColor(Color.BLACK);
+                    btnSingerName.setTextColor(Color.BLACK);
+                    btnFavoriteName.setTextColor(Color.RED);
                     break;
 
                 case R.id.btn_search:

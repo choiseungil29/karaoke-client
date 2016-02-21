@@ -10,7 +10,7 @@
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_weight="6.5"
-        android:background="#000"
+        android:background="#333"
         android:orientation="vertical">
 
         <LinearLayout
@@ -23,6 +23,7 @@
                 android:id="@+id/btn_new_song"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="최신곡" />
 
@@ -30,6 +31,7 @@
                 android:id="@+id/btn_singer_name"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="가수" />
 
@@ -37,6 +39,7 @@
                 android:id="@+id/btn_song_name"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="제목" />
 
@@ -44,6 +47,7 @@
                 android:id="@+id/btn_favorite_song"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="애창곡" />
         </LinearLayout>
@@ -65,21 +69,27 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="곡번호" />
+                    android:text="곡번호"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="제목" />
+                    android:text="제목"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="가수" />
+                    android:text="가수"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ListView
@@ -88,6 +98,43 @@
                 android:layout_height="0px"
                 android:layout_weight="1"
                 android:background="#fff" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_number"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="선택된 번호"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/text_song_name"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="선택된 노래 제목"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/text_singer_name"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="선택된 가수"
+                    android:textColor="#fff"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_search"
@@ -137,7 +184,8 @@
             android:layout_weight="0.8"
             android:clickable="false"
             android:focusableInTouchMode="false"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="30sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
