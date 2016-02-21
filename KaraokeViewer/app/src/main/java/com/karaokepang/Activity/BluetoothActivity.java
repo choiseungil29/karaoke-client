@@ -60,6 +60,11 @@ public class BluetoothActivity extends Activity {
                         Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                         startActivity(intent3);
                         break;
+                    case "song_stop":
+                        if (testActivity != null) {
+                            testActivity.finish();
+                        }
+                        break;
                     default:
                         if (testActivity != null) {
                             File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");

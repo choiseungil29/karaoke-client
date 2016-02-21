@@ -339,6 +339,7 @@ public class MainActivity extends BluetoothActivity {
                 case R.id.btn_reservation_cancle:
                     break;
                 case R.id.btn_stop:
+                    bt.send("song_stop",true);
                     break;
                 case R.id.btn_start:
                     Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
