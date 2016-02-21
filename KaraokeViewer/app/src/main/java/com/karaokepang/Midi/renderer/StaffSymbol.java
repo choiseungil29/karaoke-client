@@ -27,6 +27,13 @@ public class StaffSymbol extends Symbol {
     private long startTick;
     private long endTick;
 
+    private float progress = 0.0f;
+
+    public int leftPadding;
+    public int topPadding;
+    public int rightPadding;
+    public int bottomPadding;
+
     // C5 (60)
     public StaffSymbol(Context context, int staffWidth, int staffHeight, MidiTrack track, List<MeasureSymbol> measures) {
         this.width = staffWidth;
@@ -62,7 +69,7 @@ public class StaffSymbol extends Symbol {
 
         int y = ScoreView.FIRST_LINE_HEIGHT;
         for(int i=0; i<5; i++) {
-            canvas.drawLine(0, y, width, y, paint);
+            canvas.drawLine(leftPadding, y, width - rightPadding, y, paint);
             y += ScoreView.LINE_SPACE_HEIGHT;
         }
     }
@@ -80,16 +87,17 @@ public class StaffSymbol extends Symbol {
         drawHorizontalLines(canvas);
 
         Paint paint = new Paint();
-        paint.setStrokeWidth(ScoreView.LINE_STROKE * 2);
-        float progress = 0;
-        if(this.startTick >= this.nowTick &&
-                this.endTick < this.nowTick) {
-            progress = (this.nowTick - this.startTick) / (this.endTick - this.startTick);
+        paint.setStrokeWidth(ScoreView.LINE_STROKE * 3);
+        paint.setColor(Color.BLUE);
+        if(this.startTick <= this.nowTick &&
+                this.endTick > this.nowTick) {
+            float temp = (this.nowTick - this.startTick) / (this.endTick - this.startTick);
+            if(progress < temp) {
+                progress = temp;
+            }
 
             canvas.drawLine(progress * width, ScoreView.FIRST_LINE_HEIGHT,
                     progress * width + 1, ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
-
-            Logger.i("progress : " + progress);
         }
     }
 }

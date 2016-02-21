@@ -14,6 +14,7 @@ import com.karaokepang.Midi.renderer.midi.MidiSymbol;
 import com.karaokepang.Midi.renderer.midi.NoteSymbol;
 import com.karaokepang.Midi.renderer.midi.RestSymbol;
 import com.karaokepang.Midi.util.MidiUtil;
+import com.karaokepang.Util.Logger;
 import com.karaokepang.View.ScoreView;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class MeasureSymbol extends Symbol {
 
     public static int segment;
 
-    public int numerator;
-    public int denominator;
+    public int numerator; // 6
+    public int denominator; // 8
 
     public final ArrayList<LyricSymbol> lyricsList;
     public String lyrics = "";
@@ -63,18 +64,23 @@ public class MeasureSymbol extends Symbol {
     public void draw(Canvas canvas) {
         int x = 0;
         int notesFullWidth = this.width - paddingLeft;
-        segment = notesFullWidth/(notes.size()+1);
-        //segment = notesFullWidth / ((ScoreView.resolution / (denominator / 4) * numerator) / (ScoreView.resolution/2) + 1);
+        //segment = notesFullWidth/(notes.size()+1);
+        segment = notesFullWidth / ((ScoreView.resolution / (denominator / 4) * numerator) / (ScoreView.resolution/2) + 1);
+
         /**
          * calculating segment..
          */
 
         int nowX = segment;
+        int beforeDuration = 0;
         for(Symbol symbol : symbols) {
-            if(symbol instanceof MidiSymbol) {
+            if(symbol instanceof RestSymbol &&
+                    (((RestSymbol) symbol).getDuration() == (ScoreView.resolution / (denominator / 4) * numerator))) {
+                symbol.draw(canvas, notesFullWidth/2);
+            } else if(symbol instanceof MidiSymbol) {
                 symbol.draw(canvas, nowX);
-                nowX += segment;
-                //nowX += segment * (ScoreView.resolution / ((MidiSymbol) symbol).getDuration());
+                beforeDuration = ((MidiSymbol) symbol).getDuration() / (ScoreView.resolution/2);
+                nowX += segment * beforeDuration;
             } else {
                 symbol.draw(canvas, x);
                 x += symbol.getWidth();
@@ -123,8 +129,12 @@ public class MeasureSymbol extends Symbol {
             timeSignature = symbol;
             return symbol;
         } else if (e instanceof NoteOn) {
+            if(((NoteOn) e).getNoteValue() < ScoreView.LOWER_NOTE_VALUE) {
+                ScoreView.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
+            }
             if((((NoteOn) e).getNoteValue()/12) * 12 < ScoreView.DEFAULT_C) {
                 ScoreView.DEFAULT_C = (((NoteOn) e).getNoteValue()/12) * 12;
+                Logger.i("DEFAULT C : " + ScoreView.DEFAULT_C);
             }
             if(((NoteOn) e).getVelocity() > 0) {
                 addNoteOn((NoteOn) e);
