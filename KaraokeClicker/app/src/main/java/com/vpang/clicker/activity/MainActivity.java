@@ -109,10 +109,7 @@ public class MainActivity extends BluetoothActivity {
 
                         Song song = new Song(songNumber, songName, singer, createDate);
                         song.save();
-
                     }
-
-
                 } else {
                     Log.e("kkk", "Sheet is null!!");
                 }
@@ -346,13 +343,15 @@ public class MainActivity extends BluetoothActivity {
                 case R.id.btn_start:
                     Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
                     bt.send(textSelectNumber.getText().toString(), true);
-
                     break;
                 case R.id.btn_vpang:
+                    bt.send("mode_vpang",true);
                     break;
                 case R.id.btn_duet:
+                    bt.send("mode_duet",true);
                     break;
                 case R.id.btn_audition:
+                    bt.send("mode_audition",true);
                     break;
             }
         }

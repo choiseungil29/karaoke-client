@@ -3,10 +3,15 @@ package com.karaokepang.Activity;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.midisheetmusic.FileUri;
+
+import java.io.File;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
@@ -17,6 +22,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 public class BluetoothActivity extends Activity {
 
 
+    public static TestActivity testActivity;
     public BluetoothSPP bt;
 
     @Override
@@ -38,8 +44,29 @@ public class BluetoothActivity extends Activity {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                Log.i("kkk", "bluetooth back = " + message);
-//                chooseSong(message);
+                Toast.makeText(getApplicationContext(), "[" + message + "]", Toast.LENGTH_SHORT).show();
+                switch (message) {
+                    case "mode_vpang":
+                        Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                        intent.putExtra("mode", "vpang");
+                        startActivity(intent);
+                        break;
+                    case "mode_duet":
+                        Intent intent2 = new Intent(getApplicationContext(), TestActivity.class);
+                        intent2.putExtra("mode", "duet");
+                        startActivity(intent2);
+                        break;
+                    case "mode_audition":
+                        Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
+                        startActivity(intent3);
+                        break;
+                }
+                if (testActivity != null) {
+                    File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");
+                    Uri uri = Uri.parse(file.getAbsolutePath());
+                    FileUri fileUri = new FileUri(uri, file.getName());
+                    testActivity.initVpang(fileUri.getUri(), fileUri.toString());
+                }
             }
         });
 
@@ -49,7 +76,7 @@ public class BluetoothActivity extends Activity {
 //                        , "Connected to " + name + "\n" + address
 //                        , Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "리모콘 연결 완료", Toast.LENGTH_SHORT).show();
-//                DeviceList.deviceList.finish();
+                DeviceList.deviceList.finish();
             }
 
             public void onDeviceDisconnected() {
@@ -64,8 +91,10 @@ public class BluetoothActivity extends Activity {
         });
 
         if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
-            bt.disconnect();
+//            bt.disconnect();
+            Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
         } else {
+            Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), DeviceList.class);
             startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
         }
@@ -106,7 +135,13 @@ public class BluetoothActivity extends Activity {
                 finish();
             }
         }
+    }
 
+    public static TestActivity getTestActivity() {
+        return testActivity;
+    }
 
+    public static void setTestActivity(TestActivity testActivity) {
+        BluetoothActivity.testActivity = testActivity;
     }
 }

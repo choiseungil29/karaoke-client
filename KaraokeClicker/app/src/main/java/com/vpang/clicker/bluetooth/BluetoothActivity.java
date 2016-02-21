@@ -43,11 +43,8 @@ public class BluetoothActivity extends Activity {
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             public void onDeviceConnected(String name, String address) {
-//                Toast.makeText(getApplicationContext()
-//                        , "Connected to " + name + "\n" + address
-//                        , Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "리모콘 연결 완료", Toast.LENGTH_SHORT).show();
-//                DeviceList.deviceList.finish();
+                DeviceList.deviceList.finish();
             }
 
             public void onDeviceDisconnected() {

@@ -344,7 +344,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         try {
             FileInputStream fis = new FileInputStream(uri.getPath());
             FileDescriptor fd = fis.getFD();
-            release();
+//            release();
             player.reset();
             player.setDataSource(fd);
             player.prepare();
