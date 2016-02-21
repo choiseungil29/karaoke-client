@@ -179,7 +179,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         super.onStart();
         if (bt != null) {
             Log.e("kkk", "blue!!");
-            bt.autoConnect("vpang");
+//            bt.autoConnect("vpang");
             bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
                 public void onNewConnection(String name, String address) {
                     Log.e("kkk", "자동연결 성공");
