@@ -1,14 +1,13 @@
 package com.karaokepang.View;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -29,7 +28,6 @@ import com.karaokepang.Midi.renderer.midi.MidiSymbol;
 import com.karaokepang.Midi.renderer.midi.NoteSymbol;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Resources;
-import com.midisheetmusic.FileUri;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +36,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -96,6 +93,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     private List<Float> alphaSeconds = new ArrayList<>();
     private Map<Float, Float> millisToBpm = new HashMap<>();
 
+    private Handler musicStartHandler;
+    private Runnable musicRunnable;
+
     public ScoreView(Context context) {
         this(context, null);
     }
@@ -110,6 +110,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void init(Context context) {
+        musicStartHandler = new Handler();
         TestActivity activity = (TestActivity) context;
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
@@ -286,7 +287,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void release() {
-        if(player != null) {
+        if (player != null) {
             player.release();
         }
     }
@@ -319,6 +320,17 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+
+        musicRunnable = new Runnable() {
+            @Override
+            public void run() {
+                startMusicPlay();
+            }
+        };
+        musicStartHandler.postDelayed(musicRunnable, 1500);
+    }
+
+    private void startMusicPlay() {
         LINE_SPACE_HEIGHT = getMeasuredHeight() / 40;
         LINE_STROKE = getMeasuredHeight() / 300;
         FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 3;
@@ -355,8 +367,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        player.stop();
-        activity.stopRecord();
+        stopMusicHandler();
     }
 
     @Override
@@ -381,7 +392,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 measure.created();
                 measures.add(measure);
                 measure = new MeasureSymbol();
-                if(signature != null) {
+                if (signature != null) {
                     measure.numerator = signature.getNumerator();
                     measure.denominator = signature.getRealDenominator();
                 }
@@ -596,5 +607,19 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setSinger(String singer) {
         this.singer = singer;
+    }
+
+    public Handler getMusicStartHandler() {
+        return musicStartHandler;
+    }
+
+    public void setMusicStartHandler(Handler musicStartHandler) {
+        this.musicStartHandler = musicStartHandler;
+    }
+
+    public void stopMusicHandler() {
+        player.stop();
+        activity.stopRecord();
+        musicStartHandler.removeCallbacks(musicRunnable);
     }
 }
