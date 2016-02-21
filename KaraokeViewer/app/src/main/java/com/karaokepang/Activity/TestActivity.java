@@ -155,12 +155,13 @@ public class TestActivity extends Activity implements MusicListener {
         textSelectSong.setVisibility(View.GONE);
         tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
         scoreView = new ScoreView(this);
-        //scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        //scoreView.setLayoutParams(new RelativeLayout.MarginLayoutParams());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        scoreView.setLayoutParams(params);
-        params.setMargins(10, 0, 10, 0);
-
+        if (mode.equals("vpang")) {
+            scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        } else if (mode.equals("duet")) {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+            params.setMargins(10, 0, 10, 0);
+            scoreView.setLayoutParams(params);
+        }
         //scoreView.setPadding(100, 100, 100, 100);
         //((RelativeLayout) (findViewById(R.id.layout_score))).addView(scoreView);
         RelativeLayout relativeLayout = new RelativeLayout(this);
@@ -523,6 +524,9 @@ public class TestActivity extends Activity implements MusicListener {
     @Override
     protected void onResume() {
         super.onResume();
+        if (scoreView != null) {
+            scoreView.release();
+        }
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
@@ -550,4 +554,5 @@ public class TestActivity extends Activity implements MusicListener {
     public void onStop() {
         super.onStop();
     }
+
 }

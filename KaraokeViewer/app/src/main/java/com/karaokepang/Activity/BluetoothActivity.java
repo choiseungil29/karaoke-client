@@ -60,13 +60,16 @@ public class BluetoothActivity extends Activity {
                         Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                         startActivity(intent3);
                         break;
+                    default:
+                        if (testActivity != null) {
+                            File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");
+                            Uri uri = Uri.parse(file.getAbsolutePath());
+                            FileUri fileUri = new FileUri(uri, file.getName());
+                            testActivity.initVpang(fileUri.getUri(), fileUri.toString());
+                        }
+                        break;
                 }
-                if (testActivity != null) {
-                    File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");
-                    Uri uri = Uri.parse(file.getAbsolutePath());
-                    FileUri fileUri = new FileUri(uri, file.getName());
-                    testActivity.initVpang(fileUri.getUri(), fileUri.toString());
-                }
+
             }
         });
 
@@ -76,7 +79,9 @@ public class BluetoothActivity extends Activity {
 //                        , "Connected to " + name + "\n" + address
 //                        , Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "리모콘 연결 완료", Toast.LENGTH_SHORT).show();
-                DeviceList.deviceList.finish();
+                if (DeviceList.deviceList != null) {
+                    DeviceList.deviceList.finish();
+                }
             }
 
             public void onDeviceDisconnected() {
@@ -90,14 +95,12 @@ public class BluetoothActivity extends Activity {
             }
         });
 
-        if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
-//            bt.disconnect();
-            Toast.makeText(getApplicationContext(), "1", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "2", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-        }
+//        if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+////            bt.disconnect();
+//        } else {
+//            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+//            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+//        }
     }
 
 
@@ -135,6 +138,36 @@ public class BluetoothActivity extends Activity {
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        if (bt != null) {
+//            Log.e("kkk", "blue!!");
+//            bt.autoConnect("rk3288");
+//            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
+//                public void onNewConnection(String name, String address) {
+//                    Log.e("kkk", "자동연결 성공");
+//                    // Do something when earching for new connection device
+//                }
+//
+//                public void onAutoConnectionStarted() {
+//                    Log.e("kkk", "자동연결 성공2");
+//                    // Do something when auto connection has started
+//                }
+//            });
+        if (!bt.isBluetoothEnabled()) {
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+        } else {
+            if (!bt.isServiceAvailable()) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_ANDROID);
+                bluetoothSetUp();
+            }
+        }
+//        }
     }
 
     public static TestActivity getTestActivity() {
