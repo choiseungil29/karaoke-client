@@ -50,6 +50,7 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
         <activity android:name="com.vpang.clicker.activity.BackgroundSelectActivity"></activity>
         <activity android:name="com.vpang.clicker.activity.FinalSendActivity"></activity>
+        <activity android:name=".bluetooth.DeviceList"/>
     </application>
 
 </manifest>

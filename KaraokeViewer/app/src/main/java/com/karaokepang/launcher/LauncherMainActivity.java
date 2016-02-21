@@ -6,22 +6,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.karaokepang.Activity.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
-import com.karaokepang.Midi.event.meta.Text;
 import com.karaokepang.R;
 import com.karaokepang.ftp.FtpServiceDown;
 import com.midisheetmusic.FileUri;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,7 +33,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
     private VideoView videoView;
 
     private TextView textLed;
-
 
 
     private ArrayList<FileUri> list;
@@ -60,29 +55,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         btnFriend.setOnClickListener(this);
         btnStart.setOnClickListener(this);
 
-        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            public void onDataReceived(byte[] data, String message) {
-                Toast.makeText(getApplicationContext(), "[" + message + "]", Toast.LENGTH_SHORT).show();
-                switch (message) {
-                    case "mode_vpang":
-                        Intent intent = new Intent(LauncherMainActivity.this, TestActivity.class);
-                        intent.putExtra("mode", "vpang");
-                        startActivity(intent);
-                        break;
-                    case "mode_friend":
-                        Intent intent2 = new Intent(LauncherMainActivity.this, TestActivity.class);
-                        intent2.putExtra("mode", "friend");
-                        startActivity(intent2);
-                        break;
-                    case "mode_star":
-//                        Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
-                        Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
-                        startActivity(intent3);
-                        break;
-                }
-//                chooseSong(message);
-            }
-        });
+
     }
 
     void initDefaultData() {
@@ -167,7 +140,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                 startActivity(intent2);
                 break;
             case R.id.btn_launcher_star:
-//                Toast.makeText(getApplicationContext(), "연결전...(수정중)", Toast.LENGTH_SHORT).show();
                 Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                 startActivity(intent3);
                 break;
@@ -179,7 +151,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         super.onStart();
         if (bt != null) {
             Log.e("kkk", "blue!!");
-            bt.autoConnect("vpang");
+//            bt.autoConnect("vpang");
             bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
                 public void onNewConnection(String name, String address) {
                     Log.e("kkk", "자동연결 성공");

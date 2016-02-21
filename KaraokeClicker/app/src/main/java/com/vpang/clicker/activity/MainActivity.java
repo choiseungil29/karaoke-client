@@ -1,11 +1,9 @@
 package com.vpang.clicker.activity;
 
-import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,25 +20,20 @@ import com.orm.query.Condition;
 import com.orm.query.Select;
 import com.vpang.clicker.R;
 import com.vpang.clicker.adapter.SearchAdapter;
+import com.vpang.clicker.bluetooth.BluetoothActivity;
 import com.vpang.clicker.database.dao.Song;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothState;
 import jxl.Sheet;
 import jxl.Workbook;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BluetoothActivity {
 
 
     private EditText editSearch, editNumber;
@@ -65,7 +58,7 @@ public class MainActivity extends Activity {
 
 
         getDefaultData();
-        initTextView(); 
+        initTextView();
         initLinearLayout();
         initEditText();
         initButton();
@@ -116,10 +109,7 @@ public class MainActivity extends Activity {
 
                         Song song = new Song(songNumber, songName, singer, createDate);
                         song.save();
-
                     }
-
-
                 } else {
                     Log.e("kkk", "Sheet is null!!");
                 }
@@ -351,12 +341,17 @@ public class MainActivity extends Activity {
                 case R.id.btn_stop:
                     break;
                 case R.id.btn_start:
+                    Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
+                    bt.send(textSelectNumber.getText().toString(), true);
                     break;
                 case R.id.btn_vpang:
+                    bt.send("mode_vpang",true);
                     break;
                 case R.id.btn_duet:
+                    bt.send("mode_duet",true);
                     break;
                 case R.id.btn_audition:
+                    bt.send("mode_audition",true);
                     break;
             }
         }
@@ -421,4 +416,34 @@ public class MainActivity extends Activity {
             }
         }
     };
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (bt != null) {
+            bt.autoConnect("vpang");
+            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
+                public void onNewConnection(String name, String address) {
+                    Log.e("kkk", "자동연결 성공");
+                    // Do something when earching for new connection device
+                }
+
+                public void onAutoConnectionStarted() {
+                    Log.e("kkk", "자동연결 성공2");
+                    // Do something when auto connection has started
+                }
+            });
+            if (!bt.isBluetoothEnabled()) {
+                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+            } else {
+                if (!bt.isServiceAvailable()) {
+                    bt.setupService();
+                    bt.startService(BluetoothState.DEVICE_ANDROID);
+                    bluetoothSetUp();
+                }
+            }
+        }
+    }
 }

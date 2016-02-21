@@ -1,6 +1,6 @@
 package com.karaokepang.Activity;
 
-import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Camera;
@@ -11,11 +11,9 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -54,7 +52,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 /**
  * Created by clogic on 2015. 12. 10..
  */
-public class TestActivity extends BluetoothActivity implements MusicListener {
+public class TestActivity extends Activity implements MusicListener {
 
     //녹화
     private Camera camera;
@@ -93,7 +91,7 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
         mode = getIntent().getStringExtra("mode");
         if (mode.equals("vpang")) {
             setContentView(R.layout.activity_test_three);
-        } else if (mode.equals("friend")) {
+        } else if (mode.equals("duet")) {
             setContentView(R.layout.activity_test);
         }
 
@@ -124,7 +122,18 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
             }
         });
         videoView.start();
+//        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+//            public void onDataReceived(byte[] data, String message) {
+//                Log.i("kkk", "bluetooth = " + message);
+//                File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");
+//                Uri uri = Uri.parse(file.getAbsolutePath());
+//                FileUri fileUri = new FileUri(uri, file.getName());
+//                initVpang(fileUri.getUri(), fileUri.toString());
+//            }
+//        });
 
+
+        BluetoothActivity.testActivity = this;
     }
 
     private void initSongName(ScoreView scoreView) {
