@@ -228,14 +228,10 @@ public class TestActivity extends BluetoothActivity implements MusicListener {
                 endTick = list.get(i + 1).getTick();
 
             } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
                 endTick = list.get(i).getTick();
             }
             if ((endTick - startTick) > (ScoreView.resolution * 4)) {
                 endTick = startTick + ScoreView.resolution * 4;
-            }
-            if (startTick == endTick) {
-                Logger.i("hi!");
             }
             lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
             line.append(event.getLyric());

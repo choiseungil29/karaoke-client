@@ -65,7 +65,7 @@ public class MeasureSymbol extends Symbol {
     @Override
     public void draw(Canvas canvas) {
         int x = 0;
-        int notesFullWidth = this.width - paddingLeft;
+        int notesFullWidth = this.width;
         //segment = notesFullWidth/(notes.size()+1);
         segment = notesFullWidth / ((ScoreView.resolution / (denominator / 4) * numerator) / (ScoreView.resolution/2) + 1);
 
@@ -88,7 +88,7 @@ public class MeasureSymbol extends Symbol {
                 x += symbol.getWidth();
             }
         }
-        
+
         Paint paint = new Paint();
         paint.setStrokeWidth(ScoreView.LINE_STROKE * 2);
         if((myIndex+1) % ScoreView.MEASURE_LIMIT == 0) {
