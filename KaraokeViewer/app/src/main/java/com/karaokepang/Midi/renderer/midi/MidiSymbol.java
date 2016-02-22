@@ -14,6 +14,8 @@ public abstract class MidiSymbol extends Symbol {
 
     protected int duration = 0;
 
+    public int segment;
+
 
     @Override
     public void draw(Canvas canvas) {

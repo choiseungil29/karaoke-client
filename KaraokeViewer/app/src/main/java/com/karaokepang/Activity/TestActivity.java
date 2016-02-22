@@ -294,33 +294,37 @@ public class TestActivity extends Activity implements MusicListener {
     public void notifyCurrentTick(final float tick, int term, int measureLength) {
         String head = "";
         String tail = "";
-        if (nowLyricsIndex == 0) {
-            KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(0);
-            if (tick > ksaLyrics.startTick - (ScoreView.resolution * 4)) {
-                head = ksaLyrics.lyricLine;
-                tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
-            }
-            if (tick >= ksaLyrics.endTick) {
-                head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
-                tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
-                nowLyricsIndex++;
-                tv_lyrics.width = 0;
-                tv_lyrics.callOnDraw();
-            }
-        } else {
-            KSALyrics nowLyrics = tv_lyrics.KSALyricsArray.get(nowLyricsIndex);
-            if (tick >= nowLyrics.endTick) {
-                if (nowLyricsIndex % 2 == 0) {
+        try {
+            if (nowLyricsIndex == 0) {
+                KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(0);
+                if (tick > ksaLyrics.startTick - (ScoreView.resolution * 4)) {
+                    head = ksaLyrics.lyricLine;
+                    tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
+                }
+                if (tick >= ksaLyrics.endTick) {
                     head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
                     tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
-                } else {
-                    head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
-                    tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
+                    nowLyricsIndex++;
+                    tv_lyrics.width = 0;
+                    tv_lyrics.callOnDraw();
                 }
-                nowLyricsIndex++;
-                tv_lyrics.width = 0;
-                tv_lyrics.callOnDraw();
+            } else {
+                KSALyrics nowLyrics = tv_lyrics.KSALyricsArray.get(nowLyricsIndex);
+                if (tick >= nowLyrics.endTick) {
+                    if (nowLyricsIndex % 2 == 0) {
+                        head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
+                        tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
+                    } else {
+                        head = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
+                        tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 2).lyricLine;
+                    }
+                    nowLyricsIndex++;
+                    tv_lyrics.width = 0;
+                    tv_lyrics.callOnDraw();
+                }
             }
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
 
         final String text = head + "\n" + tail;

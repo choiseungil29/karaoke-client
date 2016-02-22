@@ -16,6 +16,7 @@ import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
+import com.karaokepang.Midi.event.NoteOn;
 import com.karaokepang.Midi.event.meta.Lyrics;
 import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.event.meta.TimeSignature;
@@ -64,6 +65,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     public static int FIRST_LINE_HEIGHT; // 오선 맨 윗줄 높이
     public static int DEFAULT_C = 128; // 가장 기본이 되는 도의 위치. 중간에 계산되어지고 변경된다.
     public static int LOWER_NOTE_VALUE = 128;
+    public static final int OCTAVE = 12;
     public static final int MEASURE_LIMIT = 4;
 
     public static int resolution = 0; // 한 박자의 단위길이
@@ -329,8 +331,21 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     private void startMusicPlay() {
         LINE_SPACE_HEIGHT = getMeasuredHeight() / 40;
         LINE_STROKE = getMeasuredHeight() / 300;
-        FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 3;
+        FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 6;
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
+
+        //Iterator<MidiEvent> it = renderTrack.getEvents().iterator();
+        for(MidiEvent e : renderTrack.getEvents()) {
+            if(e instanceof NoteOn &&
+                    ((NoteOn) e).getVelocity() > 0) {
+                if(((NoteOn) e).getNoteValue() < ScoreView.LOWER_NOTE_VALUE) {
+                    ScoreView.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
+                }
+            }
+        }
+
+        ScoreView.DEFAULT_C = (ScoreView.LOWER_NOTE_VALUE + 12) / 12 * 12;
+        Logger.i("DEFAULT C : " + ScoreView.DEFAULT_C);
 
         createMeasures(renderTrack);
         settingMeasures();
@@ -415,7 +430,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         // 여기서 마디 넘어가는애들 다시 정리해줘야됨
-        //ScoreView.DEFAULT_C = (ScoreView.LOWER_NOTE_VALUE + 12) / 12;
+        //ScoreView.DEFAULT_C = (MeasureSymbol.totalNoteValue/MeasureSymbol.noteCount) / 12 * 12;
 
         for (int i = 0; i < measures.size(); i++) {
             MeasureSymbol item = measures.get(i);
@@ -429,8 +444,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 Logger.i("---------------------------------");
                 if (symbol instanceof NoteSymbol) {
                     Logger.i(TAG, "note symbol start ");
-                    //Logger.i(TAG, "prev is : " + ((NoteSymbol) symbol).prev);
-                    //Logger.i(TAG, "next is : " + ((NoteSymbol) symbol).next);
+                    Logger.i(TAG, "note value : " + ((NoteSymbol) symbol).getNoteValue());
                     Logger.i(TAG, "tie is : " + ((NoteSymbol) symbol).isTie());
                 } else {
                     Logger.i(TAG, "rest symbol start ");
@@ -476,6 +490,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             long currentMillis2 = player.getCurrentPosition();
             float tick;
 
+            boolean finishStaffUpdate = false;
             Tempo tempo = nowMeasure.tempoList.get(0);
             while (true) {
                 float millis = 0;
@@ -514,33 +529,37 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                     // 플레이어 진행된 시간 vs 현재 마디의 tick
                     //
-                    if(nowMeasure.startTicks <= tick &&
-                            nowMeasure.endTicks > tick) {
-                        // 윗줄인지 아랫줄인지
-                        int measureIndex = (measureCount / MEASURE_LIMIT) % 2;
-                        int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
-                        try {
-                            nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
-                            nowMeasures[(measureIndex+1)%2] = measures.subList(nowMeasureIndex + 4, nowMeasureIndex + 4 + MEASURE_LIMIT);
-                        } catch (IndexOutOfBoundsException e) {
-                            e.printStackTrace();
-                            nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasures.length);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ArrayList<String> list = new ArrayList<>();
-                        for (int i = 0; i < MEASURE_LIMIT; i++) {
-                            list.add(nowMeasures[measureIndex].get(i).lyrics);
-                        }
+                    if(!finishStaffUpdate) {
+                        if (nowMeasure.startTicks <= tick &&
+                                nowMeasure.endTicks > tick) {
+                            // 윗줄인지 아랫줄인지
+                            int measureIndex = (measureCount / MEASURE_LIMIT) % 2;
+                            int nowMeasureIndex = measureCount / MEASURE_LIMIT * MEASURE_LIMIT;
+                            try {
+                                nowMeasures[measureIndex] = measures.subList(nowMeasureIndex, nowMeasureIndex + MEASURE_LIMIT);
+                                nowMeasures[(measureIndex + 1) % 2] = measures.subList(nowMeasureIndex + 4, nowMeasureIndex + 4 + MEASURE_LIMIT);
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                                nowMeasures[(measureIndex + 1) % 2] = measures.subList(nowMeasureIndex + 4, measures.size());
+                                finishStaffUpdate = true;
 
-                        Paint paint = new Paint();
-                        paint.setColor(Color.WHITE);
-                    } else if(nowMeasure.endTicks <= tick) {
-                        measureCount++;
-                        if (measureCount >= measures.size()) {
-                            return;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ArrayList<String> list = new ArrayList<>();
+                            for (int i = 0; i < MEASURE_LIMIT; i++) {
+                                list.add(nowMeasures[measureIndex].get(i).lyrics);
+                            }
+
+                            Paint paint = new Paint();
+                            paint.setColor(Color.WHITE);
+                        } else if (nowMeasure.endTicks <= tick) {
+                            measureCount++;
+                            if (measureCount >= measures.size()) {
+                                return;
+                            }
+                            nowMeasure = measures.get(measureCount);
                         }
-                        nowMeasure = measures.get(measureCount);
                     }
 
                     int term = 32;
@@ -564,6 +583,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                             callOnDraw();
                         }
                     } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                        break;
+                    } catch (IndexOutOfBoundsException e) {
                         e.printStackTrace();
                         break;
                     }

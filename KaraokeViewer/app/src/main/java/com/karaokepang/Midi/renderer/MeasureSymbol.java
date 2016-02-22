@@ -43,7 +43,7 @@ public class MeasureSymbol extends Symbol {
 
     public float BPM;
 
-    public static int segment;
+    public int segment;
 
     public int numerator; // 6
     public int denominator; // 8
@@ -52,6 +52,11 @@ public class MeasureSymbol extends Symbol {
 
     public final ArrayList<LyricSymbol> lyricsList;
     public String lyrics = "";
+
+    public static int totalNoteValue = 0;
+    public static int noteCount = 0;
+
+    private static final String TAG = MeasureSymbol.class.getSimpleName();
 
     public MeasureSymbol() {
         symbols = new ArrayList<>();
@@ -67,7 +72,7 @@ public class MeasureSymbol extends Symbol {
         int x = 0;
         int notesFullWidth = this.width;
         //segment = notesFullWidth/(notes.size()+1);
-        segment = notesFullWidth / ((ScoreView.resolution / (denominator / 4) * numerator) / (ScoreView.resolution/2) + 1);
+        segment = notesFullWidth / ((ScoreView.resolution / (denominator / 4) * numerator) / (ScoreView.resolution/4) + 1);
 
         /**
          * calculating segment..
@@ -78,10 +83,11 @@ public class MeasureSymbol extends Symbol {
         for(Symbol symbol : symbols) {
             if(symbol instanceof RestSymbol &&
                     (((RestSymbol) symbol).getDuration() == (ScoreView.resolution / (denominator / 4) * numerator))) {
-                symbol.draw(canvas, notesFullWidth/2);
+                symbol.draw(canvas, notesFullWidth / 2);
             } else if(symbol instanceof MidiSymbol) {
                 symbol.draw(canvas, nowX);
-                beforeDuration = ((MidiSymbol) symbol).getDuration() / (ScoreView.resolution/2);
+                ((MidiSymbol) symbol).segment = segment;
+                beforeDuration = ((MidiSymbol) symbol).getDuration() / (ScoreView.resolution/4);
                 nowX += segment * beforeDuration;
             } else {
                 symbol.draw(canvas, x);
@@ -140,11 +146,13 @@ public class MeasureSymbol extends Symbol {
             if(((NoteOn) e).getNoteValue() < ScoreView.LOWER_NOTE_VALUE) {
                 ScoreView.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
             }
-            if((((NoteOn) e).getNoteValue()/12) * 12 < ScoreView.DEFAULT_C) {
-                ScoreView.DEFAULT_C = (((NoteOn) e).getNoteValue()/12) * 12;
+            /*if((((NoteOn) e).getNoteValue()/12) * 12 < ScoreView.DEFAULT_C) {
+                ScoreView.DEFAULT_C = ((((NoteOn) e).getNoteValue()+6)/12) * 12;
                 Logger.i("DEFAULT C : " + ScoreView.DEFAULT_C);
-            }
+            }*/
             if(((NoteOn) e).getVelocity() > 0) {
+                totalNoteValue += ((NoteOn) e).getNoteValue();
+                noteCount++;
                 addNoteOn((NoteOn) e);
             } else if(((NoteOn) e).getVelocity() == 0) {
                 e.setDelta(e.getDelta() + pitchBendDelta);
@@ -200,6 +208,13 @@ public class MeasureSymbol extends Symbol {
                 note.needToTie();
             }
 
+            Logger.i(TAG, "note : " + note.toString());
+            Logger.i(TAG, "note start tick : " + note.getStartTicks());
+            Logger.i(TAG, "note end tick : " + (note.getStartTicks() + note.getDuration()));
+            Logger.i(TAG, "note value : " + note.getNoteValue());
+            Logger.i(TAG, "note duration : " + note.getDuration());
+            Logger.i(TAG, "---------------------------------");
+
             if(i < notes.size()-1) {
                 // 다음 노트의 startTicks보다 현재 노트의 startTicks + duration이 크면 값을 축소시킴
                 if(note.getStartTicks() + note.getDuration() > notes.get(i+1).getStartTicks()) {
@@ -251,11 +266,35 @@ public class MeasureSymbol extends Symbol {
         }
 
         boolean isEightNote = false;
+        boolean isSixteenthNote = false;
         for(int i=0; i<getAllMidiSymbols().size(); i++) {
             MidiSymbol symbol = getAllMidiSymbols().get(i);
             if(symbol instanceof RestSymbol) {
                 isEightNote = false;
+                isSixteenthNote = false;
                 continue;
+            }
+
+            /*try {
+                if(!(getAllMidiSymbols().get(i+1) instanceof NoteSymbol)) {
+                    continue;
+                }
+                if(Math.abs(((NoteSymbol) symbol).getNoteValue() - ((NoteSymbol) getAllMidiSymbols().get(i+1)).getNoteValue()) >= 12) {
+                    isSixteenthNote = false;
+                    isEightNote = false;
+                    continue;
+                }
+            } catch (Exception e) {
+                continue;
+            }*/
+            if(MidiUtil.Sixteenth(ScoreView.resolution) == symbol.getDuration()) {
+                if(isSixteenthNote) {
+                    ((NoteSymbol) symbol).prev = (NoteSymbol) getAllMidiSymbols().get(i-1);
+                    ((NoteSymbol) symbol).prev.next = (NoteSymbol) symbol;
+                }
+                isSixteenthNote = true;
+            } else {
+                isSixteenthNote = false;
             }
 
             if(MidiUtil.Eighth(ScoreView.resolution) == symbol.getDuration()) {
@@ -302,7 +341,7 @@ public class MeasureSymbol extends Symbol {
 
         for(int i=rests.size()-1; i>=0; i--) {
             RestSymbol symbol = (RestSymbol) rests.get(i);
-            if(symbol.getDuration() == 0) {
+            if(symbol.getDuration() <= 0) {
                 rests.remove(symbol);
             }
         }
@@ -322,10 +361,18 @@ public class MeasureSymbol extends Symbol {
         // 30 이하의 애들을 어떻게 처리할지..
 
         note.roundStartTicks();
-        int duration = note.getDuration();
+        int duration = ((note.getDuration() + 5) / 10) * 10;
         int startTicks = note.getStartTicks();
         for(int i=0; i<scales.size(); i++) {
-            if(duration / scales.get(i) > 0) { // duration 90 -> 120으로 맞춰준다
+            if(duration / scales.get(i) == 1) {
+                note.setEndTicks(startTicks + duration);
+            }
+            if(note.getStartTicks() + note.getDuration() > this.endTicks) {
+                note.setEndTicks(this.endTicks);
+                note.needToTie();
+            }
+
+            /*if(duration / scales.get(i) > 0) { // duration 90 -> 120으로 맞춰준다
                 try {
                     note.setEndTicks(startTicks + scales.get(i - 1));
                 } catch (IndexOutOfBoundsException e) {
@@ -337,7 +384,7 @@ public class MeasureSymbol extends Symbol {
                     note.needToTie();
                 }
                 break;
-            }
+            }*/
         }
 
         duration = note.getDuration();

@@ -106,16 +106,48 @@ public class NoteSymbol extends MidiSymbol {
             paint.setStrokeWidth(5);
             if (isTailTop) {
                 canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2, y - ScoreView.STEM_HEIGHT - append,
-                        ScoreView.LINE_SPACE_HEIGHT / 2 + MeasureSymbol.segment + 2, y - ScoreView.STEM_HEIGHT - append, paint);
+                        ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2, y - ScoreView.STEM_HEIGHT - append, paint);
             } else {
                 canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2, y + ScoreView.STEM_HEIGHT + append,
-                        -ScoreView.LINE_SPACE_HEIGHT / 2 + MeasureSymbol.segment + 2, y + ScoreView.STEM_HEIGHT + append, paint);
+                        -ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2, y + ScoreView.STEM_HEIGHT + append, paint);
+            }
+
+            if(MidiUtil.Sixteenth(ScoreView.resolution) == this.getDuration()) {
+                if (isTailTop) {
+                    canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2,
+                            y - ScoreView.STEM_HEIGHT - append + paint.getStrokeWidth() * 2,
+                            ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2,
+                            y - ScoreView.STEM_HEIGHT - append + paint.getStrokeWidth() * 2, paint);
+                } else {
+                    canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2,
+                            y + ScoreView.STEM_HEIGHT + append - paint.getStrokeWidth() * 2,
+                            -ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2,
+                            y + ScoreView.STEM_HEIGHT + append - paint.getStrokeWidth() * 2, paint);
+                }
             }
         }
 
         if (MidiUtil.needToPointLine(noteValue)) {
-            paint.setStrokeWidth(ScoreView.LINE_STROKE);
-            canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
+            drawPointLine(canvas, paint);
+        }
+    }
+
+    private void drawPointLine(Canvas canvas, Paint paint) {
+        paint.setStrokeWidth(ScoreView.LINE_STROKE);
+        //canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
+        if(noteValue%(ScoreView.DEFAULT_C - ScoreView.OCTAVE) <= ScoreView.OCTAVE) {
+            float y = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 5;
+            while (y <= this.y) {
+                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
+                y += ScoreView.LINE_SPACE_HEIGHT;
+            }
+        }
+        if(noteValue%(ScoreView.DEFAULT_C - ScoreView.OCTAVE) >= ScoreView.OCTAVE + 9) {
+            float y = ScoreView.FIRST_LINE_HEIGHT - (float)ScoreView.LINE_SPACE_HEIGHT;
+            while (y >= this.y) {
+                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
+                y -= ScoreView.LINE_SPACE_HEIGHT;
+            }
         }
     }
 

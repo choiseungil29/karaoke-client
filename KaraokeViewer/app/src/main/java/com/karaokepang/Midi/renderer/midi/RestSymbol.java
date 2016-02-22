@@ -106,8 +106,8 @@ public class RestSymbol extends MidiSymbol {
         float radius = (ScoreView.LINE_SPACE_HEIGHT-3)/3;
 
         canvas.drawCircle(0, y, radius, paint);
-        canvas.drawLine(0, y + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT, y - radius, paint);
-        canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT,
+        canvas.drawLine(0, y + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT/2, y - radius, paint);
+        canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT/2,
                 y - radius,
                 (ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT)/4,
                 y + ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT/2, paint);
@@ -115,15 +115,15 @@ public class RestSymbol extends MidiSymbol {
 
     private void drawSixteenth(Canvas canvas, Paint paint) {
         int y = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT/2;
-        float radius = (ScoreView.LINE_SPACE_HEIGHT-3)/2;
+        float radius = (ScoreView.LINE_SPACE_HEIGHT-3)/3;
 
         canvas.drawCircle(0, y, radius, paint);
-        canvas.drawLine(0, y + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT, y - radius, paint);
+        canvas.drawLine(0, y + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT/2, y - radius, paint);
 
         canvas.drawCircle(-radius, y + ScoreView.LINE_SPACE_HEIGHT, radius, paint);
-        canvas.drawLine(-radius, y + ScoreView.LINE_SPACE_HEIGHT + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT - radius, y + radius, paint);
+        canvas.drawLine(-radius, y + ScoreView.LINE_SPACE_HEIGHT + radius, ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT/2 - radius, y + radius, paint);
 
-        canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT,
+        canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT/2,
                 y - radius,
                 (ScoreView.LINE_SPACE_HEIGHT/2 + ScoreView.LINE_SPACE_HEIGHT)/4,
                 y + ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT/2, paint);

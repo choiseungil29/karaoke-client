@@ -99,8 +99,8 @@ public class StaffSymbol extends Symbol {
                 progress = temp;
             }
 
-            canvas.drawLine(progress * width, ScoreView.FIRST_LINE_HEIGHT,
-                    progress * width + 1, ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
+            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), ScoreView.FIRST_LINE_HEIGHT,
+                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
         }
     }
 }
