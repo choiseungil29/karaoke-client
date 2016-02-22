@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.vpang.clicker.R;
@@ -28,8 +31,13 @@ public class BackgroundSelectActivity extends Activity {
     ImageView imageLeft;
     @Bind(R.id.image_right)
     ImageView imageRight;
-    @Bind(R.id.btn_ok)
-    Button btnOk;
+    @Bind(R.id.edit_phone)
+    EditText editPhone;
+    @Bind(R.id.checkbox_agree)
+    CheckBox checkBox;
+    @Bind(R.id.btn_send)
+    Button btnSend;
+
 
     private int[] imageResourceLeft = {R.drawable.front1, R.drawable.front2, R.drawable.front3, R.drawable.front4, R.drawable.front5, R.drawable.front6};
     private int[] imageResourceRight = {R.drawable.back1, R.drawable.back2, R.drawable.back3
@@ -45,16 +53,6 @@ public class BackgroundSelectActivity extends Activity {
 
         initListView();
         initButton();
-    }
-
-    private void initButton() {
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BackgroundSelectActivity.this, FinalSendActivity.class));
-                finish();
-            }
-        });
     }
 
     private void initListView() {
@@ -76,6 +74,28 @@ public class BackgroundSelectActivity extends Activity {
 
     }
 
+    private void initButton() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isCellphone(editPhone.getText().toString()) && editPhone.getText().toString().length() != 0) {
+                    if (checkBox.isChecked()) {
+                        Toast.makeText(BackgroundSelectActivity.this, "서버가 미구현되여 초기화면으로 이동합니다", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(BackgroundSelectActivity.this, "약관에 동의해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(BackgroundSelectActivity.this, "전화번호를 확인해주세요", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    public boolean isCellphone(String str) {
+        return str.matches("(01[016789])(\\d{3,4})(\\d{4})");
+    }
 
     class CustomAdapter extends BaseAdapter {
         int[] imageResource;

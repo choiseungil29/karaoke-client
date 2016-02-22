@@ -543,7 +543,9 @@ public class TestActivity extends Activity implements MusicListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        scoreView.stopMusicHandler();
+        if (scoreView != null) {
+            scoreView.stopMusicHandler();
+        }
     }
 
     @Override
