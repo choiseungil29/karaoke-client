@@ -159,18 +159,15 @@ public class TestActivity extends Activity implements MusicListener {
             scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         } else if (mode.equals("duet")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-            params.setMargins(10, 0, 10, 0);
+            //params.setMargins(10, 0, 10, 0);
             scoreView.setLayoutParams(params);
         }
-        //scoreView.setPadding(100, 100, 100, 100);
-        //((RelativeLayout) (findViewById(R.id.layout_score))).addView(scoreView);
         RelativeLayout relativeLayout = new RelativeLayout(this);
         relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         relativeLayout.setBackgroundColor(Color.WHITE);
         relativeLayout.addView(scoreView);
 
         ((RelativeLayout) (findViewById(R.id.layout_score))).addView(relativeLayout);
-
 
         ClefSymbol.LoadImages(this);
         TimeSignatureSymbol.LoadImages(this);

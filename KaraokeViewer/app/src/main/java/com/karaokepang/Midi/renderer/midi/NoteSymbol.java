@@ -106,10 +106,10 @@ public class NoteSymbol extends MidiSymbol {
             paint.setStrokeWidth(5);
             if (isTailTop) {
                 canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2, y - ScoreView.STEM_HEIGHT - append,
-                        ScoreView.LINE_SPACE_HEIGHT / 2 + MeasureSymbol.segment, y - ScoreView.STEM_HEIGHT - append, paint);
+                        ScoreView.LINE_SPACE_HEIGHT / 2 + MeasureSymbol.segment + 2, y - ScoreView.STEM_HEIGHT - append, paint);
             } else {
                 canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2, y + ScoreView.STEM_HEIGHT + append,
-                        -ScoreView.LINE_SPACE_HEIGHT / 2 + MeasureSymbol.segment, y + ScoreView.STEM_HEIGHT + append, paint);
+                        -ScoreView.LINE_SPACE_HEIGHT / 2 + MeasureSymbol.segment + 2, y + ScoreView.STEM_HEIGHT + append, paint);
             }
         }
 
@@ -121,7 +121,7 @@ public class NoteSymbol extends MidiSymbol {
 
     public void drawWhole(Canvas canvas, Paint paint, float y) {
         paint.setStyle(Paint.Style.STROKE);
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 4; i++) {
             canvas.rotate(-CIRCLE_ROUTE, 0, y);
             canvas.drawOval(new RectF(-ScoreView.LINE_SPACE_HEIGHT / 2 - i, -ScoreView.LINE_SPACE_HEIGHT / 2 + y,
                     ScoreView.LINE_SPACE_HEIGHT / 2 + i, ScoreView.LINE_SPACE_HEIGHT / 2 + y), paint);
@@ -216,11 +216,11 @@ public class NoteSymbol extends MidiSymbol {
 
     public void drawStem(Canvas canvas, Paint paint, float y) {
         if (isTailTop) {
-            canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2 + 2, y,
-                    ScoreView.LINE_SPACE_HEIGHT / 2 + 2, y - ScoreView.STEM_HEIGHT - append, paint);
+            canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2 + 1, y,
+                    ScoreView.LINE_SPACE_HEIGHT / 2 + 1, y - ScoreView.STEM_HEIGHT - append, paint);
         } else {
-            canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 2, y - 1,
-                    -ScoreView.LINE_SPACE_HEIGHT / 2 - 2, y + ScoreView.STEM_HEIGHT + append, paint);
+            canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 1, y - 1,
+                    -ScoreView.LINE_SPACE_HEIGHT / 2 - 1, y + ScoreView.STEM_HEIGHT + append, paint);
         }
     }
 

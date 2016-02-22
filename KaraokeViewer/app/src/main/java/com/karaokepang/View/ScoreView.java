@@ -429,9 +429,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 Logger.i("---------------------------------");
                 if (symbol instanceof NoteSymbol) {
                     Logger.i(TAG, "note symbol start ");
-                    Logger.i(TAG, "prev is : " + ((NoteSymbol) symbol).prev);
-                    Logger.i(TAG, "next is : " + ((NoteSymbol) symbol).next);
-                    Logger.i(TAG, "note duration : " + symbol.getDuration());
+                    //Logger.i(TAG, "prev is : " + ((NoteSymbol) symbol).prev);
+                    //Logger.i(TAG, "next is : " + ((NoteSymbol) symbol).next);
                     Logger.i(TAG, "tie is : " + ((NoteSymbol) symbol).isTie());
                 } else {
                     Logger.i(TAG, "rest symbol start ");
