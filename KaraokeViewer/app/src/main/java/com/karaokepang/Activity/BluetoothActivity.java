@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +32,7 @@ public class BluetoothActivity extends Activity {
         initBluetooth();
     }
 
-    private String getAddree() {
+    private String getAddress() {
         SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
         return pref.getString("address", "");
     }
@@ -116,7 +115,7 @@ public class BluetoothActivity extends Activity {
             }
         });
 
-        if (Strings.isNullOrEmpty(getAddree())) {
+        if (Strings.isNullOrEmpty(getAddress())) {
             if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
                 bt.disconnect();
             } else {

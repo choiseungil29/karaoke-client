@@ -122,16 +122,6 @@ public class TestActivity extends Activity implements MusicListener {
             }
         });
         videoView.start();
-//        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-//            public void onDataReceived(byte[] data, String message) {
-//                Log.i("kkk", "bluetooth = " + message);
-//                File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");
-//                Uri uri = Uri.parse(file.getAbsolutePath());
-//                FileUri fileUri = new FileUri(uri, file.getName());
-//                initVpang(fileUri.getUri(), fileUri.toString());
-//            }
-//        });
-
 
         BluetoothActivity.testActivity = this;
     }

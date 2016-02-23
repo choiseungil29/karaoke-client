@@ -1,7 +1,5 @@
 package com.vpang.clicker.activity;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,13 +27,10 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
-import app.akexorcist.bluetotohspp.library.BluetoothState;
 import jxl.Sheet;
 import jxl.Workbook;
 
 public class MainActivity extends BluetoothActivity {
-
 
     private static Button btnHome;
     private static LinearLayout layoutMode;

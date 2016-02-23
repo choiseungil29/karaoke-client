@@ -20,9 +20,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
  */
 public class BluetoothActivity extends Activity {
 
-
     public BluetoothSPP bt;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +36,6 @@ public class BluetoothActivity extends Activity {
         return pref.getString("address", "");
     }
 
-
     void initBluetooth() {
         bt = new BluetoothSPP(this);
         bt.setupService();
@@ -49,7 +46,6 @@ public class BluetoothActivity extends Activity {
                     , Toast.LENGTH_SHORT).show();
             finish();
         }
-
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
@@ -76,17 +72,20 @@ public class BluetoothActivity extends Activity {
                 editor.putString("address", address);
                 editor.commit();
                 Toast.makeText(getApplicationContext(), "리모콘 연결 완료", Toast.LENGTH_SHORT).show();
-                DeviceList.deviceList.finish();
+                if (DeviceList.deviceList != null) {
+                    DeviceList.deviceList.finish();
+                }
             }
 
             public void onDeviceDisconnected() {
                 Toast.makeText(getApplicationContext()
-                        , "Connection lost", Toast.LENGTH_SHORT).show();
+                        , "연결이 끊겼습니다. 다시 연결을 시도합니다", Toast.LENGTH_SHORT).show();
+                bt.connect(getAddree());
             }
 
             public void onDeviceConnectionFailed() {
                 Toast.makeText(getApplicationContext()
-                        , "Unable to connect", Toast.LENGTH_SHORT).show();
+                        , "리모콘 연결에 실패했습니다. 다시시도해주세요.", Toast.LENGTH_SHORT).show();
             }
         });
         if (Strings.isNullOrEmpty(getAddree())) {
