@@ -73,7 +73,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     private MusicListener listener;
 
     private ScoreThread thread = new ScoreThread();
-    private MediaPlayer player = new MediaPlayer();
+    public MediaPlayer player = new MediaPlayer();
 
     private List<MeasureSymbol> measures;
     private List<MeasureSymbol> nowMeasures[] = new List[2];
@@ -329,12 +329,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void startMusicPlay() {
-        LINE_SPACE_HEIGHT = getMeasuredHeight() / 40;
+        LINE_SPACE_HEIGHT = getMeasuredHeight() / 50;
         LINE_STROKE = getMeasuredHeight() / 300;
-        FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 6;
+        FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 9;
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
 
-        //Iterator<MidiEvent> it = renderTrack.getEvents().iterator();
         for(MidiEvent e : renderTrack.getEvents()) {
             if(e instanceof NoteOn &&
                     ((NoteOn) e).getVelocity() > 0) {
