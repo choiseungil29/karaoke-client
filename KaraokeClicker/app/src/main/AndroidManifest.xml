@@ -37,6 +37,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.vpang.clicker.activity.BackgroundSelectActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name="com.vpang.clicker.activity.ArrowActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
         <activity
@@ -46,11 +49,10 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
         <activity
             android:name="com.vpang.clicker.activity.SearchActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" />
-        <activity android:name="com.vpang.clicker.activity.BackgroundSelectActivity"></activity>
-        <activity android:name="com.vpang.clicker.activity.FinalSendActivity"></activity>
-        <activity android:name=".bluetooth.DeviceList"/>
+            android:screenOrientation="portrait"/>
+
+        <activity android:name="com.vpang.clicker.activity.FinalSendActivity" />
+        <activity android:name=".bluetooth.DeviceList" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.vpang.clicker.activity;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
@@ -36,12 +37,17 @@ import jxl.Workbook;
 public class MainActivity extends BluetoothActivity {
 
 
+    private static Button btnHome;
+    private static LinearLayout layoutMode;
+
     private EditText editSearch, editNumber;
     private TextView textSelectNumber, textSelectSinger, textSelectSong;
     private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9,
-            btnBackSpace, btnStart, btnSoundPlus, btnSoundMinus, btnKeyPlus, btnKeyMinus,
-            btnTempoPlus, btnTempoMinus, btnMelody, btnReservation, btnReservationCancle, btnStop,
-            btnVpang, btnDuet, btnAudtion, btnNewSong, btnSingerName, btnSongName, btnFavoriteName;
+            btnBackSpace, btnStart, btnKeyPlus, btnKeyMinus,
+            btnTempoPlus, btnTempoMinus, btnBackgroundVideo, btnReservation, btnReservationCancle, btnStop,
+            btnVpang, btnDuet, btnAudtion, btnNewSong, btnSingerName, btnSongName, btnFavoriteName,
+            btnMusicSheetMode;
+
     private ImageView btnSearch;
     private ListView listSearch;
     private LinearLayout layoutSearch;
@@ -56,7 +62,6 @@ public class MainActivity extends BluetoothActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         getDefaultData();
         initTextView();
         initLinearLayout();
@@ -67,18 +72,6 @@ public class MainActivity extends BluetoothActivity {
 
     private void getDefaultData() {
         if (Song.listAll(Song.class).size() == 0) {
-//            try {
-//                JSONObject jsonObject = new JSONObject(readText("song.json"));
-//                JSONArray songs = jsonObject.getJSONArray("songs");
-//                for (int i = 0; i < songs.length(); i++) {
-//                    JSONObject jo = songs.getJSONObject(i);
-//                    Song song = new Song(jo.getString("songNumber"), jo.getString("song"), jo.getString("singer"), jo.getString("createDate"));
-//                    song.save();
-//                }
-//
-//            } catch (JSONException | IOException e) {
-//                e.printStackTrace();
-//            }
             readXcel();
         }
     }
@@ -166,6 +159,7 @@ public class MainActivity extends BluetoothActivity {
 
     private void initLinearLayout() {
         layoutSearch = (LinearLayout) findViewById(R.id.layout_search);
+        layoutMode = (LinearLayout) findViewById(R.id.layout_mode);
     }
 
     private void initTextView() {
@@ -208,13 +202,11 @@ public class MainActivity extends BluetoothActivity {
         btnBackSpace = (Button) findViewById(R.id.btn_backspace);
 
         btnStart = (Button) findViewById(R.id.btn_start);
-        btnSoundPlus = (Button) findViewById(R.id.btn_sound_plus);
-        btnSoundMinus = (Button) findViewById(R.id.btn_sound_minus);
         btnKeyPlus = (Button) findViewById(R.id.btn_key_plus);
         btnKeyMinus = (Button) findViewById(R.id.btn_key_minus);
         btnTempoPlus = (Button) findViewById(R.id.btn_tempo_plus);
         btnTempoMinus = (Button) findViewById(R.id.btn_tempo_minus);
-        btnMelody = (Button) findViewById(R.id.btn_melody);
+        btnBackgroundVideo = (Button) findViewById(R.id.btn_background_select);
         btnReservation = (Button) findViewById(R.id.btn_reservation);
         btnReservationCancle = (Button) findViewById(R.id.btn_reservation_cancle);
         btnStop = (Button) findViewById(R.id.btn_stop);
@@ -226,6 +218,8 @@ public class MainActivity extends BluetoothActivity {
         btnSongName = (Button) findViewById(R.id.btn_song_name);
         btnFavoriteName = (Button) findViewById(R.id.btn_favorite_song);
         btnSearch = (ImageView) findViewById(R.id.btn_search);
+        btnHome = (Button) findViewById(R.id.btn_home);
+        btnMusicSheetMode = (Button) findViewById(R.id.btn_music_sheet_mode);
 
         btn0.setOnClickListener(onClickListenerNumber);
         btn1.setOnClickListener(onClickListenerNumber);
@@ -239,13 +233,11 @@ public class MainActivity extends BluetoothActivity {
         btn9.setOnClickListener(onClickListenerNumber);
         btnBackSpace.setOnClickListener(onClickListenerNumber);
 
-        btnSoundPlus.setOnClickListener(onClickListenerOption);
-        btnSoundMinus.setOnClickListener(onClickListenerOption);
         btnKeyPlus.setOnClickListener(onClickListenerOption);
         btnKeyMinus.setOnClickListener(onClickListenerOption);
         btnTempoPlus.setOnClickListener(onClickListenerOption);
         btnTempoMinus.setOnClickListener(onClickListenerOption);
-        btnMelody.setOnClickListener(onClickListenerOption);
+        btnBackgroundVideo.setOnClickListener(onClickListenerOption);
         btnReservation.setOnClickListener(onClickListenerOption);
         btnReservationCancle.setOnClickListener(onClickListenerOption);
         btnStop.setOnClickListener(onClickListenerOption);
@@ -253,12 +245,15 @@ public class MainActivity extends BluetoothActivity {
         btnDuet.setOnClickListener(onClickListenerOption);
         btnAudtion.setOnClickListener(onClickListenerOption);
         btnStart.setOnClickListener(onClickListenerOption);
+        btnHome.setOnClickListener(onClickListenerOption);
+        btnMusicSheetMode.setOnClickListener(onClickListenerOption);
 
         btnNewSong.setOnClickListener(onClickListenerSearch);
         btnSingerName.setOnClickListener(onClickListenerSearch);
         btnSongName.setOnClickListener(onClickListenerSearch);
         btnFavoriteName.setOnClickListener(onClickListenerSearch);
         btnSearch.setOnClickListener(onClickListenerSearch);
+
     }
 
     View.OnClickListener onClickListenerNumber = new View.OnClickListener() {
@@ -319,11 +314,6 @@ public class MainActivity extends BluetoothActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
-                case R.id.btn_sound_plus:
-                    break;
-                case R.id.btn_sound_minus:
-                    break;
                 case R.id.btn_key_plus:
                     break;
                 case R.id.btn_key_minus:
@@ -332,27 +322,34 @@ public class MainActivity extends BluetoothActivity {
                     break;
                 case R.id.btn_tempo_minus:
                     break;
-                case R.id.btn_melody:
+                case R.id.btn_background_select:
+                    startActivity(new Intent(MainActivity.this, BackgroundSelectActivity.class));
                     break;
                 case R.id.btn_reservation:
                     break;
                 case R.id.btn_reservation_cancle:
                     break;
                 case R.id.btn_stop:
-                    bt.send("song_stop",true);
+                    bt.send("song_stop", true);
                     break;
                 case R.id.btn_start:
                     Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
                     bt.send(textSelectNumber.getText().toString(), true);
                     break;
                 case R.id.btn_vpang:
-                    bt.send("mode_vpang",true);
+                    bt.send("mode_vpang", true);
                     break;
                 case R.id.btn_duet:
-                    bt.send("mode_duet",true);
+                    bt.send("mode_duet", true);
                     break;
                 case R.id.btn_audition:
-                    bt.send("mode_audition",true);
+                    bt.send("mode_audition", true);
+                    break;
+                case R.id.btn_home:
+                    bt.send("mode_home", true);
+                    break;
+                case R.id.btn_music_sheet_mode:
+
                     break;
             }
         }
@@ -422,29 +419,15 @@ public class MainActivity extends BluetoothActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (bt != null) {
-            bt.autoConnect("vpang");
-            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
-                public void onNewConnection(String name, String address) {
-                    Log.e("kkk", "자동연결 성공");
-                    // Do something when earching for new connection device
-                }
+    }
 
-                public void onAutoConnectionStarted() {
-                    Log.e("kkk", "자동연결 성공2");
-                    // Do something when auto connection has started
-                }
-            });
-            if (!bt.isBluetoothEnabled()) {
-                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-            } else {
-                if (!bt.isServiceAvailable()) {
-                    bt.setupService();
-                    bt.startService(BluetoothState.DEVICE_ANDROID);
-                    bluetoothSetUp();
-                }
-            }
-        }
+    public static void buttonHomeMode() {
+        btnHome.setVisibility(View.VISIBLE);
+        layoutMode.setVisibility(View.GONE);
+    }
+
+    public static void buttonLayoutMode() {
+        btnHome.setVisibility(View.GONE);
+        layoutMode.setVisibility(View.VISIBLE);
     }
 }

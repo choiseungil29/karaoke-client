@@ -2,10 +2,15 @@ package com.vpang.clicker.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.common.base.Strings;
+import com.vpang.clicker.activity.MainActivity;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
@@ -18,15 +23,25 @@ public class BluetoothActivity extends Activity {
 
     public BluetoothSPP bt;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initBluetooth();
+        if (!Strings.isNullOrEmpty(getAddree())) {
+            bt.connect(getAddree());
+        }
+    }
+
+    private String getAddree() {
+        SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
+        return pref.getString("address", "");
     }
 
 
     void initBluetooth() {
         bt = new BluetoothSPP(this);
+        bt.setupService();
 
         if (!bt.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext()
@@ -35,15 +50,31 @@ public class BluetoothActivity extends Activity {
             finish();
         }
 
+
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
                 Log.i("kkk", "bluetooth = " + message);
-//                chooseSong(message);
+                switch (message) {
+                    case "mode_vpang":
+                        MainActivity.buttonHomeMode();
+                        break;
+                    case "mode_duet":
+                        MainActivity.buttonHomeMode();
+                        break;
+                    case "mode_home":
+                        MainActivity.buttonLayoutMode();
+                        break;
+                }
             }
         });
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             public void onDeviceConnected(String name, String address) {
+                Log.d("kkk", "연결된 주소 = " + address);
+                SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("address", address);
+                editor.commit();
                 Toast.makeText(getApplicationContext(), "리모콘 연결 완료", Toast.LENGTH_SHORT).show();
                 DeviceList.deviceList.finish();
             }
@@ -58,15 +89,15 @@ public class BluetoothActivity extends Activity {
                         , "Unable to connect", Toast.LENGTH_SHORT).show();
             }
         });
-
-        if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
-            bt.disconnect();
-        } else {
-            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+        if (Strings.isNullOrEmpty(getAddree())) {
+            if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+                bt.disconnect();
+            } else {
+                Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+                startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+            }
         }
     }
-
 
     public void bluetoothSetUp() {
 
@@ -112,17 +143,15 @@ public class BluetoothActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-//        if (bt != null) {
-//            bt.autoConnect("Galaxy Note5");
+        if (bt != null) {
+//            bt.autoConnect("vpang");
 //            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
 //                public void onNewConnection(String name, String address) {
-//                    Log.e("kkk", "자동연결 성공");
-//                    // Do something when earching for new connection device
+//                    Toast.makeText(getApplicationContext(), "새로운 자동연결", Toast.LENGTH_SHORT).show();
 //                }
 //
 //                public void onAutoConnectionStarted() {
-//                    Log.e("kkk", "자동연결 성공2");
-//                    // Do something when auto connection has started
+//                    Toast.makeText(getApplicationContext(), "자동연결 시작", Toast.LENGTH_SHORT).show();
 //                }
 //            });
             if (!bt.isBluetoothEnabled()) {
@@ -135,6 +164,6 @@ public class BluetoothActivity extends Activity {
                     bluetoothSetUp();
                 }
             }
-//        }
+        }
     }
 }
