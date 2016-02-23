@@ -156,6 +156,12 @@ public class TestActivity extends Activity implements MusicListener {
         relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         relativeLayout.setBackgroundColor(Color.WHITE);
         relativeLayout.addView(scoreView);
+        scoreView.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // 태경아 여기서 끝나
+            }
+        });
 
         ((RelativeLayout) (findViewById(R.id.layout_score))).addView(relativeLayout);
 
