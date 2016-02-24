@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -61,6 +62,7 @@ public class TestActivity extends Activity implements MusicListener {
     public boolean is_recording;
 
     private RelativeLayout layoutCamera;
+    public LinearLayout layoutLyric;
 
     private String fileName;
     private ScoreView scoreView;
@@ -89,19 +91,15 @@ public class TestActivity extends Activity implements MusicListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mode = getIntent().getStringExtra("mode");
-        if (mode.equals("vpang")) {
-            setContentView(R.layout.activity_test_three);
-        } else if (mode.equals("duet")) {
-            setContentView(R.layout.activity_test);
-        }
+        setContentView(R.layout.activity_test);
 
         preData();
         initRecordView();
 
+        layoutLyric = (LinearLayout) findViewById(R.id.layout_lyric);
         videoView = (VideoView) findViewById(R.id.vv_background);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-//        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.TS");
         String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
         videoView.setVideoURI(Uri.parse(path));
 
@@ -124,6 +122,12 @@ public class TestActivity extends Activity implements MusicListener {
         videoView.start();
 
         BluetoothActivity.testActivity = this;
+    }
+
+    private void reset() {
+        layoutLyric.setVisibility(View.INVISIBLE);
+        findViewById(R.id.layout_score).setVisibility(View.INVISIBLE);
+        textSelectSong.setVisibility(View.VISIBLE);
     }
 
     private void initSongName(ScoreView scoreView) {
@@ -149,7 +153,6 @@ public class TestActivity extends Activity implements MusicListener {
             scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         } else if (mode.equals("duet")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-            //params.setMargins(10, 0, 10, 0);
             scoreView.setLayoutParams(params);
         }
         RelativeLayout relativeLayout = new RelativeLayout(this);
@@ -160,6 +163,9 @@ public class TestActivity extends Activity implements MusicListener {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 // 태경아 여기서 끝나
+                Toast.makeText(getApplicationContext(), "끝", Toast.LENGTH_SHORT).show();
+                Log.e("kkk", "===================END===============");
+                reset();
             }
         });
 
@@ -328,10 +334,6 @@ public class TestActivity extends Activity implements MusicListener {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (tick + 500 > firstTime) {
-                        layoutSongName.setVisibility(LinearLayout.GONE);
-                        findViewById(R.id.layout_score).setVisibility(RelativeLayout.VISIBLE);
-                    }
                     tv_lyrics.setText(text);
                 }
             });
@@ -339,6 +341,10 @@ public class TestActivity extends Activity implements MusicListener {
         tv_lyrics.setTick(tick, nowLyricsIndex);
     }
 
+    public void showScoreView() {
+        layoutSongName.setVisibility(LinearLayout.GONE);
+        findViewById(R.id.layout_score).setVisibility(RelativeLayout.VISIBLE);
+    }
 
     private int findBackFacingCamera() {
         int cameraId = -1;

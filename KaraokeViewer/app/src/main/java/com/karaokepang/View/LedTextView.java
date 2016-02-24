@@ -31,8 +31,8 @@ public class LedTextView extends TextView {
     }
 
     private void applyTypeface(Context context, AttributeSet attrs) {
-        TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.BMJUATextView);
-        String typefaceName = arr.getString(R.styleable.BMJUATextView_typeface);
+//        TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.BMJUATextView);
+        String typefaceName = "BMJUA_ttf.ttf";
         Typeface typeface = null;
         try {
             typeface = Typeface.createFromAsset(context.getAssets(), typefaceName);

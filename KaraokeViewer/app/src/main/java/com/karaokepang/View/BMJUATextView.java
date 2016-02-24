@@ -1,15 +1,12 @@
 package com.karaokepang.View;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
-
-import com.karaokepang.R;
 
 public class BMJUATextView extends TextView {
 
@@ -28,8 +25,8 @@ public class BMJUATextView extends TextView {
     }
 
     private void applyTypeface(Context context, AttributeSet attrs) {
-        TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.BMJUATextView);
-        String typefaceName = arr.getString(R.styleable.BMJUATextView_typeface);
+//        TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.BMJUATextView);
+        String typefaceName = "BMJUA_ttf.ttf";
         Typeface typeface = null;
         try {
             typeface = Typeface.createFromAsset(context.getAssets(), typefaceName);

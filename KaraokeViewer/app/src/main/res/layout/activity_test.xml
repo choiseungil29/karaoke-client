@@ -3,9 +3,8 @@
     xmlns:font="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_musicsheet"
+    android:background="#fff"
     android:orientation="vertical">
-
 
     <RelativeLayout
         android:id="@+id/camera_layout"
@@ -17,7 +16,7 @@
     <LinearLayout
         android:id="@+id/layout_lyric"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_alignEnd="@+id/camera_layout"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -50,6 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/layout_lyric"
         android:layout_below="@+id/camera_layout"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
         android:visibility="invisible" />
 
     <com.karaokepang.View.BMJUATextView
@@ -61,8 +62,7 @@
         android:text="선곡해주세요!"
         android:textColor="#000"
         android:textSize="120sp"
-        android:textStyle="bold"
-        font:typeface="BMJUA_ttf.ttf" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/layout_song_name"

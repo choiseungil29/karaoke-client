@@ -86,6 +86,8 @@ public class BluetoothActivity extends Activity {
             public void onDeviceConnectionFailed() {
                 Toast.makeText(getApplicationContext()
                         , "리모콘 연결에 실패했습니다. 다시시도해주세요.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+                startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
             }
         });
         if (Strings.isNullOrEmpty(getAddree())) {
@@ -102,7 +104,6 @@ public class BluetoothActivity extends Activity {
 
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -111,15 +112,19 @@ public class BluetoothActivity extends Activity {
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (bt == null) {
             return;
         }
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == Activity.RESULT_OK)
+            if (resultCode == Activity.RESULT_OK) {
                 bt.connect(data);
+                SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("address", data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS));
+                editor.commit();
+            }
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 bt.setupService();

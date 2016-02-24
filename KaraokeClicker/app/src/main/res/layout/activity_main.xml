@@ -3,53 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_back"
     android:orientation="horizontal"
+    android:padding="8dp"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="0px"
         android:layout_height="match_parent"
+        android:layout_marginRight="8dp"
         android:layout_weight="6.5"
-        android:background="#333"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0px"
+            android:layout_marginBottom="8dp"
             android:layout_weight="0.8"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_new_song"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:text="최신곡" />
+                android:background="@drawable/btn_new_song_select" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_singer_name"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:text="가수" />
+                android:background="@drawable/btn_singer_name" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_song_name"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:text="제목" />
+                android:background="@drawable/btn_song_name" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_favorite_song"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="애창곡" />
+                android:background="@drawable/btn_favorite" />
         </LinearLayout>
 
         <LinearLayout
@@ -61,34 +63,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fff"
-                android:orientation="horizontal">
+                android:background="@drawable/main_top_back"
+                android:orientation="horizontal"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp">
 
                 <TextView
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="167"
                     android:gravity="center"
                     android:text="곡번호"
-                    android:textSize="25sp"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
+                    android:layout_weight="341"
                     android:gravity="center"
                     android:text="제목"
-                    android:textSize="25sp"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="166"
                     android:gravity="center"
                     android:text="가수"
-                    android:textSize="25sp"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -102,70 +109,66 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:background="@drawable/main_bottom_back"
+                android:orientation="horizontal"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp">
 
                 <TextView
                     android:id="@+id/text_number"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="167"
                     android:gravity="center"
                     android:text="선택된 번호"
                     android:textColor="#fff"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/text_song_name"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
+                    android:layout_weight="341"
                     android:gravity="center"
                     android:text="선택된 노래 제목"
                     android:textColor="#fff"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/text_singer_name"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="166"
                     android:gravity="center"
                     android:text="선택된 가수"
                     android:textColor="#fff"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#555"
+                android:layout_height="50dp"
+                android:background="#e6e6e6"
                 android:orientation="horizontal"
                 android:visibility="gone">
-
-                <TextView
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:text="검색"
-                    android:textColor="#fff" />
 
                 <EditText
                     android:id="@+id/edit_search"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
+                    android:layout_weight="508"
                     android:gravity="center_horizontal" />
 
                 <ImageView
                     android:id="@+id/btn_search"
                     android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:src="@android:drawable/ic_menu_search" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_weight="166"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:src="@drawable/btn_search" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -175,13 +178,16 @@
         android:layout_height="match_parent"
         android:layout_weight="3.5"
         android:background="#ccc"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="3dp">
 
         <EditText
             android:id="@+id/edit_number"
             android:layout_width="match_parent"
             android:layout_height="0px"
+            android:layout_marginBottom="8dp"
             android:layout_weight="0.8"
+            android:background="@drawable/edit_number"
             android:clickable="false"
             android:focusableInTouchMode="false"
             android:gravity="center"
@@ -193,33 +199,37 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_1"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="1" />
+                android:background="@drawable/n_01" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_2"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="2" />
+                android:background="@drawable/n_02" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_3"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="3" />
+                android:background="@drawable/n_03" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_backspace"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="#" />
+                android:background="@drawable/btn_back" />
         </LinearLayout>
 
         <LinearLayout
@@ -231,72 +241,79 @@
             <LinearLayout
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_4"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="4" />
+                    android:background="@drawable/n_04" />
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_7"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:text="7" />
+                    android:background="@drawable/n_07" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_5"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="5" />
+                    android:background="@drawable/n_05" />
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_8"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:text="8" />
+                    android:background="@drawable/n_08" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_6"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="6" />
+                    android:background="@drawable/n_06" />
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_9"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:text="9" />
+                    android:background="@drawable/n_09" />
             </LinearLayout>
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_start"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="시작" />
+                android:background="@drawable/btn_start" />
         </LinearLayout>
 
         <LinearLayout
@@ -305,60 +322,66 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_music_sheet_mode"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="악보모드" />
+                android:background="@drawable/btn_music_sheet_mode" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_0"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="0" />
+                android:background="@drawable/n_00" />
 
             <LinearLayout
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_key_plus"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="KEY+" />
+                    android:background="@drawable/btn_key_plus" />
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_key_minus"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:text="KEY-" />
+                    android:background="@drawable/btn_key_minus" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_tempo_plus"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="템포+" />
+                    android:background="@drawable/btn_temp_plus" />
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_tempo_minus"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:text="템포-" />
+                    android:background="@drawable/btn_tempo_minus" />
             </LinearLayout>
         </LinearLayout>
 
@@ -368,41 +391,46 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_background_select"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="전경배경" />
+                android:background="@drawable/btn_background" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_reservation"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="예약" />
+                android:background="@drawable/btn_reservation" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_reservation_cancle"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="예약취소" />
+                android:background="@drawable/btn_reservation_cancle" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_stop"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="정지" />
+                android:background="@drawable/btn_stop" />
         </LinearLayout>
 
-        <Button
+        <ImageView
             android:id="@+id/btn_home"
             android:layout_width="match_parent"
             android:layout_height="0px"
+            android:layout_margin="4dp"
             android:layout_weight="1.2"
-            android:text="홈"
+            android:background="@drawable/btn_home"
             android:visibility="gone" />
 
         <LinearLayout
@@ -412,28 +440,29 @@
             android:layout_weight="1.2"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_vpang"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="팡팡" />
+                android:background="@drawable/btn_vpang" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_duet"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="듀엣" />
+                android:background="@drawable/btn_duet" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_audition"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:text="오디션" />
+                android:background="@drawable/btn_audition" />
         </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>

@@ -42,14 +42,6 @@
             android:name="com.vpang.clicker.activity.BackgroundSelectActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.vpang.clicker.activity.ArrowActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
-        <activity
-            android:name="com.vpang.clicker.activity.NumberActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
-        <activity
             android:name="com.vpang.clicker.activity.SearchActivity"
             android:screenOrientation="portrait"/>
 

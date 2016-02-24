@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/launchur_background"
@@ -23,8 +24,8 @@
             android:id="@+id/btn_launcher_friend"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:background="@drawable/btn_duet" />
 
@@ -59,21 +60,17 @@
                 android:clickable="false" />
         </RelativeLayout>
 
-        <com.karaokepang.View.LedTextView
+        <com.karaokepang.View.VerticalMarqueeTextView
             android:id="@+id/text_led"
+            android:paddingLeft="30dp"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="Welcome to 팡팡    Welcome to 팡팡    Welcome to 팡팡    Welcome to 팡팡"
-            android:textSize="110sp"
-            android:textStyle="bold" />
+            android:lineSpacingExtra="50dip"
+            android:textStyle="bold"
+            app:marqueeSpeed="25"
+            app:textColor="@android:color/white"
+            app:textSize="36sp" />
     </LinearLayout>
 
 </LinearLayout>

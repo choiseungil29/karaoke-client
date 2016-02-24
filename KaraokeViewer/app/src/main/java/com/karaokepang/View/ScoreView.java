@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -113,13 +114,21 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void init(Context context) {
         musicStartHandler = new Handler();
-        TestActivity activity = (TestActivity) context;
+        activity = (TestActivity) context;
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
 
         Resources.initResources(context);
         renderTracks = new ArrayList<>();
         measures = new ArrayList<>();
+        musicRunnable = new Runnable() {
+            @Override
+            public void run() {
+                startMusicPlay();
+                activity.showScoreView();
+                activity.layoutLyric.setVisibility(VISIBLE);
+            }
+        };
     }
 
     public void setFileUri(Uri uri) {
@@ -318,14 +327,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-        musicRunnable = new Runnable() {
-            @Override
-            public void run() {
-                startMusicPlay();
-            }
-        };
-        musicStartHandler.postDelayed(musicRunnable, 1500);
+        musicStartHandler.postDelayed(musicRunnable, 3000);
     }
 
     private void startMusicPlay() {
@@ -334,10 +336,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         FIRST_LINE_HEIGHT = LINE_SPACE_HEIGHT * 9;
         STEM_HEIGHT = LINE_SPACE_HEIGHT * 3 + LINE_SPACE_HEIGHT / 2;
 
-        for(MidiEvent e : renderTrack.getEvents()) {
-            if(e instanceof NoteOn &&
+        for (MidiEvent e : renderTrack.getEvents()) {
+            if (e instanceof NoteOn &&
                     ((NoteOn) e).getVelocity() > 0) {
-                if(((NoteOn) e).getNoteValue() < ScoreView.LOWER_NOTE_VALUE) {
+                if (((NoteOn) e).getNoteValue() < ScoreView.LOWER_NOTE_VALUE) {
                     ScoreView.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
                 }
             }
@@ -528,7 +530,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
                     // 플레이어 진행된 시간 vs 현재 마디의 tick
                     //
-                    if(!finishStaffUpdate) {
+                    if (!finishStaffUpdate) {
                         if (nowMeasure.startTicks <= tick &&
                                 nowMeasure.endTicks > tick) {
                             // 윗줄인지 아랫줄인지

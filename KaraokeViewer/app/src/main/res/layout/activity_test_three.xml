@@ -45,8 +45,7 @@
         android:text="선곡해주세요!"
         android:textColor="#000"
         android:textSize="120sp"
-        android:textStyle="bold"
-        font:typeface="BMJUA_ttf.ttf" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/layout_song_name"

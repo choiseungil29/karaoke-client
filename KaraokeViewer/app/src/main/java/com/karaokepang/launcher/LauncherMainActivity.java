@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.VideoView;
 import com.karaokepang.Activity.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.R;
+import com.karaokepang.View.VerticalMarqueeTextView;
 import com.karaokepang.ftp.FtpServiceDown;
 import com.midisheetmusic.FileUri;
 
@@ -33,7 +35,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
 
     private VideoView videoView;
 
-    private TextView textLed;
+    private VerticalMarqueeTextView textLed;
 
 
     private ArrayList<FileUri> list;
@@ -124,7 +126,16 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
     }
 
     private void initTextVIew() {
-        textLed = (TextView) findViewById(R.id.text_led);
+        textLed = (VerticalMarqueeTextView) findViewById(R.id.text_led);
+        String text = "<html>" +
+                "<br /><br />" +
+                "<font color='#ff3333'>Welcome to PANG PANG!</font><br /><br />" +
+                "<font color='#ff0000'> UCC (User Created Contents)</font> 반주기는 3D 배경 영상으로 뮤직" +
+                "비디오를 만들 수 있으며 다른 룸을 초청하거나 또는 외부에 있는 가족의 스마트 폰과 듀엣으로 " +
+                "노래를 할 수 있는 새로운 반주기 입니다. <br /><br />" +
+                "새로운 노래를 배우거나 악기 연주에 사용할 수 있는 악보음악을 제공하고 있습니다.<br /><br /><br />" +
+                "</html>";
+        textLed.setText(Html.fromHtml(text));
     }
 
     @Override

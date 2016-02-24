@@ -32,16 +32,15 @@ import jxl.Workbook;
 
 public class MainActivity extends BluetoothActivity {
 
-    private static Button btnHome;
+    private static ImageView btnHome;
     private static LinearLayout layoutMode;
 
     private EditText editSearch, editNumber;
     private TextView textSelectNumber, textSelectSinger, textSelectSong;
-    private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9,
+    private ImageView btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9,
             btnBackSpace, btnStart, btnKeyPlus, btnKeyMinus,
             btnTempoPlus, btnTempoMinus, btnBackgroundVideo, btnReservation, btnReservationCancle, btnStop,
-            btnVpang, btnDuet, btnAudtion, btnNewSong, btnSingerName, btnSongName, btnFavoriteName,
-            btnMusicSheetMode;
+            btnVpang, btnDuet, btnAudtion, btnMusicSheetMode, btnNewSong, btnSingerName, btnSongName, btnFavoriteName;
 
     private ImageView btnSearch;
     private ListView listSearch;
@@ -184,37 +183,39 @@ public class MainActivity extends BluetoothActivity {
     }
 
     private void initButton() {
-        btn0 = (Button) findViewById(R.id.btn_0);
-        btn1 = (Button) findViewById(R.id.btn_1);
-        btn2 = (Button) findViewById(R.id.btn_2);
-        btn3 = (Button) findViewById(R.id.btn_3);
-        btn4 = (Button) findViewById(R.id.btn_4);
-        btn5 = (Button) findViewById(R.id.btn_5);
-        btn6 = (Button) findViewById(R.id.btn_6);
-        btn7 = (Button) findViewById(R.id.btn_7);
-        btn8 = (Button) findViewById(R.id.btn_8);
-        btn9 = (Button) findViewById(R.id.btn_9);
-        btnBackSpace = (Button) findViewById(R.id.btn_backspace);
+        btn0 = (ImageView) findViewById(R.id.btn_0);
+        btn1 = (ImageView) findViewById(R.id.btn_1);
+        btn2 = (ImageView) findViewById(R.id.btn_2);
+        btn3 = (ImageView) findViewById(R.id.btn_3);
+        btn4 = (ImageView) findViewById(R.id.btn_4);
+        btn5 = (ImageView) findViewById(R.id.btn_5);
+        btn6 = (ImageView) findViewById(R.id.btn_6);
+        btn7 = (ImageView) findViewById(R.id.btn_7);
+        btn8 = (ImageView) findViewById(R.id.btn_8);
+        btn9 = (ImageView) findViewById(R.id.btn_9);
 
-        btnStart = (Button) findViewById(R.id.btn_start);
-        btnKeyPlus = (Button) findViewById(R.id.btn_key_plus);
-        btnKeyMinus = (Button) findViewById(R.id.btn_key_minus);
-        btnTempoPlus = (Button) findViewById(R.id.btn_tempo_plus);
-        btnTempoMinus = (Button) findViewById(R.id.btn_tempo_minus);
-        btnBackgroundVideo = (Button) findViewById(R.id.btn_background_select);
-        btnReservation = (Button) findViewById(R.id.btn_reservation);
-        btnReservationCancle = (Button) findViewById(R.id.btn_reservation_cancle);
-        btnStop = (Button) findViewById(R.id.btn_stop);
-        btnVpang = (Button) findViewById(R.id.btn_vpang);
-        btnDuet = (Button) findViewById(R.id.btn_duet);
-        btnAudtion = (Button) findViewById(R.id.btn_audition);
-        btnNewSong = (Button) findViewById(R.id.btn_new_song);
-        btnSingerName = (Button) findViewById(R.id.btn_singer_name);
-        btnSongName = (Button) findViewById(R.id.btn_song_name);
-        btnFavoriteName = (Button) findViewById(R.id.btn_favorite_song);
+        btnBackSpace = (ImageView) findViewById(R.id.btn_backspace);
+
+        btnStart = (ImageView) findViewById(R.id.btn_start);
+        btnKeyPlus = (ImageView) findViewById(R.id.btn_key_plus);
+        btnKeyMinus = (ImageView) findViewById(R.id.btn_key_minus);
+        btnTempoPlus = (ImageView) findViewById(R.id.btn_tempo_plus);
+        btnTempoMinus = (ImageView) findViewById(R.id.btn_tempo_minus);
+        btnBackgroundVideo = (ImageView) findViewById(R.id.btn_background_select);
+        btnReservation = (ImageView) findViewById(R.id.btn_reservation);
+        btnReservationCancle = (ImageView) findViewById(R.id.btn_reservation_cancle);
+        btnStop = (ImageView) findViewById(R.id.btn_stop);
+        btnVpang = (ImageView) findViewById(R.id.btn_vpang);
+        btnDuet = (ImageView) findViewById(R.id.btn_duet);
+        btnAudtion = (ImageView) findViewById(R.id.btn_audition);
         btnSearch = (ImageView) findViewById(R.id.btn_search);
-        btnHome = (Button) findViewById(R.id.btn_home);
-        btnMusicSheetMode = (Button) findViewById(R.id.btn_music_sheet_mode);
+        btnMusicSheetMode = (ImageView) findViewById(R.id.btn_music_sheet_mode);
+
+        btnNewSong = (ImageView) findViewById(R.id.btn_new_song);
+        btnSingerName = (ImageView) findViewById(R.id.btn_singer_name);
+        btnSongName = (ImageView) findViewById(R.id.btn_song_name);
+        btnFavoriteName = (ImageView) findViewById(R.id.btn_favorite_song);
+        btnHome = (ImageView) findViewById(R.id.btn_home);
 
         btn0.setOnClickListener(onClickListenerNumber);
         btn1.setOnClickListener(onClickListenerNumber);
@@ -295,11 +296,6 @@ public class MainActivity extends BluetoothActivity {
                     break;
             }
 
-            btnNewSong.setTextColor(Color.BLACK);
-            btnSongName.setTextColor(Color.BLACK);
-            btnSingerName.setTextColor(Color.BLACK);
-            btnFavoriteName.setTextColor(Color.BLACK);
-
             searchAdapter = new SearchAdapter(searchSong(editNumber.getText().toString()));
             listSearch.setAdapter(searchAdapter);
         }
@@ -359,11 +355,10 @@ public class MainActivity extends BluetoothActivity {
                     editSearch.setText("");
                     editNumber.setText("");
 
-
-                    btnNewSong.setTextColor(Color.RED);
-                    btnSongName.setTextColor(Color.BLACK);
-                    btnSingerName.setTextColor(Color.BLACK);
-                    btnFavoriteName.setTextColor(Color.BLACK);
+                    btnNewSong.setBackgroundResource(R.drawable.btn_new_song_select);
+                    btnSongName.setBackgroundResource(R.drawable.btn_song_name);
+                    btnSingerName.setBackgroundResource(R.drawable.btn_singer_name);
+                    btnFavoriteName.setBackgroundResource(R.drawable.btn_favorite);
 
                     searchAdapter = new SearchAdapter(searchNewSong());
                     listSearch.setAdapter(searchAdapter);
@@ -374,10 +369,10 @@ public class MainActivity extends BluetoothActivity {
                     layoutSearch.setVisibility(LinearLayout.VISIBLE);
                     editNumber.setText("");
 
-                    btnNewSong.setTextColor(Color.BLACK);
-                    btnSongName.setTextColor(Color.RED);
-                    btnSingerName.setTextColor(Color.BLACK);
-                    btnFavoriteName.setTextColor(Color.BLACK);
+                    btnNewSong.setBackgroundResource(R.drawable.btn_new_song);
+                    btnSongName.setBackgroundResource(R.drawable.btn_song_name_select);
+                    btnSingerName.setBackgroundResource(R.drawable.btn_singer_name);
+                    btnFavoriteName.setBackgroundResource(R.drawable.btn_favorite);
                     break;
 
                 case R.id.btn_singer_name:
@@ -385,10 +380,10 @@ public class MainActivity extends BluetoothActivity {
                     layoutSearch.setVisibility(LinearLayout.VISIBLE);
                     editNumber.setText("");
 
-                    btnNewSong.setTextColor(Color.BLACK);
-                    btnSongName.setTextColor(Color.BLACK);
-                    btnSingerName.setTextColor(Color.RED);
-                    btnFavoriteName.setTextColor(Color.BLACK);
+                    btnNewSong.setBackgroundResource(R.drawable.btn_new_song);
+                    btnSongName.setBackgroundResource(R.drawable.btn_song_name);
+                    btnSingerName.setBackgroundResource(R.drawable.btn_singer_name_select);
+                    btnFavoriteName.setBackgroundResource(R.drawable.btn_favorite);
                     break;
 
                 case R.id.btn_favorite_song:
@@ -396,14 +391,14 @@ public class MainActivity extends BluetoothActivity {
                     editSearch.setText("");
                     editNumber.setText("");
 
-                    btnNewSong.setTextColor(Color.BLACK);
-                    btnSongName.setTextColor(Color.BLACK);
-                    btnSingerName.setTextColor(Color.BLACK);
-                    btnFavoriteName.setTextColor(Color.RED);
+                    btnNewSong.setBackgroundResource(R.drawable.btn_new_song);
+                    btnSongName.setBackgroundResource(R.drawable.btn_song_name);
+                    btnSingerName.setBackgroundResource(R.drawable.btn_singer_name);
+                    btnFavoriteName.setBackgroundResource(R.drawable.btn_favorite_select);
                     break;
 
                 case R.id.btn_search:
-                    searchAdapter = new SearchAdapter(searchSong(editSearch.getText().toString()));
+                    searchAdapter = new SearchAdapter(searchSong(editSearch.getText().toString().toUpperCase().toString()));
                     listSearch.setAdapter(searchAdapter);
                     break;
             }
