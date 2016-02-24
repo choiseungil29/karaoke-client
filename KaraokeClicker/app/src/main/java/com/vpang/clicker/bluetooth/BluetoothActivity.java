@@ -15,6 +15,8 @@ import com.vpang.clicker.activity.MainActivity;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
+import static com.vpang.clicker.bluetooth.SendData.*;
+
 /**
  * Created by 1002230 on 16. 2. 5..
  */
@@ -50,16 +52,12 @@ public class BluetoothActivity extends Activity {
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
                 Log.i("kkk", "bluetooth = " + message);
-                switch (message) {
-                    case "mode_vpang":
-                        MainActivity.buttonHomeMode();
-                        break;
-                    case "mode_duet":
-                        MainActivity.buttonHomeMode();
-                        break;
-                    case "mode_home":
-                        MainActivity.buttonLayoutMode();
-                        break;
+                if (message.equals(MODE_VPANG)) {
+                    MainActivity.buttonHomeMode();
+                } else if (message.equals(MODE_DUET)) {
+                    MainActivity.buttonHomeMode();
+                } else if (message.equals(MODE_HOME)) {
+                    MainActivity.buttonLayoutMode();
                 }
             }
         });

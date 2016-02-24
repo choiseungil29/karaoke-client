@@ -8,170 +8,193 @@
     android:padding="8dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_marginRight="8dp"
-        android:layout_weight="6.5"
-        android:orientation="vertical">
+        android:layout_weight="6.5">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="0.8"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/btn_new_song"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_new_song_select" />
-
-            <ImageView
-                android:id="@+id/btn_singer_name"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_singer_name" />
-
-            <ImageView
-                android:id="@+id/btn_song_name"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_song_name" />
-
-            <ImageView
-                android:id="@+id/btn_favorite_song"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/btn_favorite" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="6.2"
+            android:layout_height="match_parent"
+            android:layout_weight="6.5"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/main_top_back"
-                android:orientation="horizontal"
-                android:paddingBottom="3dp"
-                android:paddingTop="3dp">
-
-                <TextView
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="167"
-                    android:gravity="center"
-                    android:text="곡번호"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="341"
-                    android:gravity="center"
-                    android:text="제목"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="166"
-                    android:gravity="center"
-                    android:text="가수"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <ListView
-                android:id="@+id/list_search"
-                android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="1"
-                android:background="#fff" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/main_bottom_back"
-                android:orientation="horizontal"
-                android:paddingBottom="3dp"
-                android:paddingTop="3dp">
-
-                <TextView
-                    android:id="@+id/text_number"
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="167"
-                    android:gravity="center"
-                    android:text="선택된 번호"
-                    android:textColor="#fff"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/text_song_name"
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="341"
-                    android:gravity="center"
-                    android:text="선택된 노래 제목"
-                    android:textColor="#fff"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/text_singer_name"
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="166"
-                    android:gravity="center"
-                    android:text="선택된 가수"
-                    android:textColor="#fff"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_search"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#e6e6e6"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <EditText
-                    android:id="@+id/edit_search"
-                    android:layout_width="0px"
-                    android:layout_height="match_parent"
-                    android:layout_weight="508"
-                    android:gravity="center_horizontal" />
+                android:layout_marginBottom="8dp"
+                android:layout_weight="0.8"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/btn_search"
+                    android:id="@+id/btn_new_song"
                     android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_new_song_select" />
+
+                <ImageView
+                    android:id="@+id/btn_singer_name"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_singer_name" />
+
+                <ImageView
+                    android:id="@+id/btn_song_name"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_song_name" />
+
+                <ImageView
+                    android:id="@+id/btn_favorite_song"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_favorite" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="6.2"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_weight="166"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:src="@drawable/btn_search" />
+                    android:background="@drawable/main_top_back"
+                    android:orientation="horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp">
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="167"
+                        android:gravity="center"
+                        android:text="곡번호"
+                        android:textColor="#fff"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="341"
+                        android:gravity="center"
+                        android:text="제목"
+                        android:textColor="#fff"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="166"
+                        android:gravity="center"
+                        android:text="가수"
+                        android:textColor="#fff"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/list_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:background="#fff" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/main_bottom_back"
+                    android:orientation="horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp">
+
+                    <TextView
+                        android:id="@+id/text_number"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="167"
+                        android:gravity="center"
+                        android:text="선택된 번호"
+                        android:textColor="#fff"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_song_name"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="341"
+                        android:gravity="center"
+                        android:text="선택된 노래 제목"
+                        android:textColor="#fff"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_singer_name"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="166"
+                        android:gravity="center"
+                        android:text="선택된 가수"
+                        android:textColor="#fff"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="#e6e6e6"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/edit_search"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="508"
+                        android:gravity="center_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/btn_search"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_weight="166"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:src="@drawable/btn_search" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_mode_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#6000"
+            android:clickable="true">
+
+            <com.vpang.clicker.View.NanumTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="모드를 선택해주세요"
+                android:textColor="#fff"
+                android:textSize="50sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="0px"
@@ -205,7 +228,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/n_01" />
+                android:background="@drawable/btn_1_press" />
 
             <ImageView
                 android:id="@+id/btn_2"
@@ -213,7 +236,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/n_02" />
+                android:background="@drawable/btn_2_press" />
 
             <ImageView
                 android:id="@+id/btn_3"
@@ -221,7 +244,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/n_03" />
+                android:background="@drawable/btn_3_press" />
 
             <ImageView
                 android:id="@+id/btn_backspace"
@@ -229,7 +252,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_back" />
+                android:background="@drawable/btn_back_press" />
         </LinearLayout>
 
         <LinearLayout
@@ -251,14 +274,14 @@
                     android:layout_height="0px"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/n_04" />
+                    android:background="@drawable/btn_4_press" />
 
                 <ImageView
                     android:id="@+id/btn_7"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:background="@drawable/n_07" />
+                    android:background="@drawable/btn_7_press" />
             </LinearLayout>
 
             <LinearLayout
@@ -274,14 +297,14 @@
                     android:layout_height="0px"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/n_05" />
+                    android:background="@drawable/btn_5_press" />
 
                 <ImageView
                     android:id="@+id/btn_8"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:background="@drawable/n_08" />
+                    android:background="@drawable/btn_8_press" />
             </LinearLayout>
 
             <LinearLayout
@@ -297,14 +320,14 @@
                     android:layout_height="0px"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/n_06" />
+                    android:background="@drawable/btn_6_press" />
 
                 <ImageView
                     android:id="@+id/btn_9"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:background="@drawable/n_09" />
+                    android:background="@drawable/btn_9_press" />
             </LinearLayout>
 
             <ImageView
@@ -313,7 +336,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_start" />
+                android:background="@drawable/btn_start_press" />
         </LinearLayout>
 
         <LinearLayout
@@ -328,7 +351,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_music_sheet_mode" />
+                android:background="@drawable/btn_music_sheet_mode_press" />
 
             <ImageView
                 android:id="@+id/btn_0"
@@ -336,7 +359,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/n_00" />
+                android:background="@drawable/btn_0_press" />
 
             <LinearLayout
                 android:layout_width="0px"
@@ -351,14 +374,14 @@
                     android:layout_height="0px"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_key_plus" />
+                    android:background="@drawable/btn_key_plus_press" />
 
                 <ImageView
                     android:id="@+id/btn_key_minus"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_key_minus" />
+                    android:background="@drawable/btn_key_minus_press" />
             </LinearLayout>
 
             <LinearLayout
@@ -374,14 +397,14 @@
                     android:layout_height="0px"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_temp_plus" />
+                    android:background="@drawable/btn_tempo_plus_press" />
 
                 <ImageView
                     android:id="@+id/btn_tempo_minus"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_tempo_minus" />
+                    android:background="@drawable/btn_tempo_minus_press" />
             </LinearLayout>
         </LinearLayout>
 
@@ -397,7 +420,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_background" />
+                android:background="@drawable/btn_background_press" />
 
             <ImageView
                 android:id="@+id/btn_reservation"
@@ -405,7 +428,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_reservation" />
+                android:background="@drawable/btn_reservation_press" />
 
             <ImageView
                 android:id="@+id/btn_reservation_cancle"
@@ -413,7 +436,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_reservation_cancle" />
+                android:background="@drawable/btn_reservation_cancel_press" />
 
             <ImageView
                 android:id="@+id/btn_stop"
@@ -421,7 +444,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_stop" />
+                android:background="@drawable/btn_stop_press" />
         </LinearLayout>
 
         <ImageView
@@ -430,7 +453,7 @@
             android:layout_height="0px"
             android:layout_margin="4dp"
             android:layout_weight="1.2"
-            android:background="@drawable/btn_home"
+            android:background="@drawable/btn_home_press"
             android:visibility="gone" />
 
         <LinearLayout
@@ -446,7 +469,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_vpang" />
+                android:background="@drawable/btn_vpang_press" />
 
             <ImageView
                 android:id="@+id/btn_duet"
@@ -454,7 +477,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_duet" />
+                android:background="@drawable/btn_duet_press" />
 
             <ImageView
                 android:id="@+id/btn_audition"
@@ -462,7 +485,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_audition" />
+                android:background="@drawable/btn_audition_press" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,19 +1,15 @@
 package com.karaokepang.launcher;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.karaokepang.Activity.BluetoothActivity;
+import com.karaokepang.bluetooth.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.R;
 import com.karaokepang.View.VerticalMarqueeTextView;
@@ -23,9 +19,6 @@ import com.midisheetmusic.FileUri;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
-import app.akexorcist.bluetotohspp.library.BluetoothState;
 
 public class LauncherMainActivity extends BluetoothActivity implements View.OnClickListener {
 
@@ -57,8 +50,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         btnVpang.setOnClickListener(this);
         btnFriend.setOnClickListener(this);
         btnStart.setOnClickListener(this);
-
-
     }
 
     void initDefaultData() {

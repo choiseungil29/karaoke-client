@@ -109,6 +109,6 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        activity.finish();
+//        activity.finish();
     }
 }

@@ -20,6 +20,7 @@ import com.orm.query.Select;
 import com.vpang.clicker.R;
 import com.vpang.clicker.adapter.SearchAdapter;
 import com.vpang.clicker.bluetooth.BluetoothActivity;
+import com.vpang.clicker.bluetooth.SendData;
 import com.vpang.clicker.database.dao.Song;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class MainActivity extends BluetoothActivity {
 
     private static ImageView btnHome;
     private static LinearLayout layoutMode;
+    private static LinearLayout layoutModeSelect;
 
     private EditText editSearch, editNumber;
     private TextView textSelectNumber, textSelectSinger, textSelectSong;
@@ -154,6 +156,7 @@ public class MainActivity extends BluetoothActivity {
     private void initLinearLayout() {
         layoutSearch = (LinearLayout) findViewById(R.id.layout_search);
         layoutMode = (LinearLayout) findViewById(R.id.layout_mode);
+        layoutModeSelect = (LinearLayout) findViewById(R.id.layout_mode_select);
     }
 
     private void initTextView() {
@@ -321,26 +324,26 @@ public class MainActivity extends BluetoothActivity {
                 case R.id.btn_reservation_cancle:
                     break;
                 case R.id.btn_stop:
-                    bt.send("song_stop", true);
+                    bt.send(SendData.STOP, true);
                     break;
                 case R.id.btn_start:
                     Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
                     bt.send(textSelectNumber.getText().toString(), true);
                     break;
                 case R.id.btn_vpang:
-                    bt.send("mode_vpang", true);
+                    bt.send(SendData.MODE_VPANG, true);
                     break;
                 case R.id.btn_duet:
-                    bt.send("mode_duet", true);
+                    bt.send(SendData.MODE_DUET, true);
                     break;
                 case R.id.btn_audition:
-                    bt.send("mode_audition", true);
+                    bt.send(SendData.MODE_AUDITION, true);
                     break;
                 case R.id.btn_home:
-                    bt.send("mode_home", true);
+                    bt.send(SendData.MODE_HOME, true);
                     break;
                 case R.id.btn_music_sheet_mode:
-
+                    bt.send(SendData.MUSIC_SHEET_MODE, true);
                     break;
             }
         }
@@ -414,10 +417,12 @@ public class MainActivity extends BluetoothActivity {
     public static void buttonHomeMode() {
         btnHome.setVisibility(View.VISIBLE);
         layoutMode.setVisibility(View.GONE);
+        layoutModeSelect.setVisibility(View.GONE);
     }
 
     public static void buttonLayoutMode() {
         btnHome.setVisibility(View.GONE);
         layoutMode.setVisibility(View.VISIBLE);
+        layoutModeSelect.setVisibility(View.VISIBLE);
     }
 }
