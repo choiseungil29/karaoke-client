@@ -1,5 +1,7 @@
 package com.vpang.clicker.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -349,7 +351,29 @@ public class MainActivity extends BluetoothActivity {
                     bt.send(SendData.MODE_AUDITION, true);
                     break;
                 case R.id.btn_home:
-                    bt.send(SendData.MODE_HOME, true);
+                    AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+                    alt_bld.setMessage("종료하시겠습니까?").setCancelable(
+                            false).setPositiveButton("예",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // Action for 'Yes' Button
+                                    dialog.cancel();
+                                    bt.send(SendData.MODE_HOME, true);
+                                }
+                            }).setNegativeButton("아니오",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // Action for 'NO' Button
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = alt_bld.create();
+                    // Title for AlertDialog
+                    alert.setTitle("종료");
+                    // Icon for AlertDialog
+                    alert.show();
+
+                    //bt.send(SendData.MODE_HOME, true);
                     break;
                 case R.id.btn_music_sheet_mode:
                     bt.send(SendData.MUSIC_SHEET_MODE, true);
@@ -357,6 +381,32 @@ public class MainActivity extends BluetoothActivity {
             }
         }
     };
+
+    /*@Override
+    protected void onUserLeaveHint() {
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+        alt_bld.setMessage("종료하시겠습니까?").setCancelable(
+                false).setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Action for 'Yes' Button
+                        dialog.cancel();
+                        bt.send(SendData.MODE_HOME, true);
+                    }
+                }).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Action for 'NO' Button
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alt_bld.create();
+        // Title for AlertDialog
+        alert.setTitle("종료");
+        // Icon for AlertDialog
+        alert.show();
+        //bt.send(SendData.MODE_HOME, true);
+    }*/
 
     View.OnClickListener onClickListenerSearch = new View.OnClickListener() {
         @Override

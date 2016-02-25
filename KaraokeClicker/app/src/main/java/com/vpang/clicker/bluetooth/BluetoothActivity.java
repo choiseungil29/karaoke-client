@@ -168,4 +168,9 @@ public class BluetoothActivity extends Activity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

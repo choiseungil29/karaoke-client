@@ -132,4 +132,9 @@ public class SearchActivity extends Activity {
             return convertView;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

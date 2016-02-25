@@ -1,7 +1,9 @@
 package com.karaokepang.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -78,7 +80,6 @@ public class TestActivity extends Activity implements MusicListener {
 
     private ArrayList<String> localFiles = new ArrayList<>();
     private ArrayList<FileUri> list;
-
 
     private String mode = "noData";
 
