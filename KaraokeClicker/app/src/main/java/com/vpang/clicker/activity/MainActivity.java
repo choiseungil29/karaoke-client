@@ -301,6 +301,10 @@ public class MainActivity extends BluetoothActivity {
                     break;
             }
 
+            textSelectNumber.setText("선택된 번호");
+            textSelectSong.setText("선택된 노래 제목");
+            textSelectSinger.setText("선택된 가수");
+
             searchAdapter = new SearchAdapter(searchSong(editNumber.getText().toString()));
             listSearch.setAdapter(searchAdapter);
         }
@@ -331,6 +335,9 @@ public class MainActivity extends BluetoothActivity {
                 case R.id.btn_start:
                     Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
                     bt.send(textSelectNumber.getText().toString(), true);
+                    textSelectNumber.setText("선택된 번호");
+                    textSelectSong.setText("선택된 노래 제목");
+                    textSelectSinger.setText("선택된 가수");
                     break;
                 case R.id.btn_vpang:
                     bt.send(SendData.MODE_VPANG, true);
