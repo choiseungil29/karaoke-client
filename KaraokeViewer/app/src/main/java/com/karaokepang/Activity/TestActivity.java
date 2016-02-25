@@ -101,6 +101,11 @@ public class TestActivity extends Activity implements MusicListener {
         layoutScore = (RelativeLayout) findViewById(R.id.layout_score);
         layoutLyric = (LinearLayout) findViewById(R.id.layout_lyric);
         videoView = (MyVideoView) findViewById(R.id.vv_background);
+        if (mode.equals("vpang")) {
+            videoView.setVisibility(View.VISIBLE);
+        } else {
+            videoView.setVisibility(View.GONE);
+        }
         videoView.setClickable(false);
         videoView.setFocusable(false);
 //        String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
