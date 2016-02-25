@@ -19,6 +19,7 @@ import com.vpang.clicker.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class BackgroundSelectActivity extends Activity {
 
@@ -76,6 +77,11 @@ public class BackgroundSelectActivity extends Activity {
 
             }
         });
+    }
+
+    @OnClick(R.id.btn_back)
+    public void backButtonClick() {
+        finish();
     }
 
 
