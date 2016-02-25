@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -350,6 +351,7 @@ public class MainActivity extends BluetoothActivity {
                     break;
                 case R.id.btn_home:
                     bt.send(SendData.MODE_HOME, true);
+                    editNumber.setText("");
                     break;
                 case R.id.btn_music_sheet_mode:
                     bt.send(SendData.MUSIC_SHEET_MODE, true);
@@ -438,7 +440,13 @@ public class MainActivity extends BluetoothActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+
+                Log.e("kkk", "뒤2");
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

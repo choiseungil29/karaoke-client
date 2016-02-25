@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
@@ -167,5 +168,17 @@ public class BluetoothActivity extends Activity {
                 }
             }
         }
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+
+                Log.e("kkk", "뒤");
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
