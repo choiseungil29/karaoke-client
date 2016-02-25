@@ -425,4 +425,9 @@ public class MainActivity extends BluetoothActivity {
         layoutMode.setVisibility(View.VISIBLE);
         layoutModeSelect.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
