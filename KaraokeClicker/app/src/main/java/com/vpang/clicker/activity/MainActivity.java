@@ -36,6 +36,7 @@ public class MainActivity extends BluetoothActivity {
     private static ImageView btnHome;
     private static LinearLayout layoutMode;
     private static LinearLayout layoutModeSelect;
+    private static LinearLayout layoutModeSelect2;
 
     private EditText editSearch, editNumber;
     private TextView textSelectNumber, textSelectSinger, textSelectSong;
@@ -157,6 +158,7 @@ public class MainActivity extends BluetoothActivity {
         layoutSearch = (LinearLayout) findViewById(R.id.layout_search);
         layoutMode = (LinearLayout) findViewById(R.id.layout_mode);
         layoutModeSelect = (LinearLayout) findViewById(R.id.layout_mode_select);
+        layoutModeSelect2 = (LinearLayout) findViewById(R.id.layout_mode_select2);
     }
 
     private void initTextView() {
@@ -418,12 +420,14 @@ public class MainActivity extends BluetoothActivity {
         btnHome.setVisibility(View.VISIBLE);
         layoutMode.setVisibility(View.GONE);
         layoutModeSelect.setVisibility(View.GONE);
+        layoutModeSelect2.setVisibility(View.GONE);
     }
 
     public static void buttonLayoutMode() {
         btnHome.setVisibility(View.GONE);
         layoutMode.setVisibility(View.VISIBLE);
         layoutModeSelect.setVisibility(View.VISIBLE);
+        layoutModeSelect2.setVisibility(View.VISIBLE);
     }
 
     @Override
