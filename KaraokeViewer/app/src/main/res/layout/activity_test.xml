@@ -20,6 +20,15 @@
         android:clickable="false"
         android:visibility="gone" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_musicsheet"
+        android:clickable="false"
+        android:visibility="gone"
+        android:id="@+id/iv_background"/>
+
     <LinearLayout
         android:id="@+id/layout_lyric"
         android:layout_width="match_parent"
@@ -30,6 +39,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/camera_layout"
         android:gravity="center"
+        android:background="@android:color/darker_gray"
         android:orientation="horizontal">
 
         <com.karaokepang.View.OutlineTextView

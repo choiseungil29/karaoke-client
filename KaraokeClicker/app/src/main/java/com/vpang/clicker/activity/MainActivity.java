@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -55,6 +56,9 @@ public class MainActivity extends BluetoothActivity {
     private List<Song> songs;
     //0 : number, 1: song, 2: singer
     private int mode = 0;
+
+    private String nowSelectedSong;
+    private String nowSelectedSinger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +189,9 @@ public class MainActivity extends BluetoothActivity {
                 textSelectNumber.setText(song.getSongNumber());
                 textSelectSinger.setText(song.getSinger());
                 textSelectSong.setText(song.getSong());
+
+                nowSelectedSong = song.getSong();
+                nowSelectedSinger = song.getSinger();
             }
         });
     }
@@ -325,7 +332,10 @@ public class MainActivity extends BluetoothActivity {
                 case R.id.btn_tempo_minus:
                     break;
                 case R.id.btn_background_select:
-                    startActivity(new Intent(MainActivity.this, BackgroundSelectActivity.class));
+                    Intent intent = new Intent(MainActivity.this, BackgroundSelectActivity.class);
+                    intent.putExtra("singer", nowSelectedSinger);
+                    intent.putExtra("song", nowSelectedSong);
+                    startActivity(intent);
                     break;
                 case R.id.btn_reservation:
                     break;
@@ -352,13 +362,14 @@ public class MainActivity extends BluetoothActivity {
                     break;
                 case R.id.btn_home:
                     AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
-                    alt_bld.setMessage("종료하시겠습니까?").setCancelable(
+                    alt_bld.setMessage("홈으로 돌아가시겠습니까?").setCancelable(
                             false).setPositiveButton("예",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // Action for 'Yes' Button
                                     dialog.cancel();
                                     bt.send(SendData.MODE_HOME, true);
+                                    editNumber.setText("");
                                 }
                             }).setNegativeButton("아니오",
                             new DialogInterface.OnClickListener() {
@@ -372,8 +383,6 @@ public class MainActivity extends BluetoothActivity {
                     alert.setTitle("종료");
                     // Icon for AlertDialog
                     alert.show();
-
-                    //bt.send(SendData.MODE_HOME, true);
                     break;
                 case R.id.btn_music_sheet_mode:
                     bt.send(SendData.MUSIC_SHEET_MODE, true);
@@ -381,32 +390,6 @@ public class MainActivity extends BluetoothActivity {
             }
         }
     };
-
-    /*@Override
-    protected void onUserLeaveHint() {
-        AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
-        alt_bld.setMessage("종료하시겠습니까?").setCancelable(
-                false).setPositiveButton("예",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Action for 'Yes' Button
-                        dialog.cancel();
-                        bt.send(SendData.MODE_HOME, true);
-                    }
-                }).setNegativeButton("아니오",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Action for 'NO' Button
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = alt_bld.create();
-        // Title for AlertDialog
-        alert.setTitle("종료");
-        // Icon for AlertDialog
-        alert.show();
-        //bt.send(SendData.MODE_HOME, true);
-    }*/
 
     View.OnClickListener onClickListenerSearch = new View.OnClickListener() {
         @Override
@@ -488,7 +471,13 @@ public class MainActivity extends BluetoothActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+
+                Log.e("kkk", "뒤2");
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

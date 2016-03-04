@@ -16,14 +16,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/btn_text_back" />
+            android:src="@drawable/btn_text_front" />
 
         <ImageView
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/btn_text_front" />
+            android:src="@drawable/btn_text_back" />
     </LinearLayout>
 
     <LinearLayout
@@ -83,16 +83,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_singer"
                 android:text="노래 : 신승훈 - 미소속의 비친 그대를" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_leftBackground"
                 android:text="전경 : 3번" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_rightBackground"
                 android:text="배경 : 7번" />
 
             <LinearLayout

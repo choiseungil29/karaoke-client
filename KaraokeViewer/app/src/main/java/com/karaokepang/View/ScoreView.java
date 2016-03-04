@@ -129,6 +129,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 activity.layoutLyric.setVisibility(VISIBLE);
             }
         };
+
+        nowTick = 0;
+        alphaSeconds = new ArrayList<>();
+        millisToBpm = new HashMap<>();
+
+        //this.setBackgroundColor(Color.WHITE);
     }
 
     public void setFileUri(Uri uri) {

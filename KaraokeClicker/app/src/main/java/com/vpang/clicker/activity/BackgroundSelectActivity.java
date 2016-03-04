@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -34,6 +35,17 @@ public class BackgroundSelectActivity extends Activity {
     @Bind(R.id.btn_send)
     ImageView btnSend;
 
+    @Bind(R.id.tv_singer)
+    TextView tv_singer;
+
+    @Bind(R.id.tv_leftBackground)
+    TextView tv_leftBackground;
+    @Bind(R.id.tv_rightBackground)
+    TextView tv_rightBackground;
+
+    private String song;
+    private String singer;
+
 
     private int[] imageResourceLeft = {R.drawable.front1, R.drawable.front2, R.drawable.front3, R.drawable.front4, R.drawable.front5, R.drawable.front6};
     private int[] imageResourceRight = {R.drawable.back1, R.drawable.back2, R.drawable.back3
@@ -47,6 +59,18 @@ public class BackgroundSelectActivity extends Activity {
         setContentView(R.layout.activity_background_select);
         ButterKnife.bind(this);
 
+        singer = getIntent().getStringExtra("singer");
+        song = getIntent().getStringExtra("song");
+
+        if(singer == null || song == null) {
+            tv_singer.setText("노래를 선택해주세요");
+        } else {
+            tv_singer.setText("노래 : " + singer + " - " + song);
+        }
+
+        tv_leftBackground.setText("전경을 선택해주세요");
+        tv_rightBackground.setText("배경을 선택해주세요");
+
         initListView();
         initButton();
     }
@@ -59,12 +83,14 @@ public class BackgroundSelectActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Picasso.with(parent.getContext()).load(imageResourceLeft[position]).into(imageLeft);
+                tv_leftBackground.setText("전경 : " + position + "번");
             }
         });
         gridRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Picasso.with(parent.getContext()).load(imageResourceRight[position]).into(imageRight);
+                tv_rightBackground.setText("배경 : " + position + "번");
             }
         });
 

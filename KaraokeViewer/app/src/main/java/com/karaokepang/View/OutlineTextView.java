@@ -51,6 +51,7 @@ public class OutlineTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        canvas.drawColor(Color.TRANSPARENT);
         getPaint().setStrokeWidth(10);
 
         String lines = getText().toString();
@@ -132,5 +133,13 @@ public class OutlineTextView extends TextView {
                 invalidate();
             }
         });
+    }
+
+    public void reset() {
+        width = 0;
+        index = 0;
+        tick = 0;
+        this.setText("");
+        callOnDraw();
     }
 }

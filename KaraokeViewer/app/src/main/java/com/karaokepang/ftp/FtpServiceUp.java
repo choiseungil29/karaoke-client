@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.karaokepang.Util.Logger;
+import com.karaokepang.launcher.LauncherMainActivity;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -40,7 +41,8 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
             Logger.i("FTP Client Test Program");
             Logger.i("Start~~~~~~");
 
-            client.connect("192.168.0.13");
+            //client.connect("192.168.0.13");
+            client.connect("1.212.161.18");
             Logger.i("Connected to test.com...........");
 
             // 응답코드가 비정상일 경우 종료함
@@ -109,6 +111,10 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+            //((LauncherMainActivity) activity).loadSdcardMidiFiles();
+        }
 //        activity.finish();
     }
 }

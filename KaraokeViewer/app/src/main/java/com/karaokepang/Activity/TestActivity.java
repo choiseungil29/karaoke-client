@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -83,6 +84,10 @@ public class TestActivity extends Activity implements MusicListener {
 
     private String mode = "noData";
 
+    private String songNumber = "";
+
+    private ImageView iv_background;
+
     public RelativeLayout layoutScore;
     private LinearLayout layoutSongName;
     private CustomTextView textSong, textSinger, textComposer;
@@ -102,10 +107,20 @@ public class TestActivity extends Activity implements MusicListener {
         layoutScore = (RelativeLayout) findViewById(R.id.layout_score);
         layoutLyric = (LinearLayout) findViewById(R.id.layout_lyric);
         videoView = (MyVideoView) findViewById(R.id.vv_background);
+        iv_background = (ImageView) findViewById(R.id.iv_background);
         if (mode.equals("vpang")) {
             videoView.setVisibility(View.VISIBLE);
+            iv_background.setVisibility(View.GONE);
+            layoutLyric.setBackgroundColor(Color.TRANSPARENT);
         } else {
             videoView.setVisibility(View.GONE);
+        }
+        if(mode.equals("duet")) {
+            iv_background.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.GONE);
+            iv_background.bringToFront();
+            textSelectSong.bringToFront();
+            // 여기에 배경 이미지
         }
         videoView.setClickable(false);
         videoView.setFocusable(false);
@@ -136,9 +151,12 @@ public class TestActivity extends Activity implements MusicListener {
         layoutLyric.setVisibility(View.INVISIBLE);
         layoutScore.setVisibility(View.INVISIBLE);
         textSelectSong.setVisibility(View.VISIBLE);
+        iv_background.setVisibility(View.VISIBLE);
         stopRecord();
         scoreView.player.stop();
-        scoreView = new ScoreView(this);
+        nowLyricsIndex = 0;
+        tv_lyrics.reset();
+        //scoreView = new ScoreView(this);
     }
 
     private void initSongName(ScoreView scoreView) {
@@ -171,7 +189,10 @@ public class TestActivity extends Activity implements MusicListener {
 //                Toast.makeText(getApplicationContext(), "끝", Toast.LENGTH_SHORT).show();
 //                Log.e("kkk", "===================END===============");
 //                reset();
-//                new FtpServiceUp(BluetoothActivity.testActivity, fileName).execute();
+                if(!mp.isPlaying()) {
+                    reset();
+                    new FtpServiceUp(BluetoothActivity.testActivity, fileName).execute();
+                }
             }
         });
 
@@ -189,6 +210,8 @@ public class TestActivity extends Activity implements MusicListener {
             scoreView.setFileUri(uri);
             scoreView.setListener(this);
 
+            songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
+
             createLyrics();
             initSongName(scoreView);
 
@@ -196,6 +219,8 @@ public class TestActivity extends Activity implements MusicListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        iv_background.setVisibility(View.GONE);
 
         tv_lyrics.bringToFront();
         tv_lyrics.invalidate();
@@ -361,6 +386,11 @@ public class TestActivity extends Activity implements MusicListener {
                 cameraId = i;
                 break;
             }
+
+            if(info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                cameraId = i;
+                break;
+            }
         }
         return cameraId;
     }
@@ -382,7 +412,11 @@ public class TestActivity extends Activity implements MusicListener {
         int mi = c.get(Calendar.MINUTE);
         int ss = c.get(Calendar.SECOND);
 
-        return String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
+        //String filename = "" + fileName
+        String filename = songNumber + "-" + String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
+
+        //return String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
+        return filename;
     }
 
     public void stopRecord() {
@@ -395,16 +429,16 @@ public class TestActivity extends Activity implements MusicListener {
     }
 
     public void startRecord() {
-        if (!prepareMediaRecorder()) {
+        /*if (!prepareMediaRecorder()) {
             Toast.makeText(getApplicationContext(), "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
             finish();
-        }
+        }*/
         // work on UiThread for better performance
         runOnUiThread(new Runnable() {
             public void run() {
                 try {
                     is_recording = true;
-                    recorder.start();
+                    //recorder.start();
                     Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
                 } catch (final Exception ex) {
                     ex.printStackTrace();
@@ -424,7 +458,8 @@ public class TestActivity extends Activity implements MusicListener {
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.));
 
         recorder.setVideoEncodingBitRate(1000000);
         //recorder.setVideoFrameRate(30);
@@ -535,10 +570,10 @@ public class TestActivity extends Activity implements MusicListener {
         if (scoreView != null) {
             scoreView.release();
         }
-        if (camera == null) {
+        /*if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-        }
+        }*/
     }
 
     @Override
