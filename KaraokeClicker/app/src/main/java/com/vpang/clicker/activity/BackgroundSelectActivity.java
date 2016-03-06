@@ -1,6 +1,7 @@
 package com.vpang.clicker.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +13,21 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.base.Strings;
 import com.squareup.picasso.Picasso;
 import com.vpang.clicker.R;
 
+import app.akexorcist.bluetotohspp.library.BluetoothState;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.vpang.clicker.bluetooth.SendData.MODE_DUET;
+import static com.vpang.clicker.bluetooth.SendData.MODE_VPANG;
 
 public class BackgroundSelectActivity extends Activity {
 
@@ -43,8 +50,14 @@ public class BackgroundSelectActivity extends Activity {
     @Bind(R.id.tv_rightBackground)
     TextView tv_rightBackground;
 
+    @Bind(R.id.layout_mode_vpang)
+    LinearLayout layoutModeVpang;
+    @Bind(R.id.layout_mode_duet)
+    LinearLayout layoutModeDuet;
+
     private String song;
     private String singer;
+    private String mode;
 
 
     private int[] imageResourceLeft = {R.drawable.front1, R.drawable.front2, R.drawable.front3, R.drawable.front4, R.drawable.front5, R.drawable.front6};
@@ -59,18 +72,28 @@ public class BackgroundSelectActivity extends Activity {
         setContentView(R.layout.activity_background_select);
         ButterKnife.bind(this);
 
+
         singer = getIntent().getStringExtra("singer");
         song = getIntent().getStringExtra("song");
+        mode = getIntent().getStringExtra("mode");
 
-        if(singer == null || song == null) {
+        if (singer == null || song == null) {
             tv_singer.setText("노래를 선택해주세요");
         } else {
             tv_singer.setText("노래 : " + singer + " - " + song);
         }
-
         tv_leftBackground.setText("전경을 선택해주세요");
         tv_rightBackground.setText("배경을 선택해주세요");
 
+        if (!Strings.isNullOrEmpty(mode)) {
+            if (mode.equals(MODE_VPANG)) {
+                layoutModeVpang.setVisibility(LinearLayout.VISIBLE);
+                layoutModeDuet.setVisibility(LinearLayout.GONE);
+            } else if (mode.equals(MODE_DUET)) {
+                layoutModeVpang.setVisibility(LinearLayout.GONE);
+                layoutModeDuet.setVisibility(LinearLayout.VISIBLE);
+            }
+        }
         initListView();
         initButton();
     }
@@ -83,14 +106,14 @@ public class BackgroundSelectActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Picasso.with(parent.getContext()).load(imageResourceLeft[position]).into(imageLeft);
-                tv_leftBackground.setText("전경 : " + position + "번");
+                tv_leftBackground.setText(position + "");
             }
         });
         gridRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Picasso.with(parent.getContext()).load(imageResourceRight[position]).into(imageRight);
-                tv_rightBackground.setText("배경 : " + position + "번");
+                tv_rightBackground.setText(position + "");
             }
         });
 
@@ -110,6 +133,19 @@ public class BackgroundSelectActivity extends Activity {
         finish();
     }
 
+    @OnClick(R.id.btn_start)
+    public void startButtonClick() {
+        Intent intent = new Intent();
+        intent.putExtra("select_back", tv_rightBackground.getText().toString());
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    @OnClick(R.id.btn_back_duet)
+    public void duetBackButtonClick() {
+        finish();
+        Toast.makeText(getApplicationContext(), "선택된 노래가 취소되었습니다", Toast.LENGTH_SHORT).show();
+    }
 
     class CustomAdapter extends BaseAdapter {
         int[] imageResource;

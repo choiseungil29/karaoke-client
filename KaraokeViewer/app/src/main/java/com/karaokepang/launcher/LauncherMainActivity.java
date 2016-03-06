@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.VideoView;
 
+import com.karaokepang.Util.FilePath;
 import com.karaokepang.bluetooth.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.R;
@@ -76,7 +77,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
     }
 
     public void loadSdcardMidiFiles() {
-        File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+        File[] fileList = new File(FilePath.FILE_PATH_VPANGMID).listFiles();
         if (fileList == null)
             return;
         for (File file : fileList) {

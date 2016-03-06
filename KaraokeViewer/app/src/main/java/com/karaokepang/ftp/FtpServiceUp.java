@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.launcher.LauncherMainActivity;
 
@@ -47,7 +49,7 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
             // 응답코드가 비정상일 경우 종료함
             int reply = client.getReplyCode();
-            Log.e("kkk","reply = "+reply);
+            Log.e("kkk", "reply = " + reply);
             if (!FTPReply.isPositiveCompletion(reply)) {
                 client.disconnect();
                 Logger.i("FTP server refused connection");
@@ -67,14 +69,14 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
                 client.mkd("vpang_video"); // public아래로 files 디렉토리를 만든다
                 client.cwd("vpang_video"); // public/files 로 이동 (이 디렉토리로 업로드가 진행)
 
-                File file = new File("/mnt/sdcard/vpang/" + fileName + ".mp4"); // 업로드 할 파일이 있는 경로(예제는 sd카드 사진 폴더)
+                File file = new File(FilePath.FILE_PATH_VPANG + fileName + ".mp4"); // 업로드 할 파일이 있는 경로(예제는 sd카드 사진 폴더)
                 if (file.isFile()) {
                     Log.e("kkk", "============================");
                     Log.e("kkk", file.getAbsolutePath());
                     FileInputStream ifile = new FileInputStream(file);
                     client.rest(file.getName());  // ftp에 해당 파일이있다면 이어쓰기
 //                    client.appendFile(file.getName(), ifile); // ftp 해당 파일이 없다면 새로쓰기
-                    client.storeFile(file.getName(),ifile);
+                    client.storeFile(file.getName(), ifile);
                 }
 
 //                client.logout();
@@ -98,7 +100,7 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = ProgressDialog.show(activity, "", "영상 전송중 입니다", true);
+//        progressDialog = ProgressDialog.show(activity, "", "영상 전송중 입니다", true);
     }
 
     @Override
@@ -111,10 +113,11 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            //((LauncherMainActivity) activity).loadSdcardMidiFiles();
-        }
+        Toast.makeText(activity, "영상 전송이 완료되었습니다", Toast.LENGTH_SHORT).show();
+//        if (progressDialog != null && progressDialog.isShowing()) {
+//            progressDialog.dismiss();
+        //((LauncherMainActivity) activity).loadSdcardMidiFiles();
+//        }
 //        activity.finish();
     }
 }

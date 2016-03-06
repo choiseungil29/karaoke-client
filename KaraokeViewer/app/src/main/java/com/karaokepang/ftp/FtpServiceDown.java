@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.launcher.LauncherMainActivity;
 
@@ -76,7 +77,7 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                 if (ftpFiles.size() != localFiles.size() || localFiles.size() == 0) {
                     Log.e("kkk", "fuck");
                     for (int i = 0; i < ftpdirs.length; i++) {
-                        FileOutputStream fileOutputStream = new FileOutputStream("/mnt/sdcard/vpang_mid/" + ftpdirs[i].getName());
+                        FileOutputStream fileOutputStream = new FileOutputStream(FilePath.FILE_PATH_VPANGMID + ftpdirs[i].getName());
                         boolean result = client.retrieveFile("/vpang_mid/" + ftpdirs[i].getName(), fileOutputStream);
                         Log.e("kkk", "ftp result = " + result);
                     }
@@ -123,13 +124,13 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
     }
 
     private void initDefaultFileDirCheck() {
-        File dirVpang = new File("/mnt/sdcard/vpang");
+        File dirVpang = new File(FilePath.FILE_PATH_VPANG);
         if (!dirVpang.exists()) {
             Log.i("kkk", "파일생성" + dirVpang.getAbsolutePath());
             dirVpang.mkdirs();
         }
 
-        File dirVpangMid = new File("/mnt/sdcard/vpang_mid");
+        File dirVpangMid = new File(FilePath.FILE_PATH_VPANGMID);
         if (!dirVpangMid.exists()) {
             Log.i("kkk", "파일생성" + dirVpangMid.getAbsolutePath());
             dirVpangMid.mkdirs();

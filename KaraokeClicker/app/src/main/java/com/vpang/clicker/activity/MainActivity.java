@@ -1,15 +1,15 @@
 package com.vpang.clicker.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,8 +31,12 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import app.akexorcist.bluetotohspp.library.BluetoothState;
 import jxl.Sheet;
 import jxl.Workbook;
+
+import static com.vpang.clicker.bluetooth.SendData.MODE_DUET;
+import static com.vpang.clicker.bluetooth.SendData.MODE_VPANG;
 
 public class MainActivity extends BluetoothActivity {
 
@@ -97,7 +101,6 @@ public class MainActivity extends BluetoothActivity {
                         if (Strings.isNullOrEmpty(sheet.getCell(0, row).getContents())) {
                             continue;
                         }
-                        Log.i("kkk", sheet.getCell(0, row).getContents());
                         String songNumber = sheet.getCell(0, row).getContents();
                         String songName = sheet.getCell(1, row).getContents();
                         String singer = sheet.getCell(2, row).getContents();
@@ -335,6 +338,7 @@ public class MainActivity extends BluetoothActivity {
                     Intent intent = new Intent(MainActivity.this, BackgroundSelectActivity.class);
                     intent.putExtra("singer", nowSelectedSinger);
                     intent.putExtra("song", nowSelectedSong);
+                    intent.putExtra("mode", MODE);
                     startActivity(intent);
                     break;
                 case R.id.btn_reservation:
@@ -345,11 +349,20 @@ public class MainActivity extends BluetoothActivity {
                     bt.send(SendData.STOP, true);
                     break;
                 case R.id.btn_start:
-                    Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
-                    bt.send(textSelectNumber.getText().toString(), true);
-                    textSelectNumber.setText("선택된 번호");
-                    textSelectSong.setText("선택된 노래 제목");
-                    textSelectSinger.setText("선택된 가수");
+                    if (MODE.equals(MODE_DUET)) {
+                        Intent intent2 = new Intent(MainActivity.this, BackgroundSelectActivity.class);
+                        intent2.putExtra("singer", nowSelectedSinger);
+                        intent2.putExtra("song", nowSelectedSong);
+                        intent2.putExtra("mode", MODE);
+                        startActivityForResult(intent2, 9081);
+                    } else if (MODE.equals(MODE_VPANG)) {
+                        Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
+                        bt.send(textSelectNumber.getText().toString(), true);
+                        textSelectNumber.setText("선택된 번호");
+                        textSelectSong.setText("선택된 노래 제목");
+                        textSelectSinger.setText("선택된 가수");
+                    }
+
                     break;
                 case R.id.btn_vpang:
                     bt.send(SendData.MODE_VPANG, true);
@@ -475,9 +488,45 @@ public class MainActivity extends BluetoothActivity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
 
-                Log.e("kkk", "뒤2");
                 return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 9081) {
+            if (resultCode == Activity.RESULT_OK) {
+                String selectBack = data.getExtras().getString("select_back");
+                Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
+                bt.send(textSelectNumber.getText().toString() + "||" + selectBack, true);
+                textSelectNumber.setText("선택된 번호");
+                textSelectSong.setText("선택된 노래 제목");
+                textSelectSinger.setText("선택된 가수");
+            }
+        } else {
+            if (bt == null) {
+                return;
+            }
+            if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+                if (resultCode == Activity.RESULT_OK) {
+                    bt.connect(data);
+                    SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("address", data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS));
+                    editor.commit();
+                }
+            } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+                if (resultCode == Activity.RESULT_OK) {
+                    bt.setupService();
+                    bt.startService(BluetoothState.DEVICE_ANDROID);
+                } else {
+                    Toast.makeText(getApplicationContext()
+                            , "Bluetooth was not enabled."
+                            , Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        }
     }
 }

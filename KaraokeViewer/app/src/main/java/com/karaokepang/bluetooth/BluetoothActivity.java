@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.common.base.Strings;
 import com.karaokepang.Activity.DeviceList;
 import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Util.FilePath;
 import com.midisheetmusic.FileUri;
 
 import java.io.File;
@@ -84,8 +85,26 @@ public class BluetoothActivity extends Activity {
                     }
                 } else {
                     if (testActivity != null) {
+                        File file;
+                        if (message.contains("||")) {
+                            String[] splits = message.split("\\|\\|");
+                            for (int i = 0; i < splits.length; i++) {
+                                Log.d("kkk", splits[i]);
+                            }
+                            if (splits[1].equals("0")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+                            } else if (splits[1].equals("1")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
+                            } else if (splits[1].equals("2")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
+                            } else if (splits[1].equals("3")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+                            }
+                            file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
+                        } else {
+                            file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
+                        }
                         Toast.makeText(getApplicationContext(), "노래시작", Toast.LENGTH_SHORT).show();
-                        File file = new File("/mnt/sdcard/vpang_mid/" + message + ".mid");
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
                         testActivity.initVpang(fileUri.getUri(), fileUri.toString());
@@ -130,12 +149,6 @@ public class BluetoothActivity extends Activity {
         }
     }
 
-
-    public void bluetoothSetUp() {
-
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -151,13 +164,17 @@ public class BluetoothActivity extends Activity {
             return;
         }
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == Activity.RESULT_OK)
+            if (resultCode == Activity.RESULT_OK) {
                 bt.connect(data);
+                SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("address", data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS));
+                editor.commit();
+            }
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 bt.setupService();
                 bt.startService(BluetoothState.DEVICE_ANDROID);
-                bluetoothSetUp();
             } else {
                 Toast.makeText(getApplicationContext()
                         , "Bluetooth was not enabled."
@@ -178,7 +195,6 @@ public class BluetoothActivity extends Activity {
                 if (!bt.isServiceAvailable()) {
                     bt.setupService();
                     bt.startService(BluetoothState.DEVICE_ANDROID);
-                    bluetoothSetUp();
                 }
             }
         }

@@ -28,6 +28,7 @@ import com.karaokepang.Midi.renderer.Symbol;
 import com.karaokepang.Midi.renderer.TimeSignatureSymbol;
 import com.karaokepang.Midi.renderer.midi.MidiSymbol;
 import com.karaokepang.Midi.renderer.midi.NoteSymbol;
+import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Resources;
 
@@ -175,7 +176,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         try {
-            File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+            File[] fileList = new File(FilePath.FILE_PATH_VPANGMID).listFiles();
             if (fileList == null)
                 return;
             for (File file : fileList) {

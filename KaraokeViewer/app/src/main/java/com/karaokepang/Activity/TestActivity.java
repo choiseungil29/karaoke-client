@@ -1,9 +1,7 @@
 package com.karaokepang.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -19,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.Midi.MidiFile;
@@ -27,6 +26,7 @@ import com.karaokepang.Midi.event.meta.Lyrics;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
+import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.MyVideoView;
 import com.karaokepang.Util.Util;
@@ -51,6 +51,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -72,7 +73,8 @@ public class TestActivity extends Activity implements MusicListener {
     private ScoreView scoreView;
     private OutlineTextView tv_lyrics;
 
-    private MyVideoView videoView;
+    public VideoView videoViewBack;
+    public MyVideoView videoView;
 
     private BMJUATextView textSelectSong;
 
@@ -93,6 +95,7 @@ public class TestActivity extends Activity implements MusicListener {
     private CustomTextView textSong, textSinger, textComposer;
     private long firstTime = 0;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,38 +105,54 @@ public class TestActivity extends Activity implements MusicListener {
         setContentView(R.layout.activity_test);
 
         preData();
-        initRecordView();
 
         layoutScore = (RelativeLayout) findViewById(R.id.layout_score);
         layoutLyric = (LinearLayout) findViewById(R.id.layout_lyric);
         videoView = (MyVideoView) findViewById(R.id.vv_background);
+        videoViewBack = (VideoView) findViewById(R.id.vv_background_back);
         iv_background = (ImageView) findViewById(R.id.iv_background);
         if (mode.equals("vpang")) {
             videoView.setVisibility(View.VISIBLE);
+            videoViewBack.setVisibility(View.GONE);
             iv_background.setVisibility(View.GONE);
             layoutLyric.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            videoView.setVisibility(View.GONE);
-        }
-        if(mode.equals("duet")) {
+            setRandomVideoSource();
+        } else if (mode.equals("duet")) {
             iv_background.setVisibility(View.VISIBLE);
+            videoViewBack.setVisibility(View.VISIBLE);
             videoView.setVisibility(View.GONE);
             iv_background.bringToFront();
             textSelectSong.bringToFront();
+
+            videoViewBack.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
+            videoViewBack.setFocusable(false);
+            videoViewBack.setClickable(false);
+            videoViewBack.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.setLooping(true);
+                    mp.setVolume(0, 0);
+                    videoViewBack.start();
+                }
+            });
+            videoViewBack.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    videoViewBack.resume();
+                }
+            });
+            videoViewBack.start();
+//            setRandomVideoSource();
             // 여기에 배경 이미지
         }
         videoView.setClickable(false);
         videoView.setFocusable(false);
-//        String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
-//        videoView.setVideoURI(Uri.parse(path));
-        videoView.setVideoPath("/mnt/sdcard/vpang_bg/1.mp4");
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 videoView.resume();
             }
         });
-
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -144,7 +163,26 @@ public class TestActivity extends Activity implements MusicListener {
         });
         videoView.start();
 
+        initRecordView();
+
         BluetoothActivity.testActivity = this;
+    }
+
+    private void setRandomVideoSource() {
+        String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
+        String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
+        Log.d("kkk", "선택된파일 = " + randomVideoFileName);
+        videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
+    }
+
+    private String[] getFileList(String strPath) {
+        // 폴더 경로를 지정해서 File 객체 생성
+        File fileRoot = new File(strPath);
+        // 해당 경로가 폴더가 아니라면 함수 탈출
+        if (!fileRoot.isDirectory())
+            return null;
+        // 파일 목록을 구한다
+        return fileRoot.list();
     }
 
     public void reset() {
@@ -189,7 +227,7 @@ public class TestActivity extends Activity implements MusicListener {
 //                Toast.makeText(getApplicationContext(), "끝", Toast.LENGTH_SHORT).show();
 //                Log.e("kkk", "===================END===============");
 //                reset();
-                if(!mp.isPlaying()) {
+                if (!mp.isPlaying()) {
                     reset();
                     new FtpServiceUp(BluetoothActivity.testActivity, fileName).execute();
                 }
@@ -387,7 +425,7 @@ public class TestActivity extends Activity implements MusicListener {
                 break;
             }
 
-            if(info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 cameraId = i;
                 break;
             }
@@ -429,16 +467,16 @@ public class TestActivity extends Activity implements MusicListener {
     }
 
     public void startRecord() {
-        /*if (!prepareMediaRecorder()) {
+        if (!prepareMediaRecorder()) {
             Toast.makeText(getApplicationContext(), "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
             finish();
-        }*/
+        }
         // work on UiThread for better performance
         runOnUiThread(new Runnable() {
             public void run() {
                 try {
                     is_recording = true;
-                    //recorder.start();
+                    recorder.start();
                     Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
                 } catch (final Exception ex) {
                     ex.printStackTrace();
@@ -448,7 +486,7 @@ public class TestActivity extends Activity implements MusicListener {
     }
 
     private boolean prepareMediaRecorder() {
-        File dir = new File("/mnt/sdcard/vpang/");
+        File dir = new File(FilePath.FILE_PATH_VPANG);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -457,13 +495,12 @@ public class TestActivity extends Activity implements MusicListener {
         recorder.setCamera(camera);
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
-        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
-        //recorder.setProfile(CamcorderProfile.get(CamcorderProfile.));
+//        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         recorder.setVideoEncodingBitRate(1000000);
         //recorder.setVideoFrameRate(30);
-        recorder.setOutputFile("/mnt/sdcard/vpang/" + getNewFileName() + ".mp4");
+        recorder.setOutputFile(FilePath.FILE_PATH_VPANG + getNewFileName() + ".mp4");
         recorder.setMaxDuration(6000000 * 10);
         recorder.setMaxFileSize(300000000 * 20);
 
@@ -501,6 +538,7 @@ public class TestActivity extends Activity implements MusicListener {
         preview = new CameraPreview(this, getApplicationContext(), camera);
         preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
+//        layoutCamera.bringToFront();
         is_recording = false;
     }
 
@@ -534,7 +572,7 @@ public class TestActivity extends Activity implements MusicListener {
     }
 
     public void loadSdcardMidiFiles() {
-        File[] fileList = new File("/mnt/sdcard/vpang_mid").listFiles();
+        File[] fileList = new File(FilePath.FILE_PATH_VPANGMID).listFiles();
         if (fileList == null)
             return;
         for (File file : fileList) {
@@ -570,10 +608,10 @@ public class TestActivity extends Activity implements MusicListener {
         if (scoreView != null) {
             scoreView.release();
         }
-        /*if (camera == null) {
+        if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-        }*/
+        }
     }
 
     @Override

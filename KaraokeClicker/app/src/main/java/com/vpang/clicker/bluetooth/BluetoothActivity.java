@@ -2,7 +2,6 @@ package com.vpang.clicker.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,13 +15,16 @@ import com.vpang.clicker.activity.MainActivity;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
-import static com.vpang.clicker.bluetooth.SendData.*;
+import static com.vpang.clicker.bluetooth.SendData.MODE_DUET;
+import static com.vpang.clicker.bluetooth.SendData.MODE_HOME;
+import static com.vpang.clicker.bluetooth.SendData.MODE_VPANG;
 
 /**
  * Created by 1002230 on 16. 2. 5..
  */
 public class BluetoothActivity extends Activity {
 
+    public String MODE = "null";
     public BluetoothSPP bt;
 
     @Override
@@ -34,7 +36,7 @@ public class BluetoothActivity extends Activity {
         }
     }
 
-    private String getAddree() {
+    public String getAddree() {
         SharedPreferences pref = getSharedPreferences("vpang", MODE_PRIVATE);
         return pref.getString("address", "");
     }
@@ -54,10 +56,13 @@ public class BluetoothActivity extends Activity {
             public void onDataReceived(byte[] data, String message) {
                 Log.i("kkk", "bluetooth = " + message);
                 if (message.equals(MODE_VPANG)) {
+                    MODE = MODE_VPANG;
                     MainActivity.buttonHomeMode();
                 } else if (message.equals(MODE_DUET)) {
+                    MODE = MODE_DUET;
                     MainActivity.buttonHomeMode();
                 } else if (message.equals(MODE_HOME)) {
+                    MODE = MODE_HOME;
                     MainActivity.buttonLayoutMode();
                 }
             }
@@ -99,10 +104,6 @@ public class BluetoothActivity extends Activity {
         }
     }
 
-    public void bluetoothSetUp() {
-
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -128,7 +129,6 @@ public class BluetoothActivity extends Activity {
             if (resultCode == Activity.RESULT_OK) {
                 bt.setupService();
                 bt.startService(BluetoothState.DEVICE_ANDROID);
-                bluetoothSetUp();
             } else {
                 Toast.makeText(getApplicationContext()
                         , "Bluetooth was not enabled."
@@ -147,16 +147,6 @@ public class BluetoothActivity extends Activity {
     protected void onStart() {
         super.onStart();
         if (bt != null) {
-//            bt.autoConnect("vpang");
-//            bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
-//                public void onNewConnection(String name, String address) {
-//                    Toast.makeText(getApplicationContext(), "새로운 자동연결", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                public void onAutoConnectionStarted() {
-//                    Toast.makeText(getApplicationContext(), "자동연결 시작", Toast.LENGTH_SHORT).show();
-//                }
-//            });
             if (!bt.isBluetoothEnabled()) {
                 Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
@@ -164,7 +154,6 @@ public class BluetoothActivity extends Activity {
                 if (!bt.isServiceAvailable()) {
                     bt.setupService();
                     bt.startService(BluetoothState.DEVICE_ANDROID);
-                    bluetoothSetUp();
                 }
             }
         }
@@ -174,8 +163,6 @@ public class BluetoothActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-
-                Log.e("kkk", "뒤");
                 return true;
         }
         return super.onKeyDown(keyCode, event);
