@@ -88,9 +88,10 @@ public class BluetoothActivity extends Activity {
                         File file;
                         if (message.contains("||")) {
                             String[] splits = message.split("\\|\\|");
-                            for (int i = 0; i < splits.length; i++) {
-                                Log.d("kkk", splits[i]);
-                            }
+//                            for (int i = 0; i < splits.length; i++) {
+//                                Log.d("kkk", splits[i]);
+//                            }
+
                             if (splits[1].equals("0")) {
                                 testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
                             } else if (splits[1].equals("1")) {
@@ -99,7 +100,24 @@ public class BluetoothActivity extends Activity {
                                 testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
                             } else if (splits[1].equals("3")) {
                                 testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+                            } else if (splits[1].equals("4")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
+                            } else if (splits[1].equals("5")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
+                            } else if (splits[1].equals("6")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
+                            } else if (splits[1].equals("7")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
+                            } else if (splits[1].equals("8")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
+                            } else if (splits[1].equals("9")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
+                            } else if (splits[1].equals("10")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
+                            } else if (splits[1].equals("11")) {
+                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
                             }
+
                             file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
                         } else {
                             file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
