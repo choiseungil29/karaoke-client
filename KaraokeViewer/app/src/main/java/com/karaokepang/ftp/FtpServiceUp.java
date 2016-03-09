@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.launcher.LauncherMainActivity;
@@ -27,7 +28,6 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     public FtpServiceUp(Activity activity, String fileName) {
         this.activity = activity;
         this.fileName = fileName;
-        Log.e("kkk", "fileName =" + fileName);
     }
 
     private FTPClient init() {
@@ -114,6 +114,8 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         Toast.makeText(activity, "영상 전송이 완료되었습니다", Toast.LENGTH_SHORT).show();
+        ((TestActivity) activity).deleteRecodingFile();
+
 //        if (progressDialog != null && progressDialog.isShowing()) {
 //            progressDialog.dismiss();
         //((LauncherMainActivity) activity).loadSdcardMidiFiles();

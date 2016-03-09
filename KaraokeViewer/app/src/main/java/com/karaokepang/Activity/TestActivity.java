@@ -176,12 +176,9 @@ public class TestActivity extends Activity implements MusicListener {
     }
 
     private String[] getFileList(String strPath) {
-        // 폴더 경로를 지정해서 File 객체 생성
         File fileRoot = new File(strPath);
-        // 해당 경로가 폴더가 아니라면 함수 탈출
         if (!fileRoot.isDirectory())
             return null;
-        // 파일 목록을 구한다
         return fileRoot.list();
     }
 
@@ -190,11 +187,10 @@ public class TestActivity extends Activity implements MusicListener {
         layoutScore.setVisibility(View.INVISIBLE);
         textSelectSong.setVisibility(View.VISIBLE);
         iv_background.setVisibility(View.VISIBLE);
-        stopRecord();
+        stopRecord(false);
         scoreView.player.stop();
         nowLyricsIndex = 0;
         tv_lyrics.reset();
-        //scoreView = new ScoreView(this);
     }
 
     private void initSongName(ScoreView scoreView) {
@@ -450,19 +446,17 @@ public class TestActivity extends Activity implements MusicListener {
         int mi = c.get(Calendar.MINUTE);
         int ss = c.get(Calendar.SECOND);
 
-        //String filename = "" + fileName
-        String filename = songNumber + "-" + String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
-
-        //return String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
-        return filename;
+        return songNumber + "-" + String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
     }
 
-    public void stopRecord() {
-
+    public void stopRecord(boolean isRealFile) {
         if (recorder != null) {
-            recorder.stop();
-            releaseMediaRecorder();
-            Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
+            if (isRealFile) {
+                Log.e("kkk", "레코딩 진입!");
+                recorder.stop();
+                releaseMediaRecorder();
+                Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -596,10 +590,15 @@ public class TestActivity extends Activity implements MusicListener {
         dialog.setData(message);
     }
 
+    public void deleteRecodingFile() {
+        deleteFile(FilePath.FILE_PATH_VPANG + fileName + ".mp4");
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        stopRecord();
+        stopRecord(false);
+//        deleteRecodingFile();
     }
 
     @Override

@@ -387,7 +387,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        stopMusicHandler();
+//        stopMusicHandler();
     }
 
     @Override
@@ -646,7 +646,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void stopMusicHandler() {
         player.stop();
-        activity.stopRecord();
+        activity.stopRecord(true);
         musicStartHandler.removeCallbacks(musicRunnable);
     }
 }

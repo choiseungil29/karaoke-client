@@ -14,6 +14,7 @@ import com.karaokepang.bluetooth.BluetoothActivity;
 import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.R;
 import com.karaokepang.View.VerticalMarqueeTextView;
+import com.karaokepang.bluetooth.SendData;
 import com.karaokepang.ftp.FtpServiceDown;
 import com.midisheetmusic.FileUri;
 
@@ -148,6 +149,12 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
                 startActivity(intent3);
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bt.send(SendData.MODE_HOME, true);
     }
 
     @Override

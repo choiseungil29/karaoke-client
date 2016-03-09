@@ -379,7 +379,6 @@ public class MainActivity extends BluetoothActivity {
                             false).setPositiveButton("예",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // Action for 'Yes' Button
                                     dialog.cancel();
                                     bt.send(SendData.MODE_HOME, true);
                                     editNumber.setText("");
@@ -387,14 +386,11 @@ public class MainActivity extends BluetoothActivity {
                             }).setNegativeButton("아니오",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // Action for 'NO' Button
                                     dialog.cancel();
                                 }
                             });
                     AlertDialog alert = alt_bld.create();
-                    // Title for AlertDialog
                     alert.setTitle("종료");
-                    // Icon for AlertDialog
                     alert.show();
                     break;
                 case R.id.btn_music_sheet_mode:

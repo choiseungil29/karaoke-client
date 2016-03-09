@@ -78,7 +78,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="167"
                         android:gravity="center"
-                        android:text="곡번호"
+                        android:text="@string/song_number"
                         android:textColor="#fff"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -88,7 +88,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="341"
                         android:gravity="center"
-                        android:text="제목"
+                        android:text="@string/song_title"
                         android:textColor="#fff"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -98,7 +98,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="166"
                         android:gravity="center"
-                        android:text="가수"
+                        android:text="@string/singer"
                         android:textColor="#fff"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -125,7 +125,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="167"
                         android:gravity="center"
-                        android:text="선택된 번호"
+                        android:text="@string/select_number"
                         android:textColor="#fff"
                         android:textSize="18sp" />
 
@@ -135,7 +135,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="341"
                         android:gravity="center"
-                        android:text="선택된 노래 제목"
+                        android:text="@string/select_title"
                         android:textColor="#fff"
                         android:textSize="18sp" />
 
@@ -145,7 +145,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="166"
                         android:gravity="center"
-                        android:text="선택된 가수"
+                        android:text="@string/select_singer"
                         android:textColor="#fff"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -189,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="모드를 선택해주세요"
+                android:text="@string/plz_select_mode"
                 android:textColor="#fff"
                 android:textSize="50sp"
                 android:textStyle="bold" />

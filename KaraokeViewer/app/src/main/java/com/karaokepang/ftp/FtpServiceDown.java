@@ -135,5 +135,11 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
             Log.i("kkk", "파일생성" + dirVpangMid.getAbsolutePath());
             dirVpangMid.mkdirs();
         }
+
+        File dirVpangSF = new File(FilePath.FILE_PATH_VPANG_SF);
+        if (!dirVpangSF.exists()) {
+            Log.i("kkk", "파일생성" + dirVpangSF.getAbsolutePath());
+            dirVpangSF.mkdirs();
+        }
     }
 }
