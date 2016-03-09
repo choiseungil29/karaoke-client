@@ -100,6 +100,7 @@ public class TestActivity extends Activity implements MusicListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         mode = getIntent().getStringExtra("mode");
         setContentView(R.layout.activity_test);
