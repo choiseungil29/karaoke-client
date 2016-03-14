@@ -207,6 +207,7 @@ public class MusicPlayActivity extends Activity implements MusicListener {
         scoreView.player.stop();
         nowLyricsIndex = 0;
         tv_lyrics.reset();
+        scoreView.reset();
     }
 
     private void initSongName(ScoreView scoreView) {

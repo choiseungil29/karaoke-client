@@ -648,4 +648,8 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         activity.stopRecord(true);
         musicStartHandler.removeCallbacks(musicRunnable);
     }
+
+    public void reset() {
+        nowTick = 0;
+    }
 }
