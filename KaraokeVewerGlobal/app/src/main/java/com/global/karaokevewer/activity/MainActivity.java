@@ -82,7 +82,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
             videoView.setVideoURI(Uri.parse(path));
         }
-
     }
 
     private String[] getFileList(String strPath) {

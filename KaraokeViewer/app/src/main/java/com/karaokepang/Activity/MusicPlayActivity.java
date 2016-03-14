@@ -2,6 +2,7 @@ package com.karaokepang.Activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -105,13 +106,9 @@ public class MusicPlayActivity extends Activity implements MusicListener {
         mode = getIntent().getStringExtra("mode");
         setContentView(R.layout.activity_test);
 
+        setLayoutId();
         preData();
 
-        layoutScore = (RelativeLayout) findViewById(R.id.layout_score);
-        layoutLyric = (LinearLayout) findViewById(R.id.layout_lyric);
-        videoView = (MyVideoView) findViewById(R.id.vv_background);
-        videoViewBack = (VideoView) findViewById(R.id.vv_background_back);
-        iv_background = (ImageView) findViewById(R.id.iv_background);
         if (mode.equals("vpang")) {
             videoView.setVisibility(View.VISIBLE);
             videoViewBack.setVisibility(View.GONE);
@@ -143,8 +140,6 @@ public class MusicPlayActivity extends Activity implements MusicListener {
                 }
             });
             videoViewBack.start();
-//            setRandomVideoSource();
-            // 여기에 배경 이미지
         }
         videoView.setClickable(false);
         videoView.setFocusable(false);
@@ -169,11 +164,31 @@ public class MusicPlayActivity extends Activity implements MusicListener {
         BluetoothActivity.musicPlayActivity = this;
     }
 
+    private void setLayoutId() {
+        layoutScore = (RelativeLayout) findViewById(R.id.layout_score);
+        layoutLyric = (LinearLayout) findViewById(R.id.layout_lyric);
+        videoView = (MyVideoView) findViewById(R.id.vv_background);
+        videoViewBack = (VideoView) findViewById(R.id.vv_background_back);
+        iv_background = (ImageView) findViewById(R.id.iv_background);
+        layoutSongName = (LinearLayout) findViewById(R.id.layout_song_name);
+        layoutSongName.setVisibility(LinearLayout.VISIBLE);
+        textSong = (CustomTextView) findViewById(R.id.text_songName);
+        textComposer = (CustomTextView) findViewById(R.id.text_composer);
+        textSinger = (CustomTextView) findViewById(R.id.text_singer);
+        tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
+        layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
+        textSelectSong = (BMJUATextView) findViewById(R.id.textView_song_selected);
+    }
+
     private void setRandomVideoSource() {
         String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
-        String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
-        Log.d("kkk", "선택된파일 = " + randomVideoFileName);
-        videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
+        if (fileList != null) {
+            String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
+            videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
+        } else {
+            String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
+            videoView.setVideoURI(Uri.parse(path));
+        }
     }
 
     private String[] getFileList(String strPath) {
@@ -195,13 +210,6 @@ public class MusicPlayActivity extends Activity implements MusicListener {
     }
 
     private void initSongName(ScoreView scoreView) {
-        layoutSongName = (LinearLayout) findViewById(R.id.layout_song_name);
-        layoutSongName.setVisibility(LinearLayout.VISIBLE);
-
-        textSong = (CustomTextView) findViewById(R.id.text_songName);
-        textComposer = (CustomTextView) findViewById(R.id.text_composer);
-        textSinger = (CustomTextView) findViewById(R.id.text_singer);
-
         textSong.setText(scoreView.getSongName());
         textComposer.setText(scoreView.getComposer());
         textSinger.setText(scoreView.getSinger());
@@ -209,7 +217,6 @@ public class MusicPlayActivity extends Activity implements MusicListener {
 
     public void initVpang(Uri uri, String midiFileName) {
         textSelectSong.setVisibility(View.GONE);
-        tv_lyrics = (OutlineTextView) findViewById(R.id.tv_lyric);
         scoreView = new ScoreView(this);
         scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         RelativeLayout relativeLayout = new RelativeLayout(this);
@@ -529,7 +536,6 @@ public class MusicPlayActivity extends Activity implements MusicListener {
         AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
-        layoutCamera = (RelativeLayout) findViewById(R.id.camera_layout);
         preview = new CameraPreview(this, getApplicationContext(), camera);
         preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
@@ -538,7 +544,6 @@ public class MusicPlayActivity extends Activity implements MusicListener {
     }
 
     void preData() {
-        textSelectSong = (BMJUATextView) findViewById(R.id.textView_song_selected);
         textSelectSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
