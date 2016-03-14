@@ -28,7 +28,7 @@
         android:screenOrientation="landscape"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
         <activity
-            android:name=".launcher.LauncherMainActivity"
+            android:name=".Activity.LauncherMainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -48,7 +48,7 @@
         <activity android:name="com.midisheetmusic.AllSongsActivity" />
         <activity android:name="com.midisheetmusic.RecentSongsActivity" />
         <activity
-            android:name=".Activity.TestActivity"
+            android:name=".Activity.MusicPlayActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name="com.midisheetmusic.SheetMusicActivity"

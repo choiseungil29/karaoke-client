@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -13,7 +12,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.karaokepang.Activity.MusicListener;
-import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Activity.MusicPlayActivity;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
@@ -52,7 +51,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static final String TAG = ScoreView.class.getSimpleName();
 
-    private TestActivity activity;
+    private MusicPlayActivity activity;
 
     private MidiFile midi = null;
 
@@ -115,7 +114,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void init(Context context) {
         musicStartHandler = new Handler();
-        activity = (TestActivity) context;
+        activity = (MusicPlayActivity) context;
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
 
@@ -604,11 +603,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public TestActivity getActivity() {
+    public MusicPlayActivity getActivity() {
         return activity;
     }
 
-    public void setActivity(TestActivity activity) {
+    public void setActivity(MusicPlayActivity activity) {
         this.activity = activity;
     }
 

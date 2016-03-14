@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Activity.MusicPlayActivity;
 
 import java.io.IOException;
 
@@ -15,11 +15,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private Context mContext;
     private SurfaceHolder mHolder;
     private Camera mCamera;
-    TestActivity testActivity;
+    MusicPlayActivity musicPlayActivity;
 
-    public CameraPreview(TestActivity testActivity, Context context, Camera camera) {
+    public CameraPreview(MusicPlayActivity musicPlayActivity, Context context, Camera camera) {
         super(context);
-        this.testActivity = testActivity;
+        this.musicPlayActivity = musicPlayActivity;
         mContext = context;
         mCamera = camera;
         mHolder = getHolder();

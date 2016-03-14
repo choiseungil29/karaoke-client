@@ -24,7 +24,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.widget.TabHost;
 
-import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Activity.MusicPlayActivity;
 import com.karaokepang.R;
 import com.karaokepang.Util.Prefs;
 
@@ -82,7 +82,7 @@ public class ChooseSongActivity extends TabActivity {
             return;
         }
         updateRecentFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), this, TestActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), this, MusicPlayActivity.class);
         intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK);
