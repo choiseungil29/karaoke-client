@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.google.common.base.Strings;
 import com.karaokepang.Activity.DeviceList;
-import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Activity.MusicPlayActivity;
 import com.karaokepang.Util.FilePath;
 import com.midisheetmusic.FileUri;
 
@@ -27,7 +27,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 public class BluetoothActivity extends Activity {
 
 
-    public static TestActivity testActivity;
+    public static MusicPlayActivity musicPlayActivity;
     public BluetoothSPP bt;
 
     @Override
@@ -54,37 +54,37 @@ public class BluetoothActivity extends Activity {
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
                 if (message.equals(SendData.MODE_VPANG)) {
-                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MusicPlayActivity.class);
                     intent.putExtra("mode", "vpang");
                     startActivity(intent);
                     bt.send(SendData.MODE_VPANG, true);
                 } else if (message.equals(SendData.MODE_DUET)) {
-                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MusicPlayActivity.class);
                     intent.putExtra("mode", "duet");
                     bt.send(SendData.MODE_DUET, true);
                     startActivity(intent);
                 } else if (message.equals(SendData.MODE_HOME)) {
                     bt.send(SendData.MODE_HOME, true);
-                    if (testActivity != null) {
-                        testActivity.finish();
+                    if (musicPlayActivity != null) {
+                        musicPlayActivity.finish();
                     }
                 } else if (message.equals(SendData.MODE_AUDITION)) {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
                 } else if (message.equals(SendData.STOP)) {
-                    if (testActivity != null) {
-                        testActivity.reset();
+                    if (musicPlayActivity != null) {
+                        musicPlayActivity.reset();
                     }
                 } else if (message.equals(SendData.MUSIC_SHEET_MODE)) {
-                    if (testActivity.layoutScore.getVisibility() == View.VISIBLE) {
-                        testActivity.layoutScore.setVisibility(View.INVISIBLE);
+                    if (musicPlayActivity.layoutScore.getVisibility() == View.VISIBLE) {
+                        musicPlayActivity.layoutScore.setVisibility(View.INVISIBLE);
                         Toast.makeText(getApplicationContext(), "악보모드x", Toast.LENGTH_SHORT).show();
                     } else {
-                        testActivity.layoutScore.setVisibility(View.VISIBLE);
+                        musicPlayActivity.layoutScore.setVisibility(View.VISIBLE);
                         Toast.makeText(getApplicationContext(), "악보모드o", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    if (testActivity != null) {
+                    if (musicPlayActivity != null) {
                         File file;
                         if (message.contains("||")) {
                             String[] splits = message.split("\\|\\|");
@@ -93,29 +93,29 @@ public class BluetoothActivity extends Activity {
 //                            }
 
                             if (splits[1].equals("0")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
                             } else if (splits[1].equals("1")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
                             } else if (splits[1].equals("2")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
                             } else if (splits[1].equals("3")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
                             } else if (splits[1].equals("4")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
                             } else if (splits[1].equals("5")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
                             } else if (splits[1].equals("6")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
                             } else if (splits[1].equals("7")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
                             } else if (splits[1].equals("8")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
                             } else if (splits[1].equals("9")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
                             } else if (splits[1].equals("10")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
                             } else if (splits[1].equals("11")) {
-                                testActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
                             }
 
                             file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
@@ -125,7 +125,7 @@ public class BluetoothActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "노래시작", Toast.LENGTH_SHORT).show();
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
-                        testActivity.initVpang(fileUri.getUri(), fileUri.toString());
+                        musicPlayActivity.initVpang(fileUri.getUri(), fileUri.toString());
                     } else {
                         Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
                     }
@@ -218,11 +218,11 @@ public class BluetoothActivity extends Activity {
         }
     }
 
-    public static TestActivity getTestActivity() {
-        return testActivity;
+    public static MusicPlayActivity getMusicPlayActivity() {
+        return musicPlayActivity;
     }
 
-    public static void setTestActivity(TestActivity testActivity) {
-        BluetoothActivity.testActivity = testActivity;
+    public static void setMusicPlayActivity(MusicPlayActivity musicPlayActivity) {
+        BluetoothActivity.musicPlayActivity = musicPlayActivity;
     }
 }

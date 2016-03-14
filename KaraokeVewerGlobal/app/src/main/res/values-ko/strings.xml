@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KaraokeVewerGlobal</string>
+    <string name="not_installed_application">어플리케이션이 설치 되어있지 않습니다</string>
+</resources>

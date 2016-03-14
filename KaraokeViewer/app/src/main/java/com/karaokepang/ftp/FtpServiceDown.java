@@ -3,13 +3,11 @@ package com.karaokepang.ftp;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
-import com.karaokepang.Activity.TestActivity;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
-import com.karaokepang.launcher.LauncherMainActivity;
+import com.karaokepang.Activity.LauncherMainActivity;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;

@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.karaokepang.Activity.TestActivity;
+import com.karaokepang.Activity.MusicPlayActivity;
 import com.karaokepang.R;
 import com.midisheetmusic.FileUri;
 import com.midisheetmusic.IconArrayAdapter;
@@ -40,11 +40,11 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
 
     private String sendData;
     private Context context;
-    private TestActivity activity;
+    private MusicPlayActivity activity;
 
     public ChooseSongDialog(Context context, ArrayList<FileUri> list) {
         this(context, true);
-        this.activity = (TestActivity) context;
+        this.activity = (MusicPlayActivity) context;
         this.list = list;
         this.init(context);
     }
@@ -112,7 +112,7 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
             Toast.makeText(parent.getContext(), "Error: Unable to open song: " + file.toString(), Toast.LENGTH_SHORT).show();
             return;
         }
-//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), context, TestActivity.class);
+//        Intent intent = new Intent(Intent.ACTION_VIEW, file.getUri(), context, MusicPlayActivity.class);
 //        intent.putExtra(Prefs.MIDI_FILE_NAME, file.toString());
         activity.dialog.dismiss();
         activity.initVpang(file.getUri(), file.toString());
