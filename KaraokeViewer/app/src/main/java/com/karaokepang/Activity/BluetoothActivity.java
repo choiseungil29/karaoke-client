@@ -12,7 +12,6 @@ import com.google.common.base.Strings;
 import com.karaokepang.Keys;
 import com.karaokepang.Model.FileUri;
 import com.karaokepang.Util.FilePath;
-import com.karaokepang.bluetooth.SendData;
 
 import org.androidannotations.annotations.EActivity;
 
@@ -53,20 +52,20 @@ public class BluetoothActivity extends BaseActivity {
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                if (message.equals(SendData.MODE_VPANG)) {
+                if (message.equals(Keys.SendData.MODE_VPANG)) {
                     Intent intent = new Intent(getApplicationContext(), PangPangSelectActivity_.class);
                     intent.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
                     startActivity(intent);
-                    bt.send(SendData.MODE_VPANG, true);
+                    bt.send(Keys.SendData.MODE_VPANG, true);
                     Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
-                } else if (message.equals(SendData.MODE_DUET)) {
+                } else if (message.equals(Keys.SendData.MODE_DUET)) {
                     Intent intent = new Intent(getApplicationContext(), DuetSelectActivity_.class);
                     intent.putExtra(Keys.MODE, Keys.Mode.DUET);
-                    bt.send(SendData.MODE_DUET, true);
+                    bt.send(Keys.SendData.MODE_DUET, true);
                     startActivity(intent);
                     Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
-                } else if (message.equals(SendData.MODE_HOME)) {
-                    bt.send(SendData.MODE_HOME, true);
+                } else if (message.equals(Keys.SendData.MODE_HOME)) {
+                    bt.send(Keys.SendData.MODE_HOME, true);
                     if (activityController.getPangPangSelectActivity() == null && activityController.getDuetSelectActivity() != null) {
                         activityController.getDuetSelectActivity().finish();
                     } else if (activityController.getPangPangSelectActivity() != null && activityController.getDuetSelectActivity() == null) {
@@ -74,10 +73,10 @@ public class BluetoothActivity extends BaseActivity {
                     }
                     Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
                     Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
-                } else if (message.equals(SendData.MODE_AUDITION)) {
+                } else if (message.equals(Keys.SendData.MODE_AUDITION)) {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
-                } else if (message.equals(SendData.STOP)) {
+                } else if (message.equals(Keys.SendData.STOP)) {
 //                    if (musicPlayActivity != null) {
 //                        musicPlayActivity.reset();
 //                    }
@@ -88,7 +87,7 @@ public class BluetoothActivity extends BaseActivity {
                         //deut
                         activityController.getDuetActivity().finish();
                     }
-                } else if (message.equals(SendData.MUSIC_SHEET_MODE)) {
+                } else if (message.equals(Keys.SendData.MUSIC_SHEET_MODE)) {
 //                    if (musicPlayActivity.layoutScore.getVisibility() == View.VISIBLE) {
 //                        musicPlayActivity.layoutScore.setVisibility(View.INVISIBLE);
 //                        Toast.makeText(getApplicationContext(), "악보모드x", Toast.LENGTH_SHORT).show();
@@ -240,7 +239,5 @@ public class BluetoothActivity extends BaseActivity {
             }
         }
     }
-
-
 }
 

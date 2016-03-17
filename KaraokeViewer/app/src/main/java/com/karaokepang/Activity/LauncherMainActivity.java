@@ -13,7 +13,6 @@ import com.karaokepang.Model.FileUri;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.R;
 import com.karaokepang.View.VerticalMarqueeTextView;
-import com.karaokepang.bluetooth.SendData;
 import com.karaokepang.ftp.FtpServiceDown;
 
 import org.androidannotations.annotations.Click;
@@ -142,6 +141,6 @@ public class LauncherMainActivity extends BluetoothActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bt.send(SendData.MODE_HOME, true);
+        bt.send(Keys.SendData.MODE_HOME, true);
     }
 }
