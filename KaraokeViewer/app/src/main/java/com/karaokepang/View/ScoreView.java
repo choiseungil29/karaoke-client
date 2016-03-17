@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.karaokepang.Activity.MusicListener;
 import com.karaokepang.Activity.MusicPlayActivity;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
@@ -31,6 +30,8 @@ import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.Util.Resources;
 
+import org.androidannotations.annotations.EView;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -47,6 +48,7 @@ import java.util.Map;
 /**
  * Created by clogic on 2015. 12. 10..
  */
+@EView
 public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static final String TAG = ScoreView.class.getSimpleName();
@@ -651,5 +653,10 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void reset() {
         nowTick = 0;
+    }
+
+    public interface MusicListener {
+        public void notifyMeasureChanged(ArrayList<String> lyrics, long tick);
+        public void notifyCurrentTick(float tick, int term, int measureLength);
     }
 }

@@ -15,15 +15,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.karaokepang.Activity.MusicPlayActivity;
+import com.karaokepang.Midi.MidiFile;
+import com.karaokepang.Model.FileUri;
 import com.karaokepang.R;
-import com.midisheetmusic.FileUri;
-import com.midisheetmusic.IconArrayAdapter;
-import com.midisheetmusic.MidiFile;
+import com.karaokepang.adapter.IconArrayAdapter;
+
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by clogic on 2015. 12. 30..
@@ -33,9 +33,7 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
     private ArrayList<FileUri> list;
     private IconArrayAdapter adapter;
 
-    @Bind(R.id.lv_songs)
     ListView lv_songs;
-    @Bind(R.id.et_songs)
     EditText et_songs;
 
     private String sendData;
@@ -65,13 +63,14 @@ public class ChooseSongDialog extends Dialog implements TextWatcher, AdapterView
     public void init(Context context) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_choose_song);
-        ButterKnife.bind(this);
 
         this.context = context;
 
         adapter = new IconArrayAdapter(context, android.R.layout.simple_list_item_1, list);
+        lv_songs = (ListView) findViewById(R.id.lv_songs);
         lv_songs.setAdapter(adapter);
 
+        et_songs = (EditText) findViewById(R.id.et_songs);
         et_songs.addTextChangedListener(this);
         et_songs.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 

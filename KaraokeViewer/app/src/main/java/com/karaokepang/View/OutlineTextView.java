@@ -9,18 +9,20 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.Util.Logger;
 
+import org.androidannotations.annotations.EView;
+
 import java.util.ArrayList;
 
 /**
  * Created by clogic on 2016. 1. 15..
  */
+@EView
 public class OutlineTextView extends TextView {
 
     public float width = 0;
@@ -89,10 +91,10 @@ public class OutlineTextView extends TextView {
         StringBuilder builder = new StringBuilder();
         int i = 0;
         for (KSALyric lyric : lyrics.lyricList) {
-            if (lyric.startTick <= tick) {
+            if (lyric.getStartTick() <= tick) {
                 target = lyric;
-                builder.append(lyric.lyric);
-                i += lyric.lyric.length();
+                builder.append(lyric.getLyric());
+                i += lyric.getLyric().length();
             }
         }
 
@@ -104,8 +106,8 @@ public class OutlineTextView extends TextView {
 
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);
-            getPaint().getTextBounds(target.lyric, 0, target.lyric.length(), letterRect);
-            float temp = completeRect.width() + letterRect.width() * (tick - target.startTick) / ((float) target.endTick - target.startTick);
+            getPaint().getTextBounds(target.getLyric(), 0, target.getLyric().length(), letterRect);
+            float temp = completeRect.width() + letterRect.width() * (tick - target.getStartTick()) / ((float) target.getEndTick() - target.getStartTick());
             if (width < temp) {
                 width = temp;
             }

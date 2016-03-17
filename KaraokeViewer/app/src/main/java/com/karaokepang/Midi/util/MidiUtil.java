@@ -19,6 +19,14 @@ package com.karaokepang.Midi.util;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.View.ScoreView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -301,5 +309,56 @@ public class MidiUtil
             return false;
         }
         return true;
+    }
+
+    public static String getSinger(File ksaFile) {
+        if(!isKsaFile(ksaFile)) {
+            return null;
+        }
+        getLineInFile(ksaFile, 3);
+        return null;
+    }
+
+    public static String getComposer(File ksaFile) {
+        if(!isKsaFile(ksaFile)) {
+            return null;
+        }
+        getLineInFile(ksaFile, 2);
+        return null;
+    }
+
+    public static String getSongName(File ksaFile) {
+        if(!isKsaFile(ksaFile)) {
+            return null;
+        }
+        getLineInFile(ksaFile, 0);
+        return null;
+    }
+
+    private static boolean isKsaFile(File file) {
+        return file.getName().toLowerCase().endsWith(".ksa");
+    }
+
+    private static String getLineInFile(File file, int index) {
+        try {
+            InputStream is = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
+            String line;
+
+            int count = 0;
+            while ((line = reader.readLine()) != null) {
+                if(count == index) {
+                    return line;
+                }
+                count++;
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

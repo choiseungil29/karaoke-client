@@ -8,6 +8,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EView;
+
+@EView
 public class BMJUATextView extends TextView {
 
     public BMJUATextView(Context context, AttributeSet attrs, int defStyle) {
