@@ -8,9 +8,11 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.util.Log;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.karaokepang.Midi.event.meta.Text;
 import com.karaokepang.R;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.MyVideoView;
@@ -40,12 +42,13 @@ public class PangPangSelectActivity extends SelectActivity {
     MyVideoView videoView;
     @ViewById(R.id.camera_layout)
     RelativeLayout layoutCamera;
+    @ViewById(R.id.textView_song_selected)
+    TextView textSongSelected;
 
     @Override
     public void afterViews() {
         super.afterViews();
         activityController.setPangPangSelectActivity(this);
-
 
         setRandomVideoSource();
         setVideoView();
@@ -109,7 +112,7 @@ public class PangPangSelectActivity extends SelectActivity {
     public void stopRecord(boolean isRealFile) {
         if (recorder != null) {
             if (isRealFile) {
-                Log.e("kkk", "레코딩 진입!");
+                Log.e("kkk", "녹화종료");
                 recorder.stop();
                 releaseMediaRecorder();
                 Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
@@ -191,20 +194,9 @@ public class PangPangSelectActivity extends SelectActivity {
         }
     }
 
-
-    void initRecordView() {
-        AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
-
-        preview = new CameraPreview(getApplicationContext(), camera);
-        preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
-        layoutCamera.addView(preview);
-    }
-
     private void setRandomVideoSource() {
         String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
         String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
-        Log.d("kkk", "선택된파일 = " + randomVideoFileName);
         videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
     }
 
@@ -218,6 +210,14 @@ public class PangPangSelectActivity extends SelectActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (textSongSelected.getVisibility() == TextView.GONE) {
+            if (activityController.getPangPangActivity() != null) {
+                activityController.getPangPangActivity().stop();
+                activityController.setPangPangActivity(null);
+            }
+            stopRecord(true);
+            textSongSelected.setVisibility(TextView.VISIBLE);
+        }
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
@@ -227,7 +227,7 @@ public class PangPangSelectActivity extends SelectActivity {
     @Override
     protected void onPause() {
         super.onPause();
-//        releaseCamera();
+        textSongSelected.setVisibility(TextView.GONE);
     }
 
     @Override

@@ -58,16 +58,16 @@ public class PlayActivity extends BluetoothActivity {
     }
 
     public void play(String songNumber) {
-        player.start();
-        if (activityController.getPangPangActivity() != null) {
+        if (activityController.getPangPangSelectActivity() != null) {
             activityController.getPangPangSelectActivity().startRecord(songNumber);
         }
+        player.start();
     }
 
     public void stop() {
         player.stop();
-        if (activityController.getPangPangActivity() != null) {
-            activityController.getPangPangSelectActivity().stopRecord(true);
-        }
+//        if (activityController.getPangPangActivity() != null) {
+//            activityController.getPangPangSelectActivity().stopRecord(true);
+//        }
     }
 }
