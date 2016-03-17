@@ -1,30 +1,16 @@
 package com.karaokepang.Activity;
 
-import android.content.Context;
-import android.hardware.Camera;
-import android.media.AudioManager;
-import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.util.Log;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
-import com.karaokepang.Midi.event.meta.Text;
 import com.karaokepang.R;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.MyVideoView;
-import com.karaokepang.camera.CameraPreview;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Random;
 
 /**
