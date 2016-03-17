@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
@@ -28,9 +27,8 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 @EActivity
 public class BluetoothActivity extends BaseActivity {
 
-    public static MusicPlayActivity musicPlayActivity;
-    public static PangPangActivity activity;
     public BluetoothSPP bt;
+    private ActivityController activityController = ActivityController.getInstance();
 
     @Override
     public void afterViews() {
@@ -43,7 +41,7 @@ public class BluetoothActivity extends BaseActivity {
         return pref.getString("address", "");
     }
 
-    void initBluetooth() {
+    public void initBluetooth() {
         bt = new BluetoothSPP(this);
 
         if (!bt.isBluetoothAvailable()) {
@@ -60,67 +58,77 @@ public class BluetoothActivity extends BaseActivity {
                     intent.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
                     startActivity(intent);
                     bt.send(SendData.MODE_VPANG, true);
+                    Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
                 } else if (message.equals(SendData.MODE_DUET)) {
                     Intent intent = new Intent(getApplicationContext(), DuetSelectActivity_.class);
                     intent.putExtra(Keys.MODE, Keys.Mode.DUET);
                     bt.send(SendData.MODE_DUET, true);
                     startActivity(intent);
+                    Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
                 } else if (message.equals(SendData.MODE_HOME)) {
                     bt.send(SendData.MODE_HOME, true);
-                    if (musicPlayActivity != null) {
-                        musicPlayActivity.finish();
+                    if (activityController.getPangPangSelectActivity() == null && activityController.getDuetSelectActivity() != null) {
+                        activityController.getDuetSelectActivity().finish();
+                    } else if (activityController.getPangPangSelectActivity() != null && activityController.getDuetSelectActivity() == null) {
+                        activityController.getPangPangSelectActivity().finish();
                     }
+                    Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
+                    Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
                 } else if (message.equals(SendData.MODE_AUDITION)) {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
                 } else if (message.equals(SendData.STOP)) {
-                    if (musicPlayActivity != null) {
-                        musicPlayActivity.reset();
+//                    if (musicPlayActivity != null) {
+//                        musicPlayActivity.reset();
+//                    }
+                    if (activityController.getPangPangActivity() != null && activityController.getDuetSelectActivity() == null) {
+                        //pang
+                        activityController.getPangPangActivity().finish();
+                    } else if (activityController.getPangPangActivity() == null && activityController.getDuetSelectActivity() != null) {
+                        //deut
+                        activityController.getDuetActivity().finish();
                     }
                 } else if (message.equals(SendData.MUSIC_SHEET_MODE)) {
-                    if (musicPlayActivity.layoutScore.getVisibility() == View.VISIBLE) {
-                        musicPlayActivity.layoutScore.setVisibility(View.INVISIBLE);
-                        Toast.makeText(getApplicationContext(), "악보모드x", Toast.LENGTH_SHORT).show();
-                    } else {
-                        musicPlayActivity.layoutScore.setVisibility(View.VISIBLE);
-                        Toast.makeText(getApplicationContext(), "악보모드o", Toast.LENGTH_SHORT).show();
-                    }
+//                    if (musicPlayActivity.layoutScore.getVisibility() == View.VISIBLE) {
+//                        musicPlayActivity.layoutScore.setVisibility(View.INVISIBLE);
+//                        Toast.makeText(getApplicationContext(), "악보모드x", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        musicPlayActivity.layoutScore.setVisibility(View.VISIBLE);
+//                        Toast.makeText(getApplicationContext(), "악보모드o", Toast.LENGTH_SHORT).show();
+//                    }
                 } else {
-                    //if (musicPlayActivity != null) {
-                    if (activity != null) {
+//                    if (activity != null) {
+                    if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {
                         File file;
                         if (message.contains("||")) {
                             String[] splits = message.split("\\|\\|");
-//                            for (int i = 0; i < splits.length; i++) {
-//                                Log.d("kkk", splits[i]);
-//                            }
-
-                            if (splits[1].equals("0")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
-                            } else if (splits[1].equals("1")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
-                            } else if (splits[1].equals("2")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
-                            } else if (splits[1].equals("3")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
-                            } else if (splits[1].equals("4")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
-                            } else if (splits[1].equals("5")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
-                            } else if (splits[1].equals("6")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
-                            } else if (splits[1].equals("7")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
-                            } else if (splits[1].equals("8")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
-                            } else if (splits[1].equals("9")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
-                            } else if (splits[1].equals("10")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
-                            } else if (splits[1].equals("11")) {
-                                musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+                            if(activityController.getPangPangActivity()==null && activityController.getDuetActivity() !=null) {
+//                                if (splits[1].equals("0")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+//                                } else if (splits[1].equals("1")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
+//                                } else if (splits[1].equals("2")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
+//                                } else if (splits[1].equals("3")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+//                                } else if (splits[1].equals("4")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
+//                                } else if (splits[1].equals("5")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
+//                                } else if (splits[1].equals("6")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
+//                                } else if (splits[1].equals("7")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
+//                                } else if (splits[1].equals("8")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
+//                                } else if (splits[1].equals("9")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
+//                                } else if (splits[1].equals("10")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
+//                                } else if (splits[1].equals("11")) {
+//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+//                                }
                             }
-
                             file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
                         } else {
                             file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
@@ -129,7 +137,18 @@ public class BluetoothActivity extends BaseActivity {
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
                         //musicPlayActivity.initVpang(fileUri.getUri(), fileUri.toString());
-                        activity.initWithStartMidiFile(fileUri.getUri(), fileUri.toString());
+//                        activity.initWithStartMidiFile(fileUri.getUri(), fileUri.toString());
+
+
+                        if (activityController.getPangPangSelectActivity() == null && activityController.getDuetSelectActivity() != null) {
+                            //duet
+                        } else if (activityController.getPangPangSelectActivity() != null && activityController.getDuetSelectActivity() == null) {
+                            //pang
+                            Log.i("kkk", "===start pangpang activity===");
+                            Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
+                            intent.setData(fileUri.getUri());
+                            startActivity(intent);
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
                     }
@@ -165,7 +184,7 @@ public class BluetoothActivity extends BaseActivity {
             if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
                 bt.disconnect();
             } else {
-                Intent intent = new Intent(getApplicationContext(), DeviceListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DeviceListActivity_.class);
                 startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
             }
         }
@@ -222,11 +241,6 @@ public class BluetoothActivity extends BaseActivity {
         }
     }
 
-    public static MusicPlayActivity getMusicPlayActivity() {
-        return musicPlayActivity;
-    }
 
-    public static void setMusicPlayActivity(MusicPlayActivity musicPlayActivity) {
-        BluetoothActivity.musicPlayActivity = musicPlayActivity;
-    }
 }
+

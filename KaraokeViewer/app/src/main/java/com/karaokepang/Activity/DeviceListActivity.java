@@ -1,7 +1,5 @@
 package com.karaokepang.Activity;
 
-import java.util.Set;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,22 +7,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.karaokepang.R;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.Set;
 
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
@@ -45,8 +43,6 @@ public class DeviceListActivity extends BaseActivity {
     public void afterViews() {
         super.afterViews();
         deviceListActivity = this;
-
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         String strBluetoothDevices = getIntent().getStringExtra("bluetooth_devices");
         if (strBluetoothDevices == null)

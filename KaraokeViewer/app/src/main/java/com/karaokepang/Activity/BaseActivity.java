@@ -1,6 +1,6 @@
 package com.karaokepang.Activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -9,7 +9,7 @@ import org.androidannotations.annotations.EActivity;
  * Created by clogic on 16. 3. 17..
  */
 @EActivity
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends Activity {
 
     @AfterViews
     public void afterViews() {

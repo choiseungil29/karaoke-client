@@ -15,11 +15,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private Context mContext;
     private SurfaceHolder mHolder;
     private Camera mCamera;
-    MusicPlayActivity musicPlayActivity;
 
-    public CameraPreview(MusicPlayActivity musicPlayActivity, Context context, Camera camera) {
+    public CameraPreview(Context context, Camera camera) {
         super(context);
-        this.musicPlayActivity = musicPlayActivity;
         mContext = context;
         mCamera = camera;
         mHolder = getHolder();

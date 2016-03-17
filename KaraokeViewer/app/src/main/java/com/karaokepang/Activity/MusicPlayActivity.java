@@ -1,8 +1,6 @@
 package com.karaokepang.Activity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -10,7 +8,6 @@ import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,7 +34,6 @@ import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
-import com.karaokepang.ftp.FtpServiceUp;
 
 import org.androidannotations.annotations.EActivity;
 
@@ -160,8 +156,6 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
         videoView.start();
 
         initRecordView();
-
-        BluetoothActivity.musicPlayActivity = this;
     }
 
     private void setLayoutId() {
@@ -234,7 +228,8 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
 //                reset();
                 if (!mp.isPlaying()) {
                     reset();
-                    new FtpServiceUp(BluetoothActivity.musicPlayActivity, fileName).execute();
+                    //Todo bluetoothActiviy정리
+//                    new FtpServiceUp(BluetoothActivity.musicPlayActivity, fileName).execute();
                 }
             }
         });
@@ -532,7 +527,7 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
         AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
-        preview = new CameraPreview(this, getApplicationContext(), camera);
+        preview = new CameraPreview(getApplicationContext(), camera);
         preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
 //        layoutCamera.bringToFront();

@@ -10,8 +10,16 @@ import org.androidannotations.annotations.EActivity;
 @EActivity(R.layout.activity_select_duet)
 public class DuetSelectActivity extends SelectActivity {
 
+    private ActivityController activityController = ActivityController.getInstance();
     @Override
     public void afterViews() {
         super.afterViews();
+        activityController.setDuetSelectActivity(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        activityController.setDuetSelectActivity(null);
     }
 }

@@ -1,12 +1,15 @@
 package com.karaokepang.Activity;
 
+import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.karaokepang.R;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.MyVideoView;
+import com.karaokepang.camera.CameraPreview;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -20,14 +23,59 @@ import java.util.Random;
 @EActivity(R.layout.activity_select_pangpang)
 public class PangPangSelectActivity extends SelectActivity {
 
-    @ViewById(R.id.vv_background) MyVideoView videoView;
+    private ActivityController activityController = ActivityController.getInstance();
+    private Camera camera;
+    private CameraPreview preview;
+
+    @ViewById(R.id.vv_background)
+    MyVideoView videoView;
+    @ViewById(R.id.camera_layout)
+    RelativeLayout layoutCamera;
 
     @Override
     public void afterViews() {
         super.afterViews();
-
+        activityController.setPangPangSelectActivity(this);
         setRandomVideoSource();
 
+        setVideoView();
+        setCameraPreView();
+    }
+
+    private void setCameraPreView() {
+        preview = new CameraPreview(getApplicationContext(), camera);
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
+        layoutCamera.addView(preview);
+    }
+
+    private int findBackFacingCamera() {
+        int cameraId = -1;
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                cameraId = i;
+                break;
+            }
+
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                cameraId = i;
+                break;
+            }
+        }
+        return cameraId;
+    }
+
+    private void releaseCamera() {
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
+    }
+
+    private void setVideoView() {
         videoView.setClickable(false);
         videoView.setFocusable(false);
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -59,5 +107,26 @@ public class PangPangSelectActivity extends SelectActivity {
         if (!fileRoot.isDirectory())
             return null;
         return fileRoot.list();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (camera == null) {
+            camera = Camera.open(findBackFacingCamera());
+            preview.refreshCamera(camera);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseCamera();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        activityController.setPangPangSelectActivity(null);
     }
 }
