@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by clogic on 2016. 1. 12..
+ *
  */
 public class KSALyrics {
     public String lyricLine;

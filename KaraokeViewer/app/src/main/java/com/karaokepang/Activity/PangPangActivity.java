@@ -26,7 +26,7 @@ public class PangPangActivity extends PlayActivity {
         super.afterViews();
         activityController.setPangPangActivity(this);
         midiUri = getIntent().getData();
+        activityController.setPangPangActivity(this);
         initWithStartMidiFile(midiUri);
     }
-
 }

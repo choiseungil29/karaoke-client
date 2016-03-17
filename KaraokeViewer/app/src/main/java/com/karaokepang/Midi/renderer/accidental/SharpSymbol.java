@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.karaokepang.Midi.renderer.Symbol;
-import com.karaokepang.View.ScoreView;
+import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 11..
@@ -19,8 +19,8 @@ public class SharpSymbol extends Symbol {
     private int y;
 
     public SharpSymbol() {
-        lineWidth = ScoreView.LINE_STROKE;
-        lineSpace = ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT/4;
+        lineWidth = BeforeScoreView.LINE_STROKE;
+        lineSpace = BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT/4;
 
         width = lineSpace + lineSpace/3;
     }

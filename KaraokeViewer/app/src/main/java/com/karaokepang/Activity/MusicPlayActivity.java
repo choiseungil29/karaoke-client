@@ -32,7 +32,7 @@ import com.karaokepang.Util.Util;
 import com.karaokepang.View.BMJUATextView;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
-import com.karaokepang.View.ScoreView;
+import com.karaokepang.View.BeforeScoreView;
 import com.karaokepang.camera.CameraPreview;
 
 import org.androidannotations.annotations.EActivity;
@@ -54,7 +54,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  * Created by clogic on 2015. 12. 10..
  */
 @EActivity
-public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicListener {
+public class MusicPlayActivity extends BaseActivity implements BeforeScoreView.MusicListener {
 
     //녹화
     private Camera camera;
@@ -66,7 +66,7 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
     public LinearLayout layoutLyric;
 
     private String fileName;
-    private ScoreView scoreView;
+    private BeforeScoreView beforeScoreView;
     private OutlineTextView tv_lyrics;
 
     public VideoView videoViewBack;
@@ -198,28 +198,28 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
         textSelectSong.setVisibility(View.VISIBLE);
         iv_background.setVisibility(View.VISIBLE);
         stopRecord(false);
-        scoreView.player.stop();
+        beforeScoreView.player.stop();
         nowLyricsIndex = 0;
         tv_lyrics.reset();
-        scoreView.reset();
+        beforeScoreView.reset();
     }
 
-    private void initSongName(ScoreView scoreView) {
-        textSong.setText(scoreView.getSongName());
-        textComposer.setText(scoreView.getComposer());
-        textSinger.setText(scoreView.getSinger());
+    private void initSongName(BeforeScoreView beforeScoreView) {
+        textSong.setText(beforeScoreView.getSongName());
+        textComposer.setText(beforeScoreView.getComposer());
+        textSinger.setText(beforeScoreView.getSinger());
     }
 
     public void initVpang(Uri uri, String midiFileName) {
         textSelectSong.setVisibility(View.GONE);
-        scoreView = new ScoreView(this);
-        scoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        beforeScoreView = new BeforeScoreView(this);
+        beforeScoreView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         RelativeLayout relativeLayout = new RelativeLayout(this);
         relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         relativeLayout.setBackgroundColor(Color.WHITE);
-        relativeLayout.addView(scoreView);
+        relativeLayout.addView(beforeScoreView);
         layoutScore.addView(relativeLayout);
-        scoreView.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        beforeScoreView.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 // 태경아 여기서 끝나
@@ -237,16 +237,16 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
         try {
             InputStream stream = new FileInputStream(uri.getPath());
 
-            scoreView.setActivity(this);
+            beforeScoreView.setActivity(this);
             MidiFile midiFile = new MidiFile(stream);
-            scoreView.setMidiFile(midiFile, midiFileName);
-            scoreView.setFileUri(uri);
-            scoreView.setListener(this);
+            beforeScoreView.setMidiFile(midiFile, midiFileName);
+            beforeScoreView.setFileUri(uri);
+            beforeScoreView.setListener(this);
 
             songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
 
             createLyrics();
-            initSongName(scoreView);
+            initSongName(beforeScoreView);
 
             stream.close();
         } catch (IOException e) {
@@ -260,10 +260,10 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
     }
 
     private void createLyrics() {
-        tv_lyrics.lyricsArray = scoreView.lyricsArray;
+        tv_lyrics.lyricsArray = beforeScoreView.lyricsArray;
 
         List<Lyrics> list = new ArrayList<>();
-        for (MidiEvent event : scoreView.lyricsTrack.getEvents()) {
+        for (MidiEvent event : beforeScoreView.lyricsTrack.getEvents()) {
             if (event instanceof Lyrics) {
                 list.add((Lyrics) event);
             }
@@ -302,8 +302,8 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
             } catch (IndexOutOfBoundsException e) {
                 endTick = list.get(i).getTick();
             }
-            if ((endTick - startTick) > (ScoreView.resolution * 4)) {
-                endTick = startTick + ScoreView.resolution * 4;
+            if ((endTick - startTick) > (BeforeScoreView.resolution * 4)) {
+                endTick = startTick + BeforeScoreView.resolution * 4;
             }
             lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
             line.append(event.getLyric());
@@ -362,7 +362,7 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
         try {
             if (nowLyricsIndex == 0) {
                 KSALyrics ksaLyrics = tv_lyrics.KSALyricsArray.get(0);
-                if (tick > ksaLyrics.startTick - (ScoreView.resolution * 4)) {
+                if (tick > ksaLyrics.startTick - (BeforeScoreView.resolution * 4)) {
                     head = ksaLyrics.lyricLine;
                     tail = tv_lyrics.KSALyricsArray.get(nowLyricsIndex + 1).lyricLine;
                 }
@@ -601,8 +601,8 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
     @Override
     protected void onResume() {
         super.onResume();
-        if (scoreView != null) {
-            scoreView.release();
+        if (beforeScoreView != null) {
+            beforeScoreView.release();
         }
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
@@ -619,8 +619,8 @@ public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (scoreView != null) {
-            scoreView.stopMusicHandler();
+        if (beforeScoreView != null) {
+            beforeScoreView.stopMusicHandler();
         }
     }
 

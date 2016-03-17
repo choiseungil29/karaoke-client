@@ -18,7 +18,7 @@
         android:layout_marginBottom="120dp"
         android:textSize="70sp" />
 
-    <com.karaokepang.View.ScoreView
+    <com.karaokepang.View.BeforeScoreView
         android:id="@+id/sv_score"
         android:layout_width="1dp"
         android:layout_height="1dp" />

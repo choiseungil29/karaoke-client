@@ -8,8 +8,7 @@ import android.graphics.Paint;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Tempo;
-import com.karaokepang.Util.Logger;
-import com.karaokepang.View.ScoreView;
+import com.karaokepang.View.BeforeScoreView;
 
 import java.util.List;
 
@@ -68,12 +67,12 @@ public class StaffSymbol extends Symbol {
 
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(ScoreView.LINE_STROKE);
+        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE);
 
-        int y = ScoreView.FIRST_LINE_HEIGHT;
+        int y = BeforeScoreView.FIRST_LINE_HEIGHT;
         for(int i=0; i<5; i++) {
             canvas.drawLine(0, y, width, y, paint);
-            y += ScoreView.LINE_SPACE_HEIGHT;
+            y += BeforeScoreView.LINE_SPACE_HEIGHT;
         }
     }
 
@@ -90,7 +89,7 @@ public class StaffSymbol extends Symbol {
         drawHorizontalLines(canvas);
 
         Paint paint = new Paint();
-        paint.setStrokeWidth(ScoreView.LINE_STROKE * 3);
+        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE * 3);
         paint.setColor(Color.BLUE);
         if(this.startTick <= this.nowTick &&
                 this.endTick > this.nowTick) {
@@ -99,8 +98,8 @@ public class StaffSymbol extends Symbol {
                 progress = temp;
             }
 
-            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), ScoreView.FIRST_LINE_HEIGHT,
-                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 4, paint);
+            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), BeforeScoreView.FIRST_LINE_HEIGHT,
+                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 4, paint);
         }
     }
 }

@@ -6,9 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import com.karaokepang.Midi.renderer.MeasureSymbol;
 import com.karaokepang.Midi.util.MidiUtil;
-import com.karaokepang.View.ScoreView;
+import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 13..
@@ -43,12 +42,12 @@ public class NoteSymbol extends MidiSymbol {
     @Override
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
-        paint.setStrokeWidth(ScoreView.LINE_STROKE);
+        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE);
         paint.setAntiAlias(true);
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
 
-        int r = ScoreView.resolution;
+        int r = BeforeScoreView.resolution;
 
         if (prev == null && next == null) {
             if (duration == MidiUtil.Whole(r)) {
@@ -105,24 +104,24 @@ public class NoteSymbol extends MidiSymbol {
             drawQuarter(canvas, paint, y);
             paint.setStrokeWidth(5);
             if (isTailTop) {
-                canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2, y - ScoreView.STEM_HEIGHT - append,
-                        ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2, y - ScoreView.STEM_HEIGHT - append, paint);
+                canvas.drawLine(BeforeScoreView.LINE_SPACE_HEIGHT / 2, y - BeforeScoreView.STEM_HEIGHT - append,
+                        BeforeScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (BeforeScoreView.resolution/4)) + 2, y - BeforeScoreView.STEM_HEIGHT - append, paint);
             } else {
-                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2, y + ScoreView.STEM_HEIGHT + append,
-                        -ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2, y + ScoreView.STEM_HEIGHT + append, paint);
+                canvas.drawLine(-BeforeScoreView.LINE_SPACE_HEIGHT / 2, y + BeforeScoreView.STEM_HEIGHT + append,
+                        -BeforeScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (BeforeScoreView.resolution/4)) + 2, y + BeforeScoreView.STEM_HEIGHT + append, paint);
             }
 
-            if(MidiUtil.Sixteenth(ScoreView.resolution) == this.getDuration()) {
+            if(MidiUtil.Sixteenth(BeforeScoreView.resolution) == this.getDuration()) {
                 if (isTailTop) {
-                    canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2,
-                            y - ScoreView.STEM_HEIGHT - append + paint.getStrokeWidth() * 2,
-                            ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2,
-                            y - ScoreView.STEM_HEIGHT - append + paint.getStrokeWidth() * 2, paint);
+                    canvas.drawLine(BeforeScoreView.LINE_SPACE_HEIGHT / 2,
+                            y - BeforeScoreView.STEM_HEIGHT - append + paint.getStrokeWidth() * 2,
+                            BeforeScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (BeforeScoreView.resolution/4)) + 2,
+                            y - BeforeScoreView.STEM_HEIGHT - append + paint.getStrokeWidth() * 2, paint);
                 } else {
-                    canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2,
-                            y + ScoreView.STEM_HEIGHT + append - paint.getStrokeWidth() * 2,
-                            -ScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (ScoreView.resolution/4)) + 2,
-                            y + ScoreView.STEM_HEIGHT + append - paint.getStrokeWidth() * 2, paint);
+                    canvas.drawLine(-BeforeScoreView.LINE_SPACE_HEIGHT / 2,
+                            y + BeforeScoreView.STEM_HEIGHT + append - paint.getStrokeWidth() * 2,
+                            -BeforeScoreView.LINE_SPACE_HEIGHT / 2 + segment * (getDuration() / (BeforeScoreView.resolution/4)) + 2,
+                            y + BeforeScoreView.STEM_HEIGHT + append - paint.getStrokeWidth() * 2, paint);
                 }
             }
         }
@@ -133,20 +132,20 @@ public class NoteSymbol extends MidiSymbol {
     }
 
     private void drawPointLine(Canvas canvas, Paint paint) {
-        paint.setStrokeWidth(ScoreView.LINE_STROKE);
+        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE);
         //canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
-        if(noteValue%(ScoreView.DEFAULT_C - ScoreView.OCTAVE) <= ScoreView.OCTAVE) {
-            float y = ScoreView.FIRST_LINE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT * 5;
+        if(noteValue%(BeforeScoreView.DEFAULT_C - BeforeScoreView.OCTAVE) <= BeforeScoreView.OCTAVE) {
+            float y = BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 5;
             while (y <= this.y) {
-                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
-                y += ScoreView.LINE_SPACE_HEIGHT;
+                canvas.drawLine(-BeforeScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +BeforeScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
+                y += BeforeScoreView.LINE_SPACE_HEIGHT;
             }
         }
-        if(noteValue%(ScoreView.DEFAULT_C - ScoreView.OCTAVE) >= ScoreView.OCTAVE + 9) {
-            float y = ScoreView.FIRST_LINE_HEIGHT - (float)ScoreView.LINE_SPACE_HEIGHT;
+        if(noteValue%(BeforeScoreView.DEFAULT_C - BeforeScoreView.OCTAVE) >= BeforeScoreView.OCTAVE + 9) {
+            float y = BeforeScoreView.FIRST_LINE_HEIGHT - (float) BeforeScoreView.LINE_SPACE_HEIGHT;
             while (y >= this.y) {
-                canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +ScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
-                y -= ScoreView.LINE_SPACE_HEIGHT;
+                canvas.drawLine(-BeforeScoreView.LINE_SPACE_HEIGHT / 2 - 8, y, +BeforeScoreView.LINE_SPACE_HEIGHT / 2 + 8, y, paint);
+                y -= BeforeScoreView.LINE_SPACE_HEIGHT;
             }
         }
     }
@@ -155,8 +154,8 @@ public class NoteSymbol extends MidiSymbol {
         paint.setStyle(Paint.Style.STROKE);
         for (int i = 1; i < 4; i++) {
             canvas.rotate(-CIRCLE_ROUTE, 0, y);
-            canvas.drawOval(new RectF(-ScoreView.LINE_SPACE_HEIGHT / 2 - i, -ScoreView.LINE_SPACE_HEIGHT / 2 + y,
-                    ScoreView.LINE_SPACE_HEIGHT / 2 + i, ScoreView.LINE_SPACE_HEIGHT / 2 + y), paint);
+            canvas.drawOval(new RectF(-BeforeScoreView.LINE_SPACE_HEIGHT / 2 - i, -BeforeScoreView.LINE_SPACE_HEIGHT / 2 + y,
+                    BeforeScoreView.LINE_SPACE_HEIGHT / 2 + i, BeforeScoreView.LINE_SPACE_HEIGHT / 2 + y), paint);
             canvas.rotate(CIRCLE_ROUTE, 0, y);
         }
     }
@@ -164,7 +163,7 @@ public class NoteSymbol extends MidiSymbol {
     public void drawDotHalf(Canvas canvas, Paint paint, float y) {
         drawHalf(canvas, paint, y);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT / 2, y, ScoreView.LINE_SPACE_HEIGHT / 4, paint);
+        canvas.drawCircle(BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT / 2, y, BeforeScoreView.LINE_SPACE_HEIGHT / 4, paint);
     }
 
     public void drawHalf(Canvas canvas, Paint paint, float y) {
@@ -176,15 +175,15 @@ public class NoteSymbol extends MidiSymbol {
     public void drawDotQuarter(Canvas canvas, Paint paint, float y) {
         drawQuarter(canvas, paint, y);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT / 2, y, ScoreView.LINE_SPACE_HEIGHT / 4, paint);
+        canvas.drawCircle(BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT / 2, y, BeforeScoreView.LINE_SPACE_HEIGHT / 4, paint);
     }
 
     public void drawQuarter(Canvas canvas, Paint paint, float y) {
         paint.setStyle(Paint.Style.FILL);
 
         canvas.rotate(-CIRCLE_ROUTE, 0, y);
-        canvas.drawOval(new RectF(-ScoreView.LINE_SPACE_HEIGHT / 2 - 3, -ScoreView.LINE_SPACE_HEIGHT / 2 + y,
-                ScoreView.LINE_SPACE_HEIGHT / 2 + 3, ScoreView.LINE_SPACE_HEIGHT / 2 + y), paint);
+        canvas.drawOval(new RectF(-BeforeScoreView.LINE_SPACE_HEIGHT / 2 - 3, -BeforeScoreView.LINE_SPACE_HEIGHT / 2 + y,
+                BeforeScoreView.LINE_SPACE_HEIGHT / 2 + 3, BeforeScoreView.LINE_SPACE_HEIGHT / 2 + y), paint);
         canvas.rotate(CIRCLE_ROUTE, 0, y);
         drawStem(canvas, paint, y);
     }
@@ -192,32 +191,32 @@ public class NoteSymbol extends MidiSymbol {
     public void drawDotEighth(Canvas canvas, Paint paint, float y) {
         drawEighth(canvas, paint, y);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT / 2, y, ScoreView.LINE_SPACE_HEIGHT / 4, paint);
+        canvas.drawCircle(BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT / 2, y, BeforeScoreView.LINE_SPACE_HEIGHT / 4, paint);
     }
 
     public void drawEighth(Canvas canvas, Paint paint, float y) {
         drawQuarter(canvas, paint, y);
-        paint.setStrokeWidth(ScoreView.LINE_STROKE * 2);
+        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE * 2);
         paint.setStyle(Paint.Style.STROKE);
         if (isTailTop) {
             // top
-            int xStart = ScoreView.LINE_SPACE_HEIGHT / 2;
-            float yStart = y - ScoreView.STEM_HEIGHT;
+            int xStart = BeforeScoreView.LINE_SPACE_HEIGHT / 2;
+            float yStart = y - BeforeScoreView.STEM_HEIGHT;
             Path bezierPath = new Path();
             bezierPath.moveTo(xStart, yStart);
-            bezierPath.cubicTo(xStart, yStart + (3 * ScoreView.LINE_SPACE_HEIGHT) / 2,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT * 2, yStart + ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT / 2,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT / 2, yStart + ScoreView.LINE_SPACE_HEIGHT * 2 + ScoreView.LINE_SPACE_HEIGHT / 2);
+            bezierPath.cubicTo(xStart, yStart + (3 * BeforeScoreView.LINE_SPACE_HEIGHT) / 2,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT * 2, yStart + BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT / 2,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT / 2, yStart + BeforeScoreView.LINE_SPACE_HEIGHT * 2 + BeforeScoreView.LINE_SPACE_HEIGHT / 2);
             canvas.drawPath(bezierPath, paint);
         } else {
             // down
-            int xStart = -ScoreView.LINE_SPACE_HEIGHT / 2;
-            float yStart = y + ScoreView.STEM_HEIGHT;
+            int xStart = -BeforeScoreView.LINE_SPACE_HEIGHT / 2;
+            float yStart = y + BeforeScoreView.STEM_HEIGHT;
             Path bezierPath = new Path();
             bezierPath.moveTo(xStart, yStart);
-            bezierPath.cubicTo(xStart, yStart - ScoreView.LINE_SPACE_HEIGHT,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT * 2, yStart - ScoreView.LINE_SPACE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT / 2,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT, yStart - ScoreView.LINE_SPACE_HEIGHT * 2 - ScoreView.LINE_SPACE_HEIGHT / 2);
+            bezierPath.cubicTo(xStart, yStart - BeforeScoreView.LINE_SPACE_HEIGHT,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT * 2, yStart - BeforeScoreView.LINE_SPACE_HEIGHT - BeforeScoreView.LINE_SPACE_HEIGHT / 2,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT, yStart - BeforeScoreView.LINE_SPACE_HEIGHT * 2 - BeforeScoreView.LINE_SPACE_HEIGHT / 2);
             canvas.drawPath(bezierPath, paint);
         }
     }
@@ -225,34 +224,34 @@ public class NoteSymbol extends MidiSymbol {
     public void drawSixteenth(Canvas canvas, Paint paint, float y) {
         drawEighth(canvas, paint, y);
         if (isTailTop) {
-            int xStart = ScoreView.LINE_SPACE_HEIGHT / 2 + 2;
-            float yStart = y - ScoreView.STEM_HEIGHT + ScoreView.LINE_SPACE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT / 4;
+            int xStart = BeforeScoreView.LINE_SPACE_HEIGHT / 2 + 2;
+            float yStart = y - BeforeScoreView.STEM_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT - BeforeScoreView.LINE_SPACE_HEIGHT / 4;
             Path bezierPath = new Path();
             bezierPath.moveTo(xStart, yStart);
-            bezierPath.cubicTo(xStart, yStart + (3 * ScoreView.LINE_SPACE_HEIGHT) / 2,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT * 2, yStart + ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT / 2,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT / 2, yStart + ScoreView.LINE_SPACE_HEIGHT * 2 + ScoreView.LINE_SPACE_HEIGHT / 2);
+            bezierPath.cubicTo(xStart, yStart + (3 * BeforeScoreView.LINE_SPACE_HEIGHT) / 2,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT * 2, yStart + BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT / 2,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT / 2, yStart + BeforeScoreView.LINE_SPACE_HEIGHT * 2 + BeforeScoreView.LINE_SPACE_HEIGHT / 2);
             canvas.drawPath(bezierPath, paint);
         } else {
             // down
-            int xStart = -ScoreView.LINE_SPACE_HEIGHT / 2 - 2;
-            float yStart = y + ScoreView.STEM_HEIGHT - ScoreView.LINE_SPACE_HEIGHT + ScoreView.LINE_SPACE_HEIGHT / 4;
+            int xStart = -BeforeScoreView.LINE_SPACE_HEIGHT / 2 - 2;
+            float yStart = y + BeforeScoreView.STEM_HEIGHT - BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT / 4;
             Path bezierPath = new Path();
             bezierPath.moveTo(xStart, yStart);
-            bezierPath.cubicTo(xStart, yStart - ScoreView.LINE_SPACE_HEIGHT,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT * 2, yStart - ScoreView.LINE_SPACE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT / 2,
-                    xStart + ScoreView.LINE_SPACE_HEIGHT, yStart - ScoreView.LINE_SPACE_HEIGHT * 2 - ScoreView.LINE_SPACE_HEIGHT / 2);
+            bezierPath.cubicTo(xStart, yStart - BeforeScoreView.LINE_SPACE_HEIGHT,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT * 2, yStart - BeforeScoreView.LINE_SPACE_HEIGHT - BeforeScoreView.LINE_SPACE_HEIGHT / 2,
+                    xStart + BeforeScoreView.LINE_SPACE_HEIGHT, yStart - BeforeScoreView.LINE_SPACE_HEIGHT * 2 - BeforeScoreView.LINE_SPACE_HEIGHT / 2);
             canvas.drawPath(bezierPath, paint);
         }
     }
 
     public void drawStem(Canvas canvas, Paint paint, float y) {
         if (isTailTop) {
-            canvas.drawLine(ScoreView.LINE_SPACE_HEIGHT / 2 + 1, y,
-                    ScoreView.LINE_SPACE_HEIGHT / 2 + 1, y - ScoreView.STEM_HEIGHT - append, paint);
+            canvas.drawLine(BeforeScoreView.LINE_SPACE_HEIGHT / 2 + 1, y,
+                    BeforeScoreView.LINE_SPACE_HEIGHT / 2 + 1, y - BeforeScoreView.STEM_HEIGHT - append, paint);
         } else {
-            canvas.drawLine(-ScoreView.LINE_SPACE_HEIGHT / 2 - 1, y - 1,
-                    -ScoreView.LINE_SPACE_HEIGHT / 2 - 1, y + ScoreView.STEM_HEIGHT + append, paint);
+            canvas.drawLine(-BeforeScoreView.LINE_SPACE_HEIGHT / 2 - 1, y - 1,
+                    -BeforeScoreView.LINE_SPACE_HEIGHT / 2 - 1, y + BeforeScoreView.STEM_HEIGHT + append, paint);
         }
     }
 
