@@ -84,12 +84,14 @@ public class BluetoothActivity extends Activity {
             public void onDeviceDisconnected() {
                 Toast.makeText(getApplicationContext()
                         , "연결이 끊겼습니다. 다시 연결을 시도합니다", Toast.LENGTH_SHORT).show();
+                MainActivity.buttonHomeMode();
                 bt.connect(getAddree());
             }
 
             public void onDeviceConnectionFailed() {
                 Toast.makeText(getApplicationContext()
                         , "리모콘 연결에 실패했습니다. 다시시도해주세요.", Toast.LENGTH_SHORT).show();
+                MainActivity.buttonHomeMode();
                 Intent intent = new Intent(getApplicationContext(), DeviceList.class);
                 startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
             }
