@@ -69,7 +69,7 @@ public class BluetoothActivity extends BaseActivity {
                     if (activityController.isDuetSelectMode()) {
                         activityController.getDuetSelectActivity().finish();
                     } else if (activityController.isPangSelectMode()) {
-                        activityController.getPan gPangSelectActivity().finish();
+                        activityController.getPangPangSelectActivity().finish();
                     }
                     Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
                     Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
