@@ -23,6 +23,7 @@ import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Model.FileUri;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
 import com.karaokepang.R;
@@ -34,13 +35,10 @@ import com.karaokepang.View.BMJUATextView;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.ScoreView;
-import com.karaokepang.bluetooth.BluetoothActivity;
 import com.karaokepang.camera.CameraPreview;
 import com.karaokepang.ftp.FtpServiceUp;
-import com.midisheetmusic.ClefSymbol;
-import com.midisheetmusic.FileUri;
-import com.midisheetmusic.MidiPlayer;
-import com.midisheetmusic.TimeSignatureSymbol;
+
+import org.androidannotations.annotations.EActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,7 +56,8 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 /**
  * Created by clogic on 2015. 12. 10..
  */
-public class MusicPlayActivity extends Activity implements MusicListener {
+@EActivity
+public class MusicPlayActivity extends BaseActivity implements ScoreView.MusicListener {
 
     //녹화
     private Camera camera;
@@ -97,8 +96,9 @@ public class MusicPlayActivity extends Activity implements MusicListener {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void afterViews() {
+        super.afterViews();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
@@ -232,11 +232,6 @@ public class MusicPlayActivity extends Activity implements MusicListener {
             }
         });
 
-
-        ClefSymbol.LoadImages(this);
-        TimeSignatureSymbol.LoadImages(this);
-        MidiPlayer.LoadImages(this);
-
         try {
             InputStream stream = new FileInputStream(uri.getPath());
 
@@ -335,10 +330,10 @@ public class MusicPlayActivity extends Activity implements MusicListener {
             Logger.i("Lyric", "lyrics line : " + log.lyricLine);
             for (KSALyric lyric : log.lyricList) {
                 Logger.i("Lyric", "----------------");
-                Logger.i("Lyric", "lyric : " + lyric.lyric);
-                Logger.i("Lyric", "lyric start tick : " + lyric.startTick);
-                Logger.i("Lyric", "lyric end tick : " + lyric.endTick);
-                Logger.i("Lyric", "lyric delta : " + (lyric.endTick - lyric.startTick));
+                Logger.i("Lyric", "lyric : " + lyric.getLyric());
+                Logger.i("Lyric", "lyric start tick : " + lyric.getStartTick());
+                Logger.i("Lyric", "lyric end tick : " + lyric.getEndTick());
+                Logger.i("Lyric", "lyric delta : " + (lyric.getEndTick() - lyric.getStartTick()));
                 Logger.i("Lyric", "----------------");
             }
             Logger.i("Lyric", "+++++++++++++++");

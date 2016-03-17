@@ -33,12 +33,12 @@ public class KSALyrics {
         long startTick = 1000000;
         long endTick = 0;
         for(KSALyric lyric : lyricList) {
-            if(lyric.startTick < startTick) {
-                startTick = lyric.startTick;
+            if(lyric.getStartTick() < startTick) {
+                startTick = lyric.getStartTick();
                 this.startTick = startTick;
             }
-            if(lyric.endTick > endTick) {
-                endTick = lyric.endTick;
+            if(lyric.getEndTick() > endTick) {
+                endTick = lyric.getEndTick();
                 this.endTick = endTick;
             }
         }

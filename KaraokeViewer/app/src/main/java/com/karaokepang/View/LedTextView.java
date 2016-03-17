@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.karaokepang.R;
 
+import org.androidannotations.annotations.EView;
+
+@EView
 public class LedTextView extends TextView {
 
     public LedTextView(Context context, AttributeSet attrs, int defStyle) {

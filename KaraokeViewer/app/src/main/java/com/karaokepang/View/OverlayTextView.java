@@ -9,9 +9,12 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EView;
+
 /**
  * Created by clogic on 2016. 1. 15..
  */
+@EView
 public class OverlayTextView extends TextView {
 
     public OverlayTextView(Context context) {

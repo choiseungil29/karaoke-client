@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class MidiFile
@@ -60,13 +61,11 @@ public class MidiFile
         mType = mTrackCount > 1 ? 1 : 0;
     }
 
-    public MidiFile(File fileIn) throws FileNotFoundException, IOException
-    {
+    public MidiFile(File fileIn) throws FileNotFoundException, IOException {
         this(new FileInputStream(fileIn));
     }
 
-    public MidiFile(InputStream rawIn) throws IOException
-    {
+    public MidiFile(InputStream rawIn) throws IOException {
         BufferedInputStream in = new BufferedInputStream(rawIn);
 
         byte[] buffer = new byte[HEADER_SIZE];
@@ -75,85 +74,63 @@ public class MidiFile
         initFromBuffer(buffer);
 
         mTracks = new ArrayList<MidiTrack>();
-        for(int i = 0; i < mTrackCount; i++)
-        {
+        for(int i = 0; i < mTrackCount; i++) {
             mTracks.add(new MidiTrack(in));
         }
     }
 
-    public void setType(int type)
-    {
-        if(type < 0)
-        {
+    public void setType(int type) {
+        if(type < 0) {
             type = 0;
-        }
-        else if(type > 2)
-        {
+        } else if(type > 2) {
             type = 1;
-        }
-        else if(type == 0 && mTrackCount > 1)
-        {
+        } else if(type == 0 && mTrackCount > 1) {
             type = 1;
         }
         mType = type;
     }
 
-    public int getType()
-    {
+    public int getType() {
         return mType;
     }
 
-    public int getTrackCount()
-    {
+    public int getTrackCount() {
         return mTrackCount;
     }
 
-    public void setResolution(int res)
-    {
-        if(res >= 0)
-        {
+    public void setResolution(int res) {
+        if(res >= 0) {
             mResolution = res;
         }
     }
 
-    public int getResolution()
-    {
+    public int getResolution() {
         return mResolution;
     }
 
-    public long getLengthInTicks()
-    {
+    public long getLengthInTicks() {
         long length = 0;
-        for(MidiTrack T : mTracks)
-        {
+        for(MidiTrack T : mTracks) {
             long l = T.getLengthInTicks();
-            if(l > length)
-            {
+            if(l > length) {
                 length = l;
             }
         }
         return length;
     }
 
-    public ArrayList<MidiTrack> getTracks()
-    {
+    public ArrayList<MidiTrack> getTracks() {
         return mTracks;
     }
 
-    public void addTrack(MidiTrack T)
-    {
+    public void addTrack(MidiTrack T) {
         addTrack(T, mTracks.size());
     }
 
-    public void addTrack(MidiTrack T, int pos)
-    {
-
-        if(pos > mTracks.size())
-        {
+    public void addTrack(MidiTrack T, int pos) {
+        if(pos > mTracks.size()) {
             pos = mTracks.size();
-        }
-        else if(pos < 0)
-        {
+        } else if(pos < 0) {
             pos = 0;
         }
 
@@ -207,5 +184,19 @@ public class MidiFile
         mTrackCount = MidiUtil.bytesToInt(buffer, 10, 2);
         mResolution = MidiUtil.bytesToInt(buffer, 12, 2);
         Logger.i("단위시간! : " + mResolution);
+    }
+
+    public static boolean hasMidiHeader(byte[] data) {
+        String s;
+        try {
+            s = new String(data, 0, 4, "US-ASCII");
+            if (s.equals("MThd"))
+                return true;
+            else
+                return false;
+        }
+        catch (UnsupportedEncodingException e) {
+            return false;
+        }
     }
 }

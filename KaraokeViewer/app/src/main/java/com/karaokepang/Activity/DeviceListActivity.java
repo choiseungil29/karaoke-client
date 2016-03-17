@@ -23,30 +23,30 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.karaokepang.R;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
+@EActivity(R.layout.device_list)
+public class DeviceListActivity extends BaseActivity {
 
-public class DeviceList extends Activity {
-
-    public static DeviceList deviceList;
-    // Debugging
-    private static final String TAG = "BluetoothSPP";
-    private static final boolean D = true;
+    public static DeviceListActivity deviceListActivity;
 
     // Member fields
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private Set<BluetoothDevice> pairedDevices;
-    private Button scanButton;
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @ViewById(R.id.button_scan) Button scanButton;
+    @ViewById(R.id.list_devices) ListView lv_devices;
 
-        deviceList = this;
-        // Setup the window
+    @Override
+    public void afterViews() {
+        super.afterViews();
+        deviceListActivity = this;
+
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        int listId = getIntent().getIntExtra("layout_list", R.layout.device_list);
-        setContentView(listId);
 
         String strBluetoothDevices = getIntent().getStringExtra("bluetooth_devices");
         if (strBluetoothDevices == null)
@@ -56,8 +56,6 @@ public class DeviceList extends Activity {
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-        // Initialize the button to perform device discovery
-        scanButton = (Button) findViewById(R.id.button_scan);
         String strScanDevice = getIntent().getStringExtra("scan_for_devices");
         if (strScanDevice == null)
             strScanDevice = "SCAN FOR DEVICES";
@@ -68,15 +66,14 @@ public class DeviceList extends Activity {
             }
         });
 
-        // Initialize array adapters. One for already paired devices 
+        // Initialize array adapters. One for already paired devices
         // and one for newly discovered devices
         int layout_text = getIntent().getIntExtra("layout_text", R.layout.device_name);
-        mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, layout_text);
+        mPairedDevicesArrayAdapter = new ArrayAdapter<>(this, layout_text);
 
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.list_devices);
-        pairedListView.setAdapter(mPairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
+        lv_devices.setAdapter(mPairedDevicesArrayAdapter);
+        lv_devices.setOnItemClickListener(mDeviceClickListener);
 
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -117,7 +114,6 @@ public class DeviceList extends Activity {
 
     // Start device discover with the BluetoothAdapter
     private void doDiscovery() {
-        if (D) Log.d(TAG, "doDiscovery()");
 
         // Remove all element from the list
         mPairedDevicesArrayAdapter.clear();
@@ -142,7 +138,6 @@ public class DeviceList extends Activity {
         setTitle(strScanning);
 
         // Turn on sub-title for new devices
-        // findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
         // If we're already discovering, stop it
         if (mBtAdapter.isDiscovering()) {
             mBtAdapter.cancelDiscovery();

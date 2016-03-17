@@ -3,56 +3,51 @@ package com.karaokepang.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.Html;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.VideoView;
 
+import com.karaokepang.Keys;
+import com.karaokepang.Model.FileUri;
 import com.karaokepang.Util.FilePath;
-import com.karaokepang.bluetooth.BluetoothActivity;
 import com.karaokepang.R;
 import com.karaokepang.View.VerticalMarqueeTextView;
 import com.karaokepang.bluetooth.SendData;
 import com.karaokepang.ftp.FtpServiceDown;
-import com.midisheetmusic.FileUri;
+
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class LauncherMainActivity extends BluetoothActivity implements View.OnClickListener {
+@EActivity(R.layout.activity_launcher_main)
+public class LauncherMainActivity extends BluetoothActivity {
 
-    private Button btnVpang;
-    private Button btnFriend;
-    private Button btnStart;
 
-    private VideoView videoView;
+    @ViewById(R.id.btn_launcher_vpang) Button btnVpang;
+    @ViewById(R.id.btn_launcher_friend) Button btnFriend;
+    @ViewById(R.id.btn_launcher_star) Button btnStart;
 
-    private VerticalMarqueeTextView textLed;
+    @ViewById(R.id.text_led) VerticalMarqueeTextView textLed;
+    @ViewById(R.id.videoView) VideoView videoView;
 
 
     private ArrayList<FileUri> list;
     private ArrayList<String> localFiles = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void afterViews() {
+        super.afterViews();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        setContentView(R.layout.activity_launcher_main);
 
         initDefaultData();
         initVideoView();
-        initTextVIew();
-
-        btnVpang = (Button) findViewById(R.id.btn_launcher_vpang);
-        btnFriend = (Button) findViewById(R.id.btn_launcher_friend);
-        btnStart = (Button) findViewById(R.id.btn_launcher_star);
-
-        btnVpang.setOnClickListener(this);
-        btnFriend.setOnClickListener(this);
-        btnStart.setOnClickListener(this);
+        initTextView();
     }
 
     void initDefaultData() {
@@ -74,8 +69,6 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
             }
             prevname = file.toString();
         }
-
-
     }
 
     public void loadSdcardMidiFiles() {
@@ -93,21 +86,16 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
     }
 
     private void initVideoView() {
-        videoView = (VideoView) findViewById(R.id.videoView);
         videoView.setClickable(false);
         videoView.setFocusable(false);
-//        videoView.setVideoPath("/mnt/sdcard/vpang_bg/test1est1.TS");
         String path = "android.resource://" + getPackageName() + "/" + R.raw.produce;
         videoView.setVideoURI(Uri.parse(path));
-
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
             @Override
             public void onCompletion(MediaPlayer mp) {
                 videoView.resume();
             }
         });
-
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -119,8 +107,7 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         videoView.start();
     }
 
-    private void initTextVIew() {
-        textLed = (VerticalMarqueeTextView) findViewById(R.id.text_led);
+    private void initTextView() {
         String text = "<html>" +
                 "<br /><br />" +
                 "<font color='#ff3333'>Welcome to PANG PANG!</font><br /><br />" +
@@ -132,34 +119,29 @@ public class LauncherMainActivity extends BluetoothActivity implements View.OnCl
         textLed.setText(Html.fromHtml(text));
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_launcher_vpang:
-                Intent intent = new Intent(LauncherMainActivity.this, MusicPlayActivity.class);
-                intent.putExtra("mode", "vpang");
-                startActivity(intent);
-                break;
-            case R.id.btn_launcher_friend:
-                Intent intent2 = new Intent(LauncherMainActivity.this, MusicPlayActivity.class);
-                intent2.putExtra("mode", "duet");
-                startActivity(intent2);
-                break;
-            case R.id.btn_launcher_star:
-                Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
-                startActivity(intent3);
-                break;
-        }
+    @Click(R.id.btn_launcher_vpang)
+    public void clickedVpang() {
+        Intent intent = new Intent(LauncherMainActivity.this, PangPangSelectActivity_.class);
+        intent.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
+        startActivity(intent);
+    }
+
+    @Click(R.id.btn_launcher_friend)
+    public void clickedFriend() {
+        Intent intent2 = new Intent(LauncherMainActivity.this, DuetSelectActivity_.class);
+        intent2.putExtra(Keys.MODE, Keys.Mode.DUET);
+        startActivity(intent2);
+    }
+
+    @Click(R.id.btn_launcher_star)
+    public void clickedStar() {
+        Intent intent3 = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
+        startActivity(intent3);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         bt.send(SendData.MODE_HOME, true);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 }

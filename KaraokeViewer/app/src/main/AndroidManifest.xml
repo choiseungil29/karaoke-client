@@ -20,15 +20,16 @@
         android:required="false" />
 
     <application
+        android:name=".App_"
         android:allowBackup="true"
         android:configChanges="orientation"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="landscape"
-        android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".Activity.LauncherMainActivity"
+            android:name=".Activity.LauncherMainActivity_"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -39,21 +40,14 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.DeviceList" />
-        <activity android:name="com.midisheetmusic.MidiSheetMusicActivity" />
-        <activity android:name="com.midisheetmusic.FileBrowserActivity" />
-        <activity android:name="com.midisheetmusic.ChooseSongActivity" />
-        <activity android:name="com.midisheetmusic.HelpActivity" />
-        <activity android:name="com.midisheetmusic.SettingsActivity" />
-        <activity android:name="com.midisheetmusic.AllSongsActivity" />
-        <activity android:name="com.midisheetmusic.RecentSongsActivity" />
+        <activity android:name=".Activity.DeviceListActivity_" />
+        <activity android:name=".Activity.SelectActivity_" />
+        <activity android:name=".Activity.DuetSelectActivity_" />
+        <activity android:name=".Activity.PangPangSelectActivity_" />
+        <activity android:name=".Activity.PangPangActivity_" />
         <activity
-            android:name=".Activity.MusicPlayActivity"
+            android:name=".Activity.MusicPlayActivity_"
             android:screenOrientation="landscape" />
-        <activity
-            android:name="com.midisheetmusic.SheetMusicActivity"
-            android:screenOrientation="landscape" />
-
     </application>
 
 </manifest>

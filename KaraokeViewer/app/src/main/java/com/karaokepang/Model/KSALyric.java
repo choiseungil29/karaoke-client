@@ -1,22 +1,17 @@
 package com.karaokepang.Model;
 
-import com.karaokepang.View.ScoreView;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by clogic on 2016. 1. 15..
  */
+@Getter
+@Setter
+@AllArgsConstructor(suppressConstructorProperties = true)
 public class KSALyric {
-
-    public String lyric;
-    public long startTick;
-    public long endTick;
-
-    public KSALyric(String lyric, long startTick, long endTick) {
-        this.lyric = lyric;
-        this.startTick = startTick;
-        this.endTick = endTick;
-        /*if(endTick - startTick > ScoreView.resolution * 4) {
-            this.endTick = this.startTick + ScoreView.resolution * 4;
-        }*/
-    }
+    private String lyric;
+    private long startTick;
+    private long endTick;
 }

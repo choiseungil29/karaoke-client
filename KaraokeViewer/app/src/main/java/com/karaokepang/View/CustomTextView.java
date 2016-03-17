@@ -7,9 +7,12 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EView;
+
 /**
  * Created by clogic on 2016. 1. 20..
  */
+@EView
 public class CustomTextView extends TextView {
 
     public CustomTextView(Context context) {

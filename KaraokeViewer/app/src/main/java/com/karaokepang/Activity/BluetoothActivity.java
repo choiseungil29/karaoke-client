@@ -1,20 +1,21 @@
-package com.karaokepang.bluetooth;
+package com.karaokepang.Activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
-import com.karaokepang.Activity.DeviceList;
-import com.karaokepang.Activity.MusicPlayActivity;
+import com.karaokepang.Keys;
+import com.karaokepang.Model.FileUri;
 import com.karaokepang.Util.FilePath;
-import com.midisheetmusic.FileUri;
+import com.karaokepang.bluetooth.SendData;
+
+import org.androidannotations.annotations.EActivity;
 
 import java.io.File;
 
@@ -24,15 +25,15 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 /**
  * Created by 1002230 on 16. 2. 5..
  */
-public class BluetoothActivity extends Activity {
-
+@EActivity
+public class BluetoothActivity extends BaseActivity {
 
     public static MusicPlayActivity musicPlayActivity;
     public BluetoothSPP bt;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void afterViews() {
+        super.afterViews();
         initBluetooth();
     }
 
@@ -54,13 +55,13 @@ public class BluetoothActivity extends Activity {
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
                 if (message.equals(SendData.MODE_VPANG)) {
-                    Intent intent = new Intent(getApplicationContext(), MusicPlayActivity.class);
-                    intent.putExtra("mode", "vpang");
+                    Intent intent = new Intent(getApplicationContext(), PangPangSelectActivity_.class);
+                    intent.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
                     startActivity(intent);
                     bt.send(SendData.MODE_VPANG, true);
                 } else if (message.equals(SendData.MODE_DUET)) {
-                    Intent intent = new Intent(getApplicationContext(), MusicPlayActivity.class);
-                    intent.putExtra("mode", "duet");
+                    Intent intent = new Intent(getApplicationContext(), DuetSelectActivity_.class);
+                    intent.putExtra(Keys.MODE, Keys.Mode.DUET);
                     bt.send(SendData.MODE_DUET, true);
                     startActivity(intent);
                 } else if (message.equals(SendData.MODE_HOME)) {
@@ -141,8 +142,8 @@ public class BluetoothActivity extends Activity {
                 editor.putString("address", address);
                 editor.commit();
                 Toast.makeText(getApplicationContext(), "리모콘 연결 완료", Toast.LENGTH_SHORT).show();
-                if (DeviceList.deviceList != null) {
-                    DeviceList.deviceList.finish();
+                if (DeviceListActivity.deviceListActivity != null) {
+                    DeviceListActivity.deviceListActivity.finish();
                 }
             }
 
@@ -161,7 +162,7 @@ public class BluetoothActivity extends Activity {
             if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
                 bt.disconnect();
             } else {
-                Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+                Intent intent = new Intent(getApplicationContext(), DeviceListActivity.class);
                 startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
             }
         }
