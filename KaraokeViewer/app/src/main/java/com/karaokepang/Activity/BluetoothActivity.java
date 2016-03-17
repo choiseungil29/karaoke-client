@@ -95,38 +95,38 @@ public class BluetoothActivity extends BaseActivity {
                         File file;
                         if (message.contains("||")) {
                             String[] splits = message.split("\\|\\|");
-                            if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() != null) {
-//                                if (splits[1].equals("0")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
-//                                } else if (splits[1].equals("1")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
-//                                } else if (splits[1].equals("2")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
-//                                } else if (splits[1].equals("3")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
-//                                } else if (splits[1].equals("4")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
-//                                } else if (splits[1].equals("5")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
-//                                } else if (splits[1].equals("6")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
-//                                } else if (splits[1].equals("7")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
-//                                } else if (splits[1].equals("8")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
-//                                } else if (splits[1].equals("9")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
-//                                } else if (splits[1].equals("10")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
-//                                } else if (splits[1].equals("11")) {
-//                                    musicPlayActivity.videoViewBack.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
-//                                }
+                            if (splits.length != 0) {
+                                if (splits[1].equals("0")) {
+                                    Log.e("kkk", "0번째 bg2");
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+                                } else if (splits[1].equals("1")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
+                                } else if (splits[1].equals("2")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
+                                } else if (splits[1].equals("3")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+                                } else if (splits[1].equals("4")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
+                                } else if (splits[1].equals("5")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
+                                } else if (splits[1].equals("6")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
+                                } else if (splits[1].equals("7")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
+                                } else if (splits[1].equals("8")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
+                                } else if (splits[1].equals("9")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
+                                } else if (splits[1].equals("10")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
+                                } else if (splits[1].equals("11")) {
+                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+                                }
                             }
                             file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
                         } else {
                             file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
                         }
-                        Toast.makeText(getApplicationContext(), "노래시작", Toast.LENGTH_SHORT).show();
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
                         if (activityController.isDuetSelectMode()) {

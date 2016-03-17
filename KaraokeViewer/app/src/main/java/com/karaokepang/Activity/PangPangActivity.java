@@ -22,15 +22,9 @@ public class PangPangActivity extends PlayActivity {
     private Uri midiUri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activityController.setPangPangActivity(this);
-    }
-
-    @Override
     public void afterViews() {
         super.afterViews();
-
+        activityController.setPangPangActivity(this);
         midiUri = getIntent().getData();
         initWithStartMidiFile(midiUri);
     }

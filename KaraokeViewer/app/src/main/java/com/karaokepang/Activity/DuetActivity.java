@@ -1,8 +1,9 @@
 package com.karaokepang.Activity;
 
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.Window;
+
+import com.karaokepang.R;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.WindowFeature;
@@ -17,16 +18,11 @@ public class DuetActivity extends PlayActivity {
     private ActivityController activityController = ActivityController.getInstance();
     private Uri midiUri;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activityController.setDuetActivity(this);
-    }
 
     @Override
     public void afterViews() {
         super.afterViews();
-
+        activityController.setDuetActivity(this);
         midiUri = getIntent().getData();
         initWithStartMidiFile(midiUri);
     }
