@@ -162,16 +162,21 @@ public class SelectActivity extends BluetoothActivity {
     }
 
 
-
     public void cameraResume() {
         if (textSongSelected.getVisibility() == TextView.GONE) {
             if (activityController.getPangPangActivity() != null) {
                 activityController.getPangPangActivity().stop();
                 activityController.setPangPangActivity(null);
             }
+
+            if (activityController.getDuetActivity() != null) {
+                activityController.getDuetActivity().stop();
+                activityController.setDuetActivity(null);
+            }
             stopRecord(true);
             textSongSelected.setVisibility(TextView.VISIBLE);
         }
+        
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
