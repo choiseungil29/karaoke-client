@@ -130,8 +130,10 @@ public class BluetoothActivity extends BaseActivity {
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
                         if (activityController.isDuetSelectMode()) {
+                            Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
+                            intent.setData(fileUri.getUri());
+                            startActivity(intent);
                         } else if (activityController.isPangSelectMode()) {
-                            Log.i("kkk", "===start pangpang activity===");
                             Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
                             intent.setData(fileUri.getUri());
                             startActivity(intent);

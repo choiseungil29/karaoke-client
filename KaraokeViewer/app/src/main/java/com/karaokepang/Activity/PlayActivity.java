@@ -39,7 +39,14 @@ public class PlayActivity extends BluetoothActivity {
         super.afterViews();
     }
 
-    public void initMidiFile(Uri uri) {
+    public void initWithStartMidiFile(Uri uri) {
+        initMidiFile(uri);
+        String songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
+        play(songNumber);
+    }
+
+
+    private void initMidiFile(Uri uri) {
         try {
             FileInputStream fis = new FileInputStream(uri.getPath());
             FileDescriptor fd = fis.getFD();
@@ -66,8 +73,5 @@ public class PlayActivity extends BluetoothActivity {
 
     public void stop() {
         player.stop();
-//        if (activityController.getPangPangActivity() != null) {
-//            activityController.getPangPangSelectActivity().stopRecord(true);
-//        }
     }
 }

@@ -35,15 +35,4 @@ public class PangPangActivity extends PlayActivity {
         initWithStartMidiFile(midiUri);
     }
 
-
-    public void initWithStartMidiFile(Uri uri) {
-        super.initMidiFile(uri);
-        String songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
-        play(songNumber);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

@@ -33,17 +33,8 @@ import java.util.Random;
 @EActivity(R.layout.activity_select_pangpang)
 public class PangPangSelectActivity extends SelectActivity {
 
-    private ActivityController activityController = ActivityController.getInstance();
-    private Camera camera;
-    private CameraPreview preview;
-    private MediaRecorder recorder;
-
     @ViewById(R.id.vv_background)
     MyVideoView videoView;
-    @ViewById(R.id.camera_layout)
-    RelativeLayout layoutCamera;
-    @ViewById(R.id.textView_song_selected)
-    TextView textSongSelected;
 
     @Override
     public void afterViews() {
@@ -53,43 +44,23 @@ public class PangPangSelectActivity extends SelectActivity {
         setRandomVideoSource();
         setVideoView();
         setCameraPreView();
-
     }
 
-    private void setCameraPreView() {
-        preview = new CameraPreview(getApplicationContext(), camera);
-        preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
-        layoutCamera.addView(preview);
+
+    private void setRandomVideoSource() {
+        String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
+        String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
+        videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
     }
 
-    private int findBackFacingCamera() {
-        int cameraId = -1;
-        int numberOfCameras = Camera.getNumberOfCameras();
-        for (int i = 0; i < numberOfCameras; i++) {
-            Camera.CameraInfo info = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                cameraId = i;
-                break;
-            }
-
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                cameraId = i;
-                break;
-            }
-        }
-        return cameraId;
+    private String[] getFileList(String strPath) {
+        File fileRoot = new File(strPath);
+        if (!fileRoot.isDirectory())
+            return null;
+        return fileRoot.list();
     }
 
-    private void releaseCamera() {
-        if (camera != null) {
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-        }
-    }
-
-    private void setVideoView() {
+    public void setVideoView() {
         videoView.setClickable(false);
         videoView.setFocusable(false);
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -109,119 +80,10 @@ public class PangPangSelectActivity extends SelectActivity {
         videoView.start();
     }
 
-    public void stopRecord(boolean isRealFile) {
-        if (recorder != null) {
-            if (isRealFile) {
-                Log.e("kkk", "녹화종료");
-                recorder.stop();
-                releaseMediaRecorder();
-                Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    public void startRecord(String songNumber) {
-        if (!prepareMediaRecorder(songNumber)) {
-            Toast.makeText(getApplicationContext(), "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
-            finish();
-        }
-        // work on UiThread for better performance
-        runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-                    recorder.start();
-                    Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
-                } catch (final Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private boolean prepareMediaRecorder(String songNumber) {
-        File dir = new File(FilePath.FILE_PATH_VPANG);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        recorder = new MediaRecorder();
-        camera.unlock();
-        recorder.setCamera(camera);
-        recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-        recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-//        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
-
-        recorder.setVideoEncodingBitRate(1000000);
-        //recorder.setVideoFrameRate(30);
-        recorder.setOutputFile(FilePath.FILE_PATH_VPANG + getNewFileName(songNumber) + ".mp4");
-        recorder.setMaxDuration(6000000 * 10);
-        recorder.setMaxFileSize(300000000 * 20);
-
-
-        try {
-            recorder.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            releaseMediaRecorder();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            releaseMediaRecorder();
-            return false;
-        }
-        return true;
-
-    }
-
-    public String getNewFileName(String songNumber) {
-        Calendar c = Calendar.getInstance();
-        int yy = c.get(Calendar.YEAR);
-        int mm = c.get(Calendar.MONTH);
-        int dd = c.get(Calendar.DAY_OF_MONTH);
-        int hh = c.get(Calendar.HOUR_OF_DAY);
-        int mi = c.get(Calendar.MINUTE);
-        int ss = c.get(Calendar.SECOND);
-
-        return songNumber + "-" + String.format(Locale.getDefault(), "%04d-%02d-%02d-%02d-%02d-%02d", yy, mm + 1, dd, hh, mi, ss);
-    }
-
-
-    private void releaseMediaRecorder() {
-        if (recorder != null) {
-            recorder.reset();
-            recorder.release();
-            recorder = null;
-        }
-    }
-
-    private void setRandomVideoSource() {
-        String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
-        String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
-        videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
-    }
-
-    private String[] getFileList(String strPath) {
-        File fileRoot = new File(strPath);
-        if (!fileRoot.isDirectory())
-            return null;
-        return fileRoot.list();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (textSongSelected.getVisibility() == TextView.GONE) {
-            if (activityController.getPangPangActivity() != null) {
-                activityController.getPangPangActivity().stop();
-                activityController.setPangPangActivity(null);
-            }
-            stopRecord(true);
-            textSongSelected.setVisibility(TextView.VISIBLE);
-        }
-        if (camera == null) {
-            camera = Camera.open(findBackFacingCamera());
-            preview.refreshCamera(camera);
-        }
+        cameraResume();
     }
 
     @Override
