@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 import com.karaokepang.Midi.renderer.Symbol;
-import com.karaokepang.View.ScoreView;
+import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 11..
@@ -21,8 +21,8 @@ public class FlatSymbol extends Symbol {
     private int y;
 
     public FlatSymbol() {
-        lineWidth = ScoreView.LINE_STROKE;
-        lineSpace = ScoreView.LINE_SPACE_HEIGHT;
+        lineWidth = BeforeScoreView.LINE_STROKE;
+        lineSpace = BeforeScoreView.LINE_SPACE_HEIGHT;
 
         width = lineSpace + lineSpace/4;
     }

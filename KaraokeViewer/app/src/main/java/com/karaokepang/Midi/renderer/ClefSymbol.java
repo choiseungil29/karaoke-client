@@ -11,7 +11,7 @@ import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.NoteOn;
 import com.karaokepang.R;
-import com.karaokepang.View.ScoreView;
+import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 10..
@@ -48,16 +48,16 @@ public class ClefSymbol extends Symbol {
         clef = trebleRes;
 
         this.setLeftMargin(10);
-        width = (int)(clef.getWidth() * ((float)ScoreView.LINE_SPACE_HEIGHT * 6 / clef.getHeight()));
+        width = (int)(clef.getWidth() * ((float) BeforeScoreView.LINE_SPACE_HEIGHT * 6 / clef.getHeight()));
     }
 
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
 
         Rect src = new Rect(0, 0, getWidth(), clef.getHeight());
-        Rect dst = new Rect(0, 0, (int)(getWidth() * ((float)ScoreView.LINE_SPACE_HEIGHT * 6 / clef.getHeight())), ScoreView.LINE_SPACE_HEIGHT * 6);
-        canvas.translate(0, ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT);
+        Rect dst = new Rect(0, 0, (int)(getWidth() * ((float) BeforeScoreView.LINE_SPACE_HEIGHT * 6 / clef.getHeight())), BeforeScoreView.LINE_SPACE_HEIGHT * 6);
+        canvas.translate(0, BeforeScoreView.FIRST_LINE_HEIGHT - BeforeScoreView.LINE_SPACE_HEIGHT);
         canvas.drawBitmap(clef, src, dst, paint);
-        canvas.translate(0, -(ScoreView.FIRST_LINE_HEIGHT - ScoreView.LINE_SPACE_HEIGHT));
+        canvas.translate(0, -(BeforeScoreView.FIRST_LINE_HEIGHT - BeforeScoreView.LINE_SPACE_HEIGHT));
     }
 }

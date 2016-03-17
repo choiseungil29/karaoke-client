@@ -111,7 +111,6 @@ public class PangPangActivity extends PlayActivity {
         videoView.start();
     }
 
-
     public void initWithStartMidiFile(Uri uri) {
         super.initMidiFile(uri);
         play();
