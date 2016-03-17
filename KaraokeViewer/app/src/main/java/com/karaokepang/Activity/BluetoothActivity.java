@@ -29,6 +29,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 public class BluetoothActivity extends BaseActivity {
 
     public static MusicPlayActivity musicPlayActivity;
+    public static PangPangActivity activity;
     public BluetoothSPP bt;
 
     @Override
@@ -85,7 +86,8 @@ public class BluetoothActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(), "악보모드o", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    if (musicPlayActivity != null) {
+                    //if (musicPlayActivity != null) {
+                    if (activity != null) {
                         File file;
                         if (message.contains("||")) {
                             String[] splits = message.split("\\|\\|");
@@ -126,7 +128,8 @@ public class BluetoothActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(), "노래시작", Toast.LENGTH_SHORT).show();
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
-                        musicPlayActivity.initVpang(fileUri.getUri(), fileUri.toString());
+                        //musicPlayActivity.initVpang(fileUri.getUri(), fileUri.toString());
+                        activity.initWithStartMidiFile(fileUri.getUri(), fileUri.toString());
                     } else {
                         Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
                     }

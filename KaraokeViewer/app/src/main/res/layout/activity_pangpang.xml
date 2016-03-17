@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_song_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.karaokepang.View.CustomTextView
+            android:id="@+id/tv_songName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+        <com.karaokepang.View.CustomTextView
+            android:id="@+id/tv_composer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="50sp" />
+
+        <com.karaokepang.View.CustomTextView
+            android:id="@+id/tv_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="50sp" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/camera_layout"
@@ -27,4 +60,4 @@
         android:clickable="false"
         android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>
