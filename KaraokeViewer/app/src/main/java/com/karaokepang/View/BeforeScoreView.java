@@ -136,7 +136,6 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
         alphaSeconds = new ArrayList<>();
         millisToBpm = new HashMap<>();
 
-        //this.setBackgroundColor(Color.WHITE);
     }
 
     public void setFileUri(Uri uri) {
@@ -167,7 +166,6 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
 
                 if (event.toString().contains("TrackName") &&
                         event.toString().toLowerCase().contains("kasa")) {
-                    //renderTracks.add(midi.getTracks().get(i));
                     lyricsTrack = midi.getTracks().get(i);
                 }
             }

@@ -27,14 +27,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by clogic on 16. 3. 17..
  */
 @EActivity
 public class PlayActivity extends BluetoothActivity {
+
+    private ActivityController activityController = ActivityController.getInstance();
 
     protected MediaPlayer player = new MediaPlayer();
     protected MidiFile midifile;
@@ -44,6 +48,8 @@ public class PlayActivity extends BluetoothActivity {
     protected List<String> ksaLyricsArray = new ArrayList<>();
     protected StringBuilder ksaLyrics;
 
+    private Map<Float, Float> millisToBpm = new HashMap<>();
+
     @ViewById(R.id.layout_song_name) LinearLayout layoutSongName;
     @ViewById(R.id.tv_songName) CustomTextView tv_songName;
     @ViewById(R.id.tv_composer) CustomTextView tv_composerName;
@@ -52,6 +58,12 @@ public class PlayActivity extends BluetoothActivity {
     @Override
     public void afterViews() {
         super.afterViews();
+    }
+
+    public void initWithStartMidiFile(Uri uri) {
+        initMidiFile(uri);
+        String songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
+        play(songNumber);
     }
 
     public void initMidiFile(Uri uri) {
@@ -156,17 +168,19 @@ public class PlayActivity extends BluetoothActivity {
                             break;
                         }
                     }
+                }
 
-                    if(eng.length() > 0) {
-                        ((com.karaokepang.Midi.event.meta.Lyrics) event).setLyric(String.valueOf(nowCharacter));
-                    } else {
-                        ((com.karaokepang.Midi.event.meta.Lyrics) event).setLyric(eng);
-                    }
-                    j++;
-                    if(j >= ksaLyricsArray.get(i).length()) {
-                        i++;
-                        j=0;
-                    }
+                if(eng.length() > 0) {
+                    ((com.karaokepang.Midi.event.meta.Lyrics) event).setLyric(eng);
+                    continue;
+                }
+
+                ((com.karaokepang.Midi.event.meta.Lyrics) event).setLyric(String.valueOf(nowCharacter));
+
+                j++;
+                if(j >= ksaLyricsArray.get(i).length()) {
+                    i++;
+                    j=0;
                 }
             }
         } catch (Exception e) {
@@ -179,8 +193,12 @@ public class PlayActivity extends BluetoothActivity {
         tv_singer.setText(MidiUtil.getSinger(musicFile));
     }
 
-    public void play() {
+    public void play(String songNumber) {
+        if (activityController.getPangPangSelectActivity() != null) {
+            activityController.getPangPangSelectActivity().startRecord(songNumber);
+        }
         player.start();
+        tickCounter();
     }
 
     public void stop() {
@@ -189,6 +207,13 @@ public class PlayActivity extends BluetoothActivity {
 
     @Background
     public void tickCounter() {
-        long currentMillis = System.currentTimeMillis();
+        long beforePosition = player.getCurrentPosition();
+        int term = 32;
+
+        while (true) {
+            if(player.getCurrentPosition() - beforePosition > term) {
+
+            }
+        }
     }
 }

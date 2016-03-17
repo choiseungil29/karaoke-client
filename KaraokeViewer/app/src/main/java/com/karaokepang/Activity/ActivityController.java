@@ -51,4 +51,21 @@ public class ActivityController {
     public void setDuetActivity(DuetActivity duetActivity) {
         this.duetActivity = duetActivity;
     }
+
+    public boolean isPangSelectMode() {
+        return pangPangSelectActivity != null && duetSelectActivity == null;
+    }
+
+    public boolean isDuetSelectMode() {
+        return pangPangSelectActivity == null && duetSelectActivity != null;
+    }
+
+    public boolean isPangMode() {
+        return pangPangActivity != null && duetActivity == null;
+    }
+
+    public boolean isDuetMode() {
+        return pangPangActivity == null && duetActivity != null;
+    }
+
 }
