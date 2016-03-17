@@ -41,12 +41,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.DeviceListActivity_"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
+            android:name=".Activity.DeviceListActivity_" />
         <activity android:name=".Activity.SelectActivity_" />
         <activity android:name=".Activity.DuetSelectActivity_" />
         <activity android:name=".Activity.PangPangSelectActivity_" />
-        <activity android:name=".Activity.PangPangActivity_" />
+        <activity
+            android:name=".Activity.PangPangActivity_"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".Activity.MusicPlayActivity_"
             android:screenOrientation="landscape" />

@@ -136,10 +136,6 @@ public class BluetoothActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(), "노래시작", Toast.LENGTH_SHORT).show();
                         Uri uri = Uri.parse(file.getAbsolutePath());
                         FileUri fileUri = new FileUri(uri, file.getName());
-                        //musicPlayActivity.initVpang(fileUri.getUri(), fileUri.toString());
-//                        activity.initWithStartMidiFile(fileUri.getUri(), fileUri.toString());
-
-
                         if (activityController.getPangPangSelectActivity() == null && activityController.getDuetSelectActivity() != null) {
                             //duet
                         } else if (activityController.getPangPangSelectActivity() != null && activityController.getDuetSelectActivity() == null) {

@@ -22,6 +22,7 @@ import java.io.IOException;
 @EActivity
 public class PlayActivity extends BluetoothActivity {
 
+    private ActivityController activityController = ActivityController.getInstance();
     MediaPlayer player = new MediaPlayer();
 
     @ViewById(R.id.layout_song_name)
@@ -56,11 +57,17 @@ public class PlayActivity extends BluetoothActivity {
         tv_singer.setText(MidiUtil.getSinger(musicFile));
     }
 
-    public void play() {
+    public void play(String songNumber) {
         player.start();
+        if (activityController.getPangPangActivity() != null) {
+            activityController.getPangPangSelectActivity().startRecord(songNumber);
+        }
     }
 
     public void stop() {
         player.stop();
+        if (activityController.getPangPangActivity() != null) {
+            activityController.getPangPangSelectActivity().stopRecord(true);
+        }
     }
 }
