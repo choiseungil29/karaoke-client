@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
@@ -57,13 +58,11 @@ public class BluetoothActivity extends BaseActivity {
                     intent.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
                     startActivity(intent);
                     bt.send(Keys.SendData.MODE_VPANG, true);
-                    Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
                 } else if (message.equals(Keys.SendData.MODE_DUET)) {
                     Intent intent = new Intent(getApplicationContext(), DuetSelectActivity_.class);
                     intent.putExtra(Keys.MODE, Keys.Mode.DUET);
                     bt.send(Keys.SendData.MODE_DUET, true);
                     startActivity(intent);
-                    Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
                 } else if (message.equals(Keys.SendData.MODE_HOME)) {
                     bt.send(Keys.SendData.MODE_HOME, true);
                     if (activityController.isDuetSelectMode()) {
@@ -71,8 +70,6 @@ public class BluetoothActivity extends BaseActivity {
                     } else if (activityController.isPangSelectMode()) {
                         activityController.getPangPangSelectActivity().finish();
                     }
-                    Log.e("kkk", "pangpangSelect A = " + activityController.getPangPangSelectActivity());
-                    Log.e("kkk", "duetSelect A = " + activityController.getDuetSelectActivity());
                 } else if (message.equals(Keys.SendData.MODE_AUDITION)) {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
@@ -97,7 +94,6 @@ public class BluetoothActivity extends BaseActivity {
                             String[] splits = message.split("\\|\\|");
                             if (splits.length != 0) {
                                 if (splits[1].equals("0")) {
-                                    Log.e("kkk", "0번째 bg2");
                                     activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
                                 } else if (splits[1].equals("1")) {
                                     activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");

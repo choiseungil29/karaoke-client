@@ -47,11 +47,11 @@
         <activity
             android:name=".Activity.PangPangActivity_"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent" />
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
             android:name=".Activity.DuetActivity_"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Holo.Dialog" />
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
             android:name=".Activity.MusicPlayActivity_"
             android:screenOrientation="landscape" />

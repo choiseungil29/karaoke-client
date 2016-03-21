@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <LinearLayout
@@ -37,16 +37,17 @@
     </LinearLayout>
 
     <com.karaokepang.View.LyricsTextView_
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
         android:id="@+id/ltv_lyrics"
-        android:textSize="60sp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:textSize="110sp" />
 
     <com.karaokepang.View.ScoreView_
+        android:id="@+id/sv_score"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/ltv_lyrics"
-        android:id="@+id/sv_score" />
+        android:layout_above="@id/ltv_lyrics" />
 
 </RelativeLayout>

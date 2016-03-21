@@ -56,7 +56,6 @@ public class LyricsTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         Logger.i("call on draw : " + bottomLyricsWidth);
-
         Paint paint = getPaint();
         paint.setTextSize(getTextSize());
         paint.setStrokeWidth(10);
@@ -85,12 +84,12 @@ public class LyricsTextView extends TextView {
 
     public void initLyrics(List<Lyric> lyrics) {
         String parent = lyrics.get(0).getParent();
-        int i=0;
+        int i = 0;
         List<Lyric> top = new ArrayList<>();
         List<Lyric> bot = new ArrayList<>();
-        for(Lyric lyric : lyrics) {
-            if(!lyric.getParent().equals(parent)) {
-                if(i%2 == 0) {
+        for (Lyric lyric : lyrics) {
+            if (!lyric.getParent().equals(parent)) {
+                if (i % 2 == 0) {
                     topLyrics.add(top);
                     top = new ArrayList<>();
                 } else {
@@ -100,7 +99,7 @@ public class LyricsTextView extends TextView {
                 parent = lyric.getParent();
                 i++;
             }
-            if(i%2 == 0) {
+            if (i % 2 == 0) {
                 top.add(lyric);
             } else {
                 bot.add(lyric);
@@ -110,14 +109,14 @@ public class LyricsTextView extends TextView {
 
     @Background
     public void update(float tick) {
-        for(int i=0; i< topLyrics.size()-1; i++) {
-            if(tick > bottomLyrics.get(i).get(0).getEndTick()) {
+        for (int i = 0; i < topLyrics.size() - 1; i++) {
+            if (tick > bottomLyrics.get(i).get(0).getEndTick()) {
                 topIdx = i + 1;
             }
         }
 
-        for(int i=0; i< bottomLyrics.size()-1; i++) {
-            if(tick > topLyrics.get(i+1).get(0).getEndTick()) {
+        for (int i = 0; i < bottomLyrics.size() - 1; i++) {
+            if (tick > topLyrics.get(i + 1).get(0).getEndTick()) {
                 bottomIdx = i + 1;
             }
         }
@@ -150,12 +149,12 @@ public class LyricsTextView extends TextView {
                 getPaint().getTextBounds(lastLyric.getText(), 0, lastLyric.getText().length(), currentLetterRect);
 
                 int spaceCount = 0;
-                for(int i=0; i<lastLyric.getParent().length(); i++) {
-                    if(sb.toString().length() >= i) {
+                for (int i = 0; i < lastLyric.getParent().length(); i++) {
+                    if (sb.toString().length() >= i) {
                         break;
                     }
 
-                    if(lastLyric.getParent().charAt(i - spaceCount) != sb.toString().charAt(i)) {
+                    if (lastLyric.getParent().charAt(i - spaceCount) != sb.toString().charAt(i)) {
                         spaceCount++;
                     }
                 }

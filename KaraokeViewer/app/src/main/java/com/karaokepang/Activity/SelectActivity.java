@@ -2,13 +2,19 @@ package com.karaokepang.Activity;
 
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.karaokepang.R;
 import com.karaokepang.Util.FilePath;
+import com.karaokepang.Util.MyVideoView;
 import com.karaokepang.camera.CameraPreview;
 
 import org.androidannotations.annotations.EActivity;
@@ -18,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by clogic on 16. 3. 17..
@@ -25,13 +32,14 @@ import java.util.Locale;
 @EActivity
 public class SelectActivity extends BluetoothActivity {
 
-
     public ActivityController activityController = ActivityController.getInstance();
 
     private Camera camera;
-    private CameraPreview preview;
+    public CameraPreview preview;
     private MediaRecorder recorder;
 
+    @ViewById(R.id.vv_background)
+    VideoView videoView;
     @ViewById(R.id.camera_layout)
     RelativeLayout layoutCamera;
     @ViewById(R.id.textView_song_selected)
@@ -46,6 +54,45 @@ public class SelectActivity extends BluetoothActivity {
         preview = new CameraPreview(getApplicationContext(), camera);
         preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
+    }
+    public void setDuetCameraPreView() {
+        preview = new CameraPreview(getApplicationContext(), camera);
+        int width = getWindowManager().getDefaultDisplay().getWidth() / 2;
+        preview.setLayoutParams(new RelativeLayout.LayoutParams(width, (int) (width * 0.56)));
+        layoutCamera.addView(preview);
+    }
+
+    public void setRandomVideoSource() {
+        String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
+        String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
+        videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
+    }
+
+    private String[] getFileList(String strPath) {
+        File fileRoot = new File(strPath);
+        if (!fileRoot.isDirectory())
+            return null;
+        return fileRoot.list();
+    }
+
+    public void setVideoView() {
+        videoView.setClickable(false);
+        videoView.setFocusable(false);
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                videoView.resume();
+            }
+        });
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+                mp.setVolume(0, 0);
+                videoView.start();
+            }
+        });
+        videoView.start();
     }
 
     public int findBackFacingCamera() {
@@ -97,6 +144,7 @@ public class SelectActivity extends BluetoothActivity {
                 try {
                     recorder.start();
                     Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
+                    activityController.getDuetSelectActivity().layoutPreiew.setVisibility(LinearLayout.VISIBLE);
                 } catch (final Exception ex) {
                     ex.printStackTrace();
                 }

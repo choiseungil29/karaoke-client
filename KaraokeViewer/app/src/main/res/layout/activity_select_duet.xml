@@ -11,6 +11,30 @@
         android:background="@drawable/background_musicsheet"
         android:clickable="false" />
 
+    <LinearLayout
+        android:id="@+id/layout_preview"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="280dp"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <VideoView
+            android:id="@+id/vv_background"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="false" />
+
+        <RelativeLayout
+            android:id="@+id/camera_layout"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <com.karaokepang.View.BMJUATextView
         android:id="@+id/textView_song_selected"
         android:layout_width="match_parent"
@@ -21,22 +45,5 @@
         android:textColor="#000"
         android:textSize="120sp"
         android:textStyle="bold" />
-
-    <VideoView
-        android:id="@+id/vv_background_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:clickable="false" />
-
-    <RelativeLayout
-        android:id="@+id/camera_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
-
-
 
 </RelativeLayout>

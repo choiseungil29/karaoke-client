@@ -19,8 +19,6 @@ import java.util.Random;
 @EActivity(R.layout.activity_select_pangpang)
 public class PangPangSelectActivity extends SelectActivity {
 
-    @ViewById(R.id.vv_background)
-    MyVideoView videoView;
 
     @Override
     public void afterViews() {
@@ -33,38 +31,6 @@ public class PangPangSelectActivity extends SelectActivity {
     }
 
 
-    private void setRandomVideoSource() {
-        String[] fileList = getFileList(FilePath.FILE_PATH_VPANGBG);
-        String randomVideoFileName = fileList[new Random().nextInt(fileList.length)];
-        videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG + randomVideoFileName);
-    }
-
-    private String[] getFileList(String strPath) {
-        File fileRoot = new File(strPath);
-        if (!fileRoot.isDirectory())
-            return null;
-        return fileRoot.list();
-    }
-
-    public void setVideoView() {
-        videoView.setClickable(false);
-        videoView.setFocusable(false);
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                videoView.resume();
-            }
-        });
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(true);
-                mp.setVolume(0, 0);
-                videoView.start();
-            }
-        });
-        videoView.start();
-    }
 
     @Override
     protected void onResume() {
