@@ -63,23 +63,23 @@ public class LyricsTextView extends TextView {
         paint.setTypeface(font);
         paint.setColor(Color.BLACK);
 
-        canvas.drawText(topLyrics.get(topIdx).get(0).getParent(), getWidth() / 4, getTextSize(), paint);
-        canvas.drawText(bottomLyrics.get(bottomIdx).get(0).getParent(), getWidth() / 2 + getWidth() / 8, getTextSize() * 2, paint);
+        canvas.drawText(topLyrics.get(topIdx).get(0).getParent(), getWidth() / 3, getTextSize(), paint);
+        canvas.drawText(bottomLyrics.get(bottomIdx).get(0).getParent(), getWidth() / 2, getTextSize() * 2, paint);
 
         getPaint().setStyle(Paint.Style.FILL);
         getPaint().setColor(Color.parseColor("#ff7f50"));
 
         {
             canvas.save();
-            canvas.clipRect(0, 0, getWidth() / 4 + topLyricsWidth, 10000);
-            canvas.drawText(topLyrics.get(topIdx).get(0).getParent(), getWidth() / 4, getTextSize(), paint);
+            canvas.clipRect(0, 0, getWidth() / 3 + topLyricsWidth, 10000);
+            canvas.drawText(topLyrics.get(topIdx).get(0).getParent(), getWidth() / 3, getTextSize(), paint);
         }
 
         canvas.restore();
 
         {
-            canvas.clipRect(0, 0, getWidth() / 2 + getWidth() / 8 + bottomLyricsWidth, 10000);
-            canvas.drawText(bottomLyrics.get(bottomIdx).get(0).getParent(), getWidth() / 2 + getWidth() / 8, getTextSize() * 2, paint);
+            canvas.clipRect(0, 0, getWidth() / 2 + bottomLyricsWidth, 10000);
+            canvas.drawText(bottomLyrics.get(bottomIdx).get(0).getParent(), getWidth() / 2, getTextSize() * 2, paint);
         }
     }
 
