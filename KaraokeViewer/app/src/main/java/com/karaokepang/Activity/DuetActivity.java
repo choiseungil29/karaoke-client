@@ -2,6 +2,7 @@ package com.karaokepang.Activity;
 
 import android.net.Uri;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.karaokepang.R;
 import com.karaokepang.View.ScoreView;
@@ -27,6 +28,8 @@ public class DuetActivity extends PlayActivity {
     public void afterViews() {
         super.afterViews();
         activityController.setDuetActivity(this);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
         initMidiFileWithStart(midiUri);
     }
@@ -40,6 +43,6 @@ public class DuetActivity extends PlayActivity {
     @Override
     protected void draw(float tick) {
         super.draw(tick);
-        sv_score.draw();
+        //sv_score.draw();
     }
 }
