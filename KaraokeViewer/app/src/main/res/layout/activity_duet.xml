@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.karaokepang.View.ScoreView_
-        android:id="@+id/sv_score"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <LinearLayout
         android:id="@+id/layout_song_name"
         android:layout_width="match_parent"
@@ -17,7 +12,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.karaokepang.View.CustomTextView
+        <com.karaokepang.View.CustomTextView_
             android:id="@+id/tv_songName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,19 +20,32 @@
             android:textSize="100sp"
             android:textStyle="bold" />
 
-        <com.karaokepang.View.CustomTextView
+        <com.karaokepang.View.CustomTextView_
             android:id="@+id/tv_composer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000"
             android:textSize="50sp" />
 
-        <com.karaokepang.View.CustomTextView
+        <com.karaokepang.View.CustomTextView_
             android:id="@+id/tv_singer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000"
             android:textSize="50sp" />
     </LinearLayout>
+
+    <com.karaokepang.View.LyricsTextView_
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:id="@+id/ltv_lyrics"
+        android:textSize="60sp"
+        android:layout_alignParentBottom="true"/>
+
+    <com.karaokepang.View.ScoreView_
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ltv_lyrics"
+        android:id="@+id/sv_score" />
 
 </RelativeLayout>

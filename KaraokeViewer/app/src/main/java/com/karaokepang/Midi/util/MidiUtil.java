@@ -16,6 +16,7 @@
 
 package com.karaokepang.Midi.util;
 
+import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.View.BeforeScoreView;
 
 import java.io.BufferedReader;
@@ -54,6 +55,14 @@ public class MidiUtil
     public static double msToTicks(long ms, float bpm, int ppq)
     {
         return msToTicks(ms, bpmToMpqn(bpm), ppq);
+    }
+
+    public static double millisToTick(long millis, Tempo t) {
+        return t.getBpm() / 60 * MidiInfo.resolution * millis / 1000;
+    }
+
+    public static float tickToMillis(float tick, Tempo t) {
+        return tick / t.getBpm();
     }
 
     public static int bpmToMpqn(float bpm)

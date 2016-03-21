@@ -19,27 +19,27 @@ public class DuetActivity extends PlayActivity {
 
     private ActivityController activityController = ActivityController.getInstance();
     private Uri midiUri;
-    @ViewById(R.id.sv_score) ScoreView sv_score;
 
+    @ViewById(R.id.sv_score)
+    ScoreView sv_score;
 
     @Override
     public void afterViews() {
         super.afterViews();
         activityController.setDuetActivity(this);
         midiUri = getIntent().getData();
-        activityController.setDuetActivity(this);
-        initWithStartMidiFile(midiUri);
-//        initMidiFile(midiUri);
+        initMidiFileWithStart(midiUri);
     }
 
-//    public void initWithStartMidiFile(Uri uri) {
-//        initMidiFile(uri);
-//        String songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
-//        play(songNumber);
-//    }
-//
-//    @Override
-//    public void initMidiFile(Uri uri) {
-//        super.initMidiFile(uri);
-//    }
+    @Override
+    protected void update(float tick) {
+        super.update(tick);
+        sv_score.update(tick);
+    }
+
+    @Override
+    protected void draw(float tick) {
+        super.draw(tick);
+        sv_score.draw();
+    }
 }

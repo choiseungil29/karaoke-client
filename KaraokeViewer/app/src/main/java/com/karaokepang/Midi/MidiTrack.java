@@ -29,14 +29,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
-public class MidiTrack
-{
+public class MidiTrack {
     private static final boolean VERBOSE = false;
 
-    public static final byte[] IDENTIFIER = { 'M', 'T', 'r', 'k' };
+    public static final byte[] IDENTIFIER = {'M', 'T', 'r', 'k'};
 
     private int mSize;
     private boolean mSizeNeedsRecalculating;
@@ -45,8 +46,7 @@ public class MidiTrack
 
     private TreeSet<MidiEvent> mEvents;
 
-    public static MidiTrack createTempoTrack()
-    {
+    public static MidiTrack createTempoTrack() {
         MidiTrack T = new MidiTrack();
 
         T.insertEvent(new TimeSignature());
@@ -55,8 +55,7 @@ public class MidiTrack
         return T;
     }
 
-    public MidiTrack()
-    {
+    public MidiTrack() {
         mEvents = new TreeSet<>();
         mSize = 0;
         mSizeNeedsRecalculating = false;
@@ -64,56 +63,49 @@ public class MidiTrack
         mEndOfTrackDelta = 0;
     }
 
-    public MidiTrack(InputStream in) throws IOException
-    {
+    public MidiTrack(InputStream in) throws IOException {
         this();
 
         byte[] buffer = new byte[4];
         in.read(buffer);
 
-        if(!MidiUtil.bytesEqual(buffer, IDENTIFIER, 0, 4))
-        {
+        if (!MidiUtil.bytesEqual(buffer, IDENTIFIER, 0, 4)) {
             System.err.println("Track identifier did not match MTrk!");
             return;
         }
 
         in.read(buffer);
         mSize = MidiUtil.bytesToInt(buffer, 0, 4);
-        
+
         buffer = new byte[mSize];
         in.read(buffer);
-        
+
         this.readTrackData(buffer);
     }
-    
-    private void readTrackData(byte[] data) throws IOException
-    {
+
+    private void readTrackData(byte[] data) throws IOException {
         InputStream in = new ByteArrayInputStream(data);
 
         long totalTicks = 0;
-        
-        while(in.available() > 0)
-        {
+
+        while (in.available() > 0) {
             VariableLengthInt delta = new VariableLengthInt(in);
             totalTicks += delta.getValue();
 
             MidiEvent E = MidiEvent.parseEvent(totalTicks, delta.getValue(), in);
-            if(E == null)
-            {
+            if (E == null) {
                 System.out.println("Event skipped!");
                 continue;
             }
 
-            if(VERBOSE)
-            {
+            if (VERBOSE) {
                 System.out.println(E);
             }
 
             // Not adding the EndOfTrack event here allows the track to be
             // edited
             // after being read in from file.
-            if(E.getClass().equals(EndOfTrack.class))
-            {
+            if (E.getClass().equals(EndOfTrack.class)) {
                 mEndOfTrackDelta = E.getDelta();
                 break;
             }
@@ -121,29 +113,23 @@ public class MidiTrack
         }
     }
 
-    public TreeSet<MidiEvent> getEvents()
-    {
+    public TreeSet<MidiEvent> getEvents() {
         return mEvents;
     }
 
-    public int getEventCount()
-    {
+    public int getEventCount() {
         return mEvents.size();
     }
 
-    public int getSize()
-    {
-        if(mSizeNeedsRecalculating)
-        {
+    public int getSize() {
+        if (mSizeNeedsRecalculating) {
             recalculateSize();
         }
         return mSize;
     }
 
-    public long getLengthInTicks()
-    {
-        if(mEvents.size() == 0)
-        {
+    public long getLengthInTicks() {
+        if (mEvents.size() == 0) {
             return 0;
         }
 
@@ -151,32 +137,26 @@ public class MidiTrack
         return E.getTick();
     }
 
-    public long getEndOfTrackDelta()
-    {
+    public long getEndOfTrackDelta() {
         return mEndOfTrackDelta;
     }
 
-    public void setEndOfTrackDelta(long delta)
-    {
+    public void setEndOfTrackDelta(long delta) {
         mEndOfTrackDelta = delta;
     }
 
-    public void insertNote(int channel, int pitch, int velocity, long tick, long duration)
-    {
+    public void insertNote(int channel, int pitch, int velocity, long tick, long duration) {
         insertEvent(new NoteOn(tick, channel, pitch, velocity));
         insertEvent(new NoteOn(tick + duration, channel, pitch, 0));
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void insertEvent(MidiEvent newEvent)
-    {
-        if(newEvent == null)
-        {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void insertEvent(MidiEvent newEvent) {
+        if (newEvent == null) {
             return;
         }
 
-        if(mClosed)
-        {
+        if (mClosed) {
             System.err.println("Error: Cannot add an event to a closed track.");
             return;
         }
@@ -185,8 +165,7 @@ public class MidiTrack
 
         // floor() and ceiling() are not supported on Android before API Level 9
         // (Gingerbread)
-        try
-        {
+        try {
             Class treeSet = Class.forName("java.util.TreeSet");
             Method floor = treeSet.getMethod("floor", Object.class);
             Method ceiling = treeSet.getMethod("ceiling", Object.class);
@@ -194,18 +173,14 @@ public class MidiTrack
             prev = (MidiEvent) floor.invoke(mEvents, newEvent);
             next = (MidiEvent) ceiling.invoke(mEvents, newEvent);
 
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             // methods are not supported - must perform linear search
             Iterator<MidiEvent> it = mEvents.iterator();
 
-            while(it.hasNext())
-            {
+            while (it.hasNext()) {
                 next = it.next();
 
-                if(next.getTick() > newEvent.getTick())
-                {
+                if (next.getTick() > newEvent.getTick()) {
                     break;
                 }
 
@@ -219,44 +194,35 @@ public class MidiTrack
 
         // Set its delta time based on the previous event (or itself if no
         // previous event exists)
-        if(prev != null)
-        {
+        if (prev != null) {
             newEvent.setDelta(newEvent.getTick() - prev.getTick());
-        }
-        else
-        {
+        } else {
             newEvent.setDelta(newEvent.getTick());
         }
 
         // Update the next event's delta time relative to the new event.
-        if(next != null)
-        {
+        if (next != null) {
             next.setDelta(next.getTick() - newEvent.getTick());
         }
 
         mSize += newEvent.getSize();
 
-        if(newEvent.getClass().equals(EndOfTrack.class))
-        {
-            if(next != null)
-            {
+        if (newEvent.getClass().equals(EndOfTrack.class)) {
+            if (next != null) {
                 throw new IllegalArgumentException("Attempting to insert EndOfTrack before an existing event. Use closeTrack() when finished with MidiTrack.");
             }
             mClosed = true;
         }
     }
 
-    public boolean removeEvent(MidiEvent E)
-    {
+    public boolean removeEvent(MidiEvent E) {
         Iterator<MidiEvent> it = mEvents.iterator();
         MidiEvent prev = null, curr = null, next = null;
 
-        while(it.hasNext())
-        {
+        while (it.hasNext()) {
             next = it.next();
 
-            if(E.equals(curr))
-            {
+            if (E.equals(curr)) {
                 break;
             }
 
@@ -265,35 +231,28 @@ public class MidiTrack
             next = null;
         }
 
-        if(next == null)
-        {
+        if (next == null) {
             // Either the event was not found in the track,
             // or this is the last event in the track.
             // Either way, we won't need to update any delta times
             return mEvents.remove(curr);
         }
 
-        if(!mEvents.remove(curr))
-        {
+        if (!mEvents.remove(curr)) {
             return false;
         }
 
-        if(prev != null)
-        {
+        if (prev != null) {
             next.setDelta(next.getTick() - prev.getTick());
-        }
-        else
-        {
+        } else {
             next.setDelta(next.getTick());
         }
         return true;
     }
 
-    public void closeTrack()
-    {
+    public void closeTrack() {
         long lastTick = 0;
-        if(mEvents.size() > 0)
-        {
+        if (mEvents.size() > 0) {
             MidiEvent last = mEvents.last();
             lastTick = last.getTick();
         }
@@ -304,30 +263,25 @@ public class MidiTrack
     /**
      * print log of all events
      */
-    public void dumpEvents()
-    {
+    public void dumpEvents() {
         Iterator<MidiEvent> it = mEvents.iterator();
-        while(it.hasNext())
-        {
+        while (it.hasNext()) {
             System.out.println(it.next());
         }
     }
 
-    private void recalculateSize()
-    {
+    private void recalculateSize() {
         mSize = 0;
 
         Iterator<MidiEvent> it = mEvents.iterator();
         MidiEvent last = null;
-        while(it.hasNext())
-        {
+        while (it.hasNext()) {
             MidiEvent E = it.next();
             mSize += E.getSize();
 
             // If an event is of the same type as the previous event,
             // no status byte is written.
-            if(last != null && !E.requiresStatusByte(last))
-            {
+            if (last != null && !E.requiresStatusByte(last)) {
                 mSize--;
             }
             last = E;
@@ -336,15 +290,12 @@ public class MidiTrack
         mSizeNeedsRecalculating = false;
     }
 
-    public void writeToFile(OutputStream out) throws IOException
-    {
-        if(!mClosed)
-        {
+    public void writeToFile(OutputStream out) throws IOException {
+        if (!mClosed) {
             closeTrack();
         }
 
-        if(mSizeNeedsRecalculating)
-        {
+        if (mSizeNeedsRecalculating) {
             recalculateSize();
         }
 
@@ -354,11 +305,9 @@ public class MidiTrack
         Iterator<MidiEvent> it = mEvents.iterator();
         MidiEvent lastEvent = null;
 
-        while(it.hasNext())
-        {
+        while (it.hasNext()) {
             MidiEvent event = it.next();
-            if(VERBOSE)
-            {
+            if (VERBOSE) {
                 System.out.println("Writing: " + event);
             }
 
@@ -366,5 +315,16 @@ public class MidiTrack
 
             lastEvent = event;
         }
+    }
+
+    public <T extends MidiEvent> List<T> getEvents(Class<T> types) {
+        List<T> list = new ArrayList<>();
+
+        for (MidiEvent event : getEvents()) {
+            if (event.getClass() == types) {
+                list.add((T) event);
+            }
+        }
+        return list;
     }
 }

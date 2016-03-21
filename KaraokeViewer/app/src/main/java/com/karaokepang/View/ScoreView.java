@@ -12,6 +12,7 @@ import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Util.Resources;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EView;
 
 /**
@@ -67,7 +68,11 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    public void callOnDraw() {
+    public void update(float tick) {
+
+    }
+
+    public void draw() {
         SurfaceHolder holder = getHolder();
         Canvas canvas = holder.lockCanvas();
         if (canvas == null) {

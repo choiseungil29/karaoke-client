@@ -2,17 +2,17 @@ package com.karaokepang.Midi.renderer;
 
 import android.graphics.Canvas;
 
-import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Midi.event.meta.MidiLyrics;
 
 /**
  * Created by clogic on 2015. 12. 31..
  */
 public class LyricSymbol extends Symbol {
 
-    Lyrics lyrics;
+    MidiLyrics midiLyrics;
 
-    public LyricSymbol(Lyrics lyrics) {
-        this.lyrics = lyrics;
+    public LyricSymbol(MidiLyrics midiLyrics) {
+        this.midiLyrics = midiLyrics;
     }
 
     @Override

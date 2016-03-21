@@ -1,14 +1,11 @@
 package com.karaokepang.Activity;
 
 import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 
 import com.karaokepang.R;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.WindowFeature;
 
 /**
@@ -27,6 +24,6 @@ public class PangPangActivity extends PlayActivity {
         activityController.setPangPangActivity(this);
         midiUri = getIntent().getData();
         activityController.setPangPangActivity(this);
-        initWithStartMidiFile(midiUri);
+        initMidiFileWithStart(midiUri);
     }
 }

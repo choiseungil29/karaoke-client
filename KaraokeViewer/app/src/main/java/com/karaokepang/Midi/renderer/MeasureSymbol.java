@@ -7,7 +7,7 @@ import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.NoteOn;
 import com.karaokepang.Midi.event.PitchBend;
 import com.karaokepang.Midi.event.meta.KeySignature;
-import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Midi.event.meta.MidiLyrics;
 import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.event.meta.TimeSignature;
 import com.karaokepang.Midi.renderer.midi.MidiSymbol;
@@ -160,8 +160,8 @@ public class MeasureSymbol extends Symbol {
                 pitchBendDelta = 0;
             }
             return null;
-        } else if (e instanceof Lyrics) {
-            LyricSymbol symbol = new LyricSymbol((Lyrics) e);
+        } else if (e instanceof MidiLyrics) {
+            LyricSymbol symbol = new LyricSymbol((MidiLyrics) e);
             lyricsList.add(symbol);
             return symbol;
         } else if (e instanceof PitchBend) {
@@ -262,7 +262,7 @@ public class MeasureSymbol extends Symbol {
         });
 
         for(LyricSymbol symbol : lyricsList) {
-            lyrics += symbol.lyrics.getLyric();
+            lyrics += symbol.midiLyrics.getLyric();
         }
 
         boolean isEightNote = false;

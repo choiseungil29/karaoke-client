@@ -100,9 +100,6 @@ public class OutlineTextView extends TextView {
 
         Rect completeRect = new Rect();
         Rect letterRect = new Rect();
-        Rect spaceRect = new Rect();
-
-        getPaint().getTextBounds(" ", 0, 1, spaceRect);
 
         try {
             getPaint().getTextBounds(builder.toString(), 0, i, completeRect);

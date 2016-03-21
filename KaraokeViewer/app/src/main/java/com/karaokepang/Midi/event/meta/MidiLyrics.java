@@ -16,9 +16,9 @@
 
 package com.karaokepang.Midi.event.meta;
 
-public class Lyrics extends TextualMetaEvent
+public class MidiLyrics extends TextualMetaEvent
 {
-    public Lyrics(long tick, long delta, String lyric)
+    public MidiLyrics(long tick, long delta, String lyric)
     {
         super(tick, delta, MetaEvent.LYRICS, lyric);
     }

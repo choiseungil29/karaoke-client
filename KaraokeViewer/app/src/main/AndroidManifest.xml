@@ -50,8 +50,7 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".Activity.DuetActivity_"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Activity.MusicPlayActivity_"
             android:screenOrientation="landscape" />

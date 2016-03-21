@@ -20,7 +20,7 @@ import android.widget.VideoView;
 import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.event.MidiEvent;
-import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Midi.event.meta.MidiLyrics;
 import com.karaokepang.Model.FileUri;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
@@ -262,10 +262,10 @@ public class MusicPlayActivity extends BaseActivity implements BeforeScoreView.M
     private void createLyrics() {
         tv_lyrics.lyricsArray = beforeScoreView.lyricsArray;
 
-        List<Lyrics> list = new ArrayList<>();
+        List<MidiLyrics> list = new ArrayList<>();
         for (MidiEvent event : beforeScoreView.lyricsTrack.getEvents()) {
-            if (event instanceof Lyrics) {
-                list.add((Lyrics) event);
+            if (event instanceof MidiLyrics) {
+                list.add((MidiLyrics) event);
             }
         }
 
@@ -275,7 +275,7 @@ public class MusicPlayActivity extends BaseActivity implements BeforeScoreView.M
         int i;
 
         for (i = 0; i < list.size(); i++) {
-            Lyrics event = list.get(i);
+            MidiLyrics event = list.get(i);
             if (!Util.filterLyricText(event)) {
                 continue;
             }

@@ -3,7 +3,7 @@ package com.karaokepang.Util;
 import android.content.Context;
 import android.util.TypedValue;
 
-import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Midi.event.meta.MidiLyrics;
 
 /**
  * Created by clogic on 2015. 12. 10..
@@ -19,7 +19,7 @@ public class Util {
      * @param event 가사 이벤트
      * @return 문제되는 텍스트가 있으면 false
      */
-    public static boolean filterLyricText(Lyrics event) {
+    public static boolean filterLyricText(MidiLyrics event) {
         if (event.getLyric().equals("\r")) {
             return false;
         }

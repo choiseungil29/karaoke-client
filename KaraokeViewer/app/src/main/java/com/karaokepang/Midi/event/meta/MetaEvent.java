@@ -95,7 +95,7 @@ public abstract class MetaEvent extends MidiEvent
                 case INSTRUMENT_NAME:
                     return new InstrumentName(tick, delta, text);
                 case LYRICS:
-                    return new Lyrics(tick, delta, text);
+                    return new MidiLyrics(tick, delta, text);
                 case MARKER:
                     return new Marker(tick, delta, text);
                 case CUE_POINT:

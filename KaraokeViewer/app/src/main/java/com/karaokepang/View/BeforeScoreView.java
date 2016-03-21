@@ -16,7 +16,7 @@ import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.NoteOn;
-import com.karaokepang.Midi.event.meta.Lyrics;
+import com.karaokepang.Midi.event.meta.MidiLyrics;
 import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.event.meta.TimeSignature;
 import com.karaokepang.Midi.renderer.KeySignatureSymbol;
@@ -224,15 +224,15 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
         try {
             while (lyricsIt.hasNext()) {
                 MidiEvent event = lyricsIt.next();
-                if (event instanceof Lyrics) {
+                if (event instanceof MidiLyrics) {
 
-                    if (((Lyrics) event).getLyric().equals("\r")) {
+                    if (((MidiLyrics) event).getLyric().equals("\r")) {
                         continue;
                     }
-                    if (((Lyrics) event).getLyric().equals("\n")) {
+                    if (((MidiLyrics) event).getLyric().equals("\n")) {
                         continue;
                     }
-                    if (((Lyrics) event).getLyric().equals("")) {
+                    if (((MidiLyrics) event).getLyric().equals("")) {
                         continue;
                     }
 
@@ -253,7 +253,7 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
                                 lyrics.charAt(lyricsIndex) != '\n' &&
                                 lyrics.charAt(lyricsIndex) != '\r' &&
                                 lyrics.charAt(lyricsIndex) != '^') {
-                            if (english.trim().length() < ((Lyrics) event).getLyric().trim().length()) {
+                            if (english.trim().length() < ((MidiLyrics) event).getLyric().trim().length()) {
                                 english += lyrics.charAt(lyricsIndex);
                                 lyricsIndex++;
                             } else {
@@ -262,11 +262,11 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
                         }
                     }
                     if (english.length() != 0) {
-                        ((Lyrics) event).setLyric(english);
+                        ((MidiLyrics) event).setLyric(english);
                         continue;
                     }
 
-                    ((Lyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)));
+                    ((MidiLyrics) event).setLyric(String.valueOf(lyrics.charAt(lyricsIndex)));
 
 
                     lyricsIndex++;
@@ -553,13 +553,6 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            ArrayList<String> list = new ArrayList<>();
-                            for (int i = 0; i < MEASURE_LIMIT; i++) {
-                                list.add(nowMeasures[measureIndex].get(i).lyrics);
-                            }
-
-                            Paint paint = new Paint();
-                            paint.setColor(Color.WHITE);
                         } else if (nowMeasure.endTicks <= tick) {
                             measureCount++;
                             if (measureCount >= measures.size()) {
@@ -571,6 +564,7 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
 
                     int term = 32;
                     try {
+                        // 현재 tick계산해서 가사 던져준다
                         if (player.getCurrentPosition() - currentMillis2 > term) {
                             tick = 0;
                             stack = 0;
