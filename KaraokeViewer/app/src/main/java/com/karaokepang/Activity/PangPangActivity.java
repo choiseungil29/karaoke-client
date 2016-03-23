@@ -2,6 +2,7 @@ package com.karaokepang.Activity;
 
 import android.net.Uri;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.karaokepang.R;
 
@@ -22,8 +23,15 @@ public class PangPangActivity extends PlayActivity {
     public void afterViews() {
         super.afterViews();
         activityController.setPangPangActivity(this);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
-        activityController.setPangPangActivity(this);
         initMidiFileWithStart(midiUri);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        activityController.setPangPangActivity(this);
     }
 }
