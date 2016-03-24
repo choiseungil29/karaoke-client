@@ -45,4 +45,10 @@ public class DuetActivity extends PlayActivity {
         super.draw(tick);
         //sv_score.draw();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        activityController.setDuetActivity(null);
+    }
 }
