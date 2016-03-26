@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.karaokepang.Model.Lyric;
+import com.karaokepang.Model.Lyrics;
 import com.karaokepang.Util.Logger;
 
 import org.androidannotations.annotations.AfterViews;
@@ -27,14 +28,8 @@ import java.util.List;
 public class LyricsTextView extends TextView {
     private Typeface font;
 
-    private float topLyricsWidth = 0.0f;
-    private float bottomLyricsWidth = 0.0f;
-
-    private List<List<Lyric>> topLyrics = new ArrayList<>();
-    private List<List<Lyric>> bottomLyrics = new ArrayList<>();
-
-    private int topIdx = 0;
-    private int bottomIdx = 0;
+    Lyrics top;
+    Lyrics bottom;
 
     public LyricsTextView(Context context) {
         this(context, null);
@@ -51,6 +46,10 @@ public class LyricsTextView extends TextView {
     @AfterViews
     public void afterViews() {
         font = Typeface.createFromAsset(getContext().getAssets(), "BMJUA_ttf.ttf");
+        top = new Lyrics();
+        bottom = new Lyrics();
+
+        this.setBackgroundColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -61,23 +60,15 @@ public class LyricsTextView extends TextView {
         paint.setTypeface(font);
         paint.setColor(Color.BLACK);
 
-        canvas.drawText(topLyrics.get(topIdx).get(0).getParent(), getWidth() / 4, getTextSize(), paint);
-        canvas.drawText(bottomLyrics.get(bottomIdx).get(0).getParent(), getWidth() / 2, getTextSize() * 2, paint);
-
-        getPaint().setStyle(Paint.Style.FILL);
-        getPaint().setColor(Color.parseColor("#ff7f50"));
-        {
-            canvas.save();
-            canvas.clipRect(0, 0, getWidth() / 4 + topLyricsWidth, 10000);
-            canvas.drawText(topLyrics.get(topIdx).get(0).getParent(), getWidth() / 4, getTextSize(), paint);
-        }
-
+        canvas.save();
+        //if(top.getIndex() < top.getLyrics().size()) {
+            drawLyrics(canvas, top, getWidth() / 4, getTextSize());
+        //}
         canvas.restore();
-
-        {
-            canvas.clipRect(0, 0, getWidth() / 2 + bottomLyricsWidth, 10000);
-            canvas.drawText(bottomLyrics.get(bottomIdx).get(0).getParent(), getWidth() / 2, getTextSize() * 2, paint);
-        }
+        //if(bottom.getIndex() < bottom.getLyrics().size()) {
+            drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
+        //}
+        canvas.restore();
     }
 
     public void initLyrics(List<Lyric> lyrics) {
@@ -88,10 +79,10 @@ public class LyricsTextView extends TextView {
         for (Lyric lyric : lyrics) {
             if (!lyric.getParent().equals(parent)) {
                 if (i % 2 == 0) {
-                    topLyrics.add(top);
+                    this.top.add(top);
                     top = new ArrayList<>();
                 } else {
-                    bottomLyrics.add(bot);
+                    this.bottom.add(bot);
                     bot = new ArrayList<>();
                 }
                 parent = lyric.getParent();
@@ -107,91 +98,61 @@ public class LyricsTextView extends TextView {
 
     @Background
     public void update(float tick) {
-        for (int i = 0; i < topLyrics.size() - 1; i++) {
-            if (tick > bottomLyrics.get(i).get(0).getEndTick()) {
-                topIdx = i + 1;
+        calculateLyricsIndex(tick, top);
+        calculateLyricsIndex(tick, bottom);
+
+        calculateLyricsWidth(tick, top);
+        calculateLyricsWidth(tick, bottom);
+    }
+
+    private void calculateLyricsIndex(float tick, Lyrics lyrics) {
+        for(int i=0; i<lyrics.getLyrics().size(); i++) {
+            if(tick >= lyrics.getLyrics().get(i).get(
+                    lyrics.getLyrics().get(i).size()-1).getEndTick()) {
+                lyrics.setIndex(i+1);
+                lyrics.setWidth(0);
             }
         }
+    }
 
-        for (int i = 0; i < bottomLyrics.size() - 1; i++) {
-            if (tick > topLyrics.get(i + 1).get(0).getEndTick()) {
-                bottomIdx = i + 1;
+    private void calculateLyricsWidth(float tick, Lyrics lyrics) {
+        List<Lyric> oneLine = lyrics.getLyrics().get(lyrics.getIndex());
+
+        int space = 0;
+        for(int i=0; i<oneLine.size(); i++) {
+            Lyric lyric = oneLine.get(i);
+            if(lyric.getParent().charAt(i + space) == ' ') {
+                space++;
+            }
+            if(tick >= lyric.getStartTick() &&
+                    tick <= lyric.getEndTick()) {
+                String text = lyric.getParent().substring(0, i + space);
+                StringBuilder textBuilder = new StringBuilder();
+                for(int j=0; j<i; j++) {
+                    textBuilder.append(oneLine.get(j).getText());
+                }
+                for(int j=0; j<space; j++) {
+                    textBuilder.append(" ");
+                }
+                String lastIndex = lyric.getParent().substring(i + space, i + lyric.getText().length() + space);
+                float widthPercent = (tick - lyric.getStartTick()) /
+                        (lyric.getEndTick() - lyric.getStartTick());
+                float textWidth = getPaint().measureText(text);
+                textWidth = getPaint().measureText(textBuilder.toString());
+                lyrics.setWidth(textWidth + ((int)getPaint().measureText(lastIndex)) * widthPercent);
             }
         }
+    }
 
-        {
-            StringBuilder sb = new StringBuilder();
-            Lyric lastLyric = null;
-            for (int i = 0; i < topLyrics.get(topIdx).size(); i++) {
-                Lyric lyric = topLyrics.get(topIdx).get(i);
+    private void drawLyrics(Canvas canvas, Lyrics lyrics, float x, float y) {
+        Paint paint = new Paint(getPaint());
+        canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, paint);
 
-                if (tick > lyric.getEndTick()) {
-                    sb.append(lyric.getText());
-                }
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.parseColor("#ff7f50"));
 
-                if (tick >= lyric.getStartTick() && tick < lyric.getEndTick()) {
-                    lastLyric = lyric;
-                }
-            }
-
-            if (lastLyric == null) {
-                topLyricsWidth = 0;
-            } else {
-
-                Rect fullRect = new Rect();
-                Rect currentLetterRect = new Rect();
-                Rect spaceRect = new Rect();
-
-                getPaint().getTextBounds(" ", 0, 1, spaceRect);
-                getPaint().getTextBounds(sb.toString(), 0, sb.length(), fullRect);
-                getPaint().getTextBounds(lastLyric.getText(), 0, lastLyric.getText().length(), currentLetterRect);
-
-                int spaceCount = 0;
-                for (int i = 0; i < lastLyric.getParent().length(); i++) {
-                    if (sb.toString().length() >= i) {
-                        break;
-                    }
-
-                    if (lastLyric.getParent().charAt(i - spaceCount) != sb.toString().charAt(i)) {
-                        spaceCount++;
-                    }
-                }
-
-                topLyricsWidth = fullRect.width() + currentLetterRect.width() *
-                        (tick - lastLyric.getStartTick()) / (lastLyric.getEndTick() - lastLyric.getStartTick()) +
-                        spaceRect.width() * spaceCount;
-            }
-
-        }
-
-        {
-            StringBuilder sb = new StringBuilder();
-            Lyric lastLyric = null;
-            for (int i = 0; i < bottomLyrics.get(bottomIdx).size(); i++) {
-                Lyric lyric = bottomLyrics.get(bottomIdx).get(i);
-
-                if (tick >= lyric.getEndTick()) {
-                    sb.append(lyric.getText());
-                }
-
-                if (tick >= lyric.getStartTick() && tick < lyric.getEndTick()) {
-                    lastLyric = lyric;
-                }
-            }
-
-            if (lastLyric == null) {
-                bottomLyricsWidth = 0;
-            } else {
-                Rect fullRect = new Rect();
-                Rect currentLetterRect = new Rect();
-
-                getPaint().getTextBounds(sb.toString(), 0, sb.length(), fullRect);
-                getPaint().getTextBounds(lastLyric.getText(), 0, lastLyric.getText().length(), currentLetterRect);
-
-                bottomLyricsWidth = fullRect.width() + currentLetterRect.width() *
-                        (tick - lastLyric.getStartTick()) / (lastLyric.getEndTick() - lastLyric.getStartTick());
-            }
-        }
+        canvas.clipRect(0, 0, x + lyrics.getWidth(), 10000);
+        canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, paint);
     }
 
     @UiThread

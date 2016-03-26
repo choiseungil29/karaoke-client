@@ -30,6 +30,11 @@ public class PangPangActivity extends PlayActivity {
     }
 
     @Override
+    protected void update(float tick) {
+
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         activityController.setPangPangActivity(this);

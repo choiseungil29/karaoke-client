@@ -14,6 +14,7 @@ import com.karaokepang.Midi.util.MidiUtil;
 import com.karaokepang.Model.Lyric;
 import com.karaokepang.Model.Lyrics;
 import com.karaokepang.R;
+import com.karaokepang.Util.Logger;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.LyricsTextView;
 
@@ -39,7 +40,7 @@ import java.util.List;
  * Created by clogic on 16. 3. 17..
  */
 @EActivity
-public class PlayActivity extends BluetoothActivity {
+public abstract class PlayActivity extends BluetoothActivity {
 
     private ActivityController activityController = ActivityController.getInstance();
 
@@ -117,6 +118,8 @@ public class PlayActivity extends BluetoothActivity {
             activityController.getDuetSelectActivity().startRecord(songNumber);
         }
         player.start();
+        Logger.i("play!!");
+        Logger.i("player play!");
         tickCounter();
         //draw();
         loop();
@@ -145,30 +148,11 @@ public class PlayActivity extends BluetoothActivity {
         }
     }
 
-    protected void update(float tick) {
-        ltv_lyrics.update(tick);
-    }
+    protected abstract void update(float tick);
 
     protected void draw(float tick) {
         ltv_lyrics.callOnDraw(tick);
     }
-
-    /*@Background
-    protected void callOnDraw() {
-        int term = 30;
-        long beforePosition = player.getCurrentPosition();
-
-        Logger.i("call on draw");
-
-        while (player.getCurrentPosition() < player.getDuration()) {
-            if(player.getCurrentPosition() - beforePosition <= term) {
-                continue;
-            }
-            beforePosition = player.getCurrentPosition();
-            ltv_lyrics.update(tick);
-            ltv_lyrics.callOnDraw(tick);
-        }
-    }*/
 
     @Background
     public void tickCounter() {
@@ -204,7 +188,9 @@ public class PlayActivity extends BluetoothActivity {
             Tempo lastTempo = tempos.get(i);
             tick += lastTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
 
-            this.tick = tick;
+            if(this.tick < tick) {
+                this.tick = tick;
+            }
         }
     }
 
@@ -363,6 +349,9 @@ public class PlayActivity extends BluetoothActivity {
                 while ((line = reader.readLine()) != null) {
                     if (count < 4) {
                         count++;
+                        continue;
+                    }
+                    if(line.equals("")) {
                         continue;
                     }
                     ksaLyricsArray.add(line);
