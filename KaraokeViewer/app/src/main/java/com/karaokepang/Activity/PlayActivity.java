@@ -78,6 +78,13 @@ public abstract class PlayActivity extends BluetoothActivity {
         play(songNumber);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Logger.i("destroy!");
+        player.reset();
+    }
+
     public void initMidiFile(Uri uri) {
         try {
             FileInputStream fis = new FileInputStream(uri.getPath());
