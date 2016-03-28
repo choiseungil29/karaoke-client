@@ -34,6 +34,7 @@ import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.BeforeScoreView;
 import com.karaokepang.camera.CameraPreview;
+import com.karaokepang.ftp.FtpServiceUp;
 
 import org.androidannotations.annotations.EActivity;
 
@@ -455,6 +456,7 @@ public class MusicPlayActivity extends BaseActivity implements BeforeScoreView.M
                 recorder.stop();
                 releaseMediaRecorder();
                 Toast.makeText(getApplicationContext(), "녹화종료", Toast.LENGTH_LONG).show();
+                new FtpServiceUp(fileName).execute();
             }
         }
     }

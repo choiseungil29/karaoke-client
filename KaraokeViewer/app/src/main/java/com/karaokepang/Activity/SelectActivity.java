@@ -4,8 +4,6 @@ import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,7 +12,6 @@ import android.widget.VideoView;
 
 import com.karaokepang.R;
 import com.karaokepang.Util.FilePath;
-import com.karaokepang.Util.MyVideoView;
 import com.karaokepang.camera.CameraPreview;
 
 import org.androidannotations.annotations.EActivity;
@@ -37,6 +34,7 @@ public class SelectActivity extends BluetoothActivity {
     private Camera camera;
     public CameraPreview preview;
     private MediaRecorder recorder;
+    public String fileName;
 
     @ViewById(R.id.vv_background)
     VideoView videoView;
@@ -55,6 +53,7 @@ public class SelectActivity extends BluetoothActivity {
         preview.setLayoutParams(new RelativeLayout.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 4, getWindowManager().getDefaultDisplay().getHeight() / 4));
         layoutCamera.addView(preview);
     }
+
     public void setDuetCameraPreView() {
         preview = new CameraPreview(getApplicationContext(), camera);
         int width = getWindowManager().getDefaultDisplay().getWidth() / 2;
@@ -167,7 +166,8 @@ public class SelectActivity extends BluetoothActivity {
 
         recorder.setVideoEncodingBitRate(1000000);
         //recorder.setVideoFrameRate(30);
-        recorder.setOutputFile(FilePath.FILE_PATH_VPANG + getNewFileName(songNumber) + ".mp4");
+        fileName = getNewFileName(songNumber);
+        recorder.setOutputFile(FilePath.FILE_PATH_VPANG + fileName + ".mp4");
         recorder.setMaxDuration(6000000 * 10);
         recorder.setMaxFileSize(300000000 * 20);
 

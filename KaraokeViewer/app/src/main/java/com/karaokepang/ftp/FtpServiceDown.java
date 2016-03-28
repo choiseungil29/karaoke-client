@@ -46,7 +46,7 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
             Logger.i("Start~~~~~~");
 
             //client.connect("192.168.0.13");
-            client.connect("1.212.161.18");
+            client.connect("mediapot.iptime.org");
             Logger.i("Connected to test.com...........");
 
             // 응답코드가 비정상일 경우 종료함
@@ -80,7 +80,6 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                         Log.e("kkk", "ftp result = " + result);
                     }
                 }
-
                 client.logout();
             }
         } catch (Exception e) {

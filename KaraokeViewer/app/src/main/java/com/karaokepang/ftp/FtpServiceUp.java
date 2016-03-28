@@ -1,12 +1,8 @@
 package com.karaokepang.ftp;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.karaokepang.Activity.MusicPlayActivity;
 import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 
@@ -20,12 +16,9 @@ import java.io.IOException;
 
 public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
-    private Activity activity;
-    private ProgressDialog progressDialog;
     private String fileName;
 
-    public FtpServiceUp(Activity activity, String fileName) {
-        this.activity = activity;
+    public FtpServiceUp(String fileName) {
         this.fileName = fileName;
     }
 
@@ -33,17 +26,16 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
         FTPClient client = null;
 
-        // 계정 로그인
         try {
             client = new FTPClient();
 
             client.setControlEncoding("euc-kr");
 
-            Logger.i("FTP Client Test Program");
+            Logger.i("======FTP Upload 시작===============");
             Logger.i("Start~~~~~~");
 
             //client.connect("192.168.0.13");
-            client.connect("1.212.161.18");
+            client.connect("mediapot.iptime.org");
             Logger.i("Connected to test.com...........");
 
             // 응답코드가 비정상일 경우 종료함
@@ -99,12 +91,12 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        Log.e("kkk","ftp upload start");
 //        progressDialog = ProgressDialog.show(activity, "", "영상 전송중 입니다", true);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-
         init();
         return null;
     }
@@ -112,8 +104,9 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Toast.makeText(activity, "영상 전송이 완료되었습니다", Toast.LENGTH_SHORT).show();
-        ((MusicPlayActivity) activity).deleteRecodingFile();
+        Log.d("kkk", "영상 전송이 완료되었습니다");
+//        Toast.makeText(activity, "영상 전송이 완료되었습니다", Toast.LENGTH_SHORT).show();
+//        ((MusicPlayActivity) activity).deleteRecodingFile();
 
 //        if (progressDialog != null && progressDialog.isShowing()) {
 //            progressDialog.dismiss();
