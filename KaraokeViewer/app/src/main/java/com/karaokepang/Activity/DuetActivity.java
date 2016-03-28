@@ -31,6 +31,7 @@ public class DuetActivity extends PlayActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
+        sv_score.initMidiFile(midiUri);
         initMidiFileWithStart(midiUri);
     }
 
