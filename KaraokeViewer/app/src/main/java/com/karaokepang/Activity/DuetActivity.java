@@ -44,7 +44,7 @@ public class DuetActivity extends PlayActivity {
     @Override
     protected void draw(float tick) {
         super.draw(tick);
-        //sv_score.draw();
+        sv_score.draw();
     }
 
     @Override
