@@ -179,34 +179,40 @@ public abstract class PlayActivity extends BluetoothActivity {
             if(player.getCurrentPosition() - beforePosition <= term) {
                 continue;
             }
-
-            beforePosition = player.getCurrentPosition();
             if(tempos == null || tempos.size() == 0) {
                 throw new RuntimeException("tempos size 0");
             }
 
-            HashMap<Long, Float> tempoTickToMillis = new HashMap<>();
-            for(Tempo t : tempos) {
-                tempoTickToMillis.put(t.getTick(), t.getTick() / t.getBpm() * 1000);
-            }
-
-            float tick = 0;
             long currentPosition = player.getCurrentPosition();
-            int i;
-            for(i=0; i<tempos.size()-1; i++) {
-                Tempo t = tempos.get(i);
-                float limitMillis = tempoTickToMillis.get(tempos.get(i + 1).getTick());
-                if(currentPosition > limitMillis - t.getTick()/t.getBpm() * 1000) {
-                    tick += t.getBpm() / 60 * MidiInfo.resolution * limitMillis / 1000;
-                    currentPosition -= limitMillis;
-                }
-            }
-            Tempo lastTempo = tempos.get(i);
-            tick += lastTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
+            if(tempos.size() == 1) {
+                float tick = 0;
+                Tempo lastTempo = tempos.get(0);
+                tick += lastTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
 
-            if(this.tick < tick) {
-                this.tick = tick;
+                if(this.tick < tick) {
+                    this.tick = tick;
+                }
+            } else if (tempos.size() == 2) {
+                Tempo firstTempo = tempos.get(0);
+                Tempo secondTempo = tempos.get(1);
+
+                float totalTick = 0;
+                long firstTempoMillis = (long) (secondTempo.getTick() / (firstTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
+                if(currentPosition < firstTempoMillis) {
+                    totalTick += firstTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
+                } else {
+                    currentPosition -= (secondTempo.getTick() / (firstTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
+                    totalTick += secondTempo.getTick();
+                    totalTick += secondTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
+                }
+                if(this.tick < totalTick) {
+                    this.tick = totalTick;
+                }
+            } else {
+                throw new RuntimeException("tempos size " + tempos.size());
             }
+
+            beforePosition = player.getCurrentPosition();
         }
     }
 
@@ -235,6 +241,10 @@ public abstract class PlayActivity extends BluetoothActivity {
             }
         }
         tempos = midifile.getTracks().get(0).getEvents(Tempo.class);
+        MidiTrack signTrack = midifile.getTracks().get(0);
+        for(MidiEvent e : signTrack.getEvents()) {
+            Logger.i("event : " + e.toString());
+        }
     }
     private void initLyrics() {
         Iterator<MidiEvent> lyricsIt = lyricsTrack.getEvents().iterator();

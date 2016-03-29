@@ -92,8 +92,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             MidiInfo.resolution = midi.getResolution();
             initRenderTracks(midi);
             initRenderTrack();
-            //createAllMeasures();
-            //settingMeasures();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -194,7 +192,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update(float tick) {
         this.tick = tick;
-        
+
         if (!initialized) {
             return;
         }
