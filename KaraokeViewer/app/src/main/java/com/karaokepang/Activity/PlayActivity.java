@@ -112,15 +112,16 @@ public abstract class PlayActivity extends BluetoothActivity {
                 }
             });
             player.start();
+            Logger.i("player start!");
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         MidiInfo.resolution = midifile.getResolution();
-        loadKsaByMidi(uri);
         initTracks();
-        initLyrics();
+        ltv_lyrics.loadKsaByMidi(uri);
+        ltv_lyrics.initLyrics(lyricsTrack);
 
         File musicFile = new File(uri.getPath());
         tv_songName.setText(MidiUtil.getSongName(musicFile));
@@ -208,8 +209,41 @@ public abstract class PlayActivity extends BluetoothActivity {
                 if(this.tick < totalTick) {
                     this.tick = totalTick;
                 }
+            } else if (tempos.size() == 3) {
+                throw new RuntimeException("sdag");
             } else {
-                throw new RuntimeException("tempos size " + tempos.size());
+                ArrayList<Long> tempoMillis = new ArrayList<>();
+                long lastTempoMillis = 0;
+                for(int i=0; i<tempos.size()-1; i++) {
+                    Tempo nowTempo = tempos.get(i);
+                    Tempo nextTempo = tempos.get(i+1);
+                    lastTempoMillis = (long) (lastTempoMillis + nextTempo.getTick() / (nowTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
+                    tempoMillis.add(lastTempoMillis);
+                }
+
+                float totalTick = 0;
+                for(int i=0; i<tempoMillis.size(); i++) {
+                    if(i == 0) {
+                        lastTempoMillis = 0;
+                    } else {
+                        lastTempoMillis = tempoMillis.get(i-1);
+                    }
+                    if(currentPosition < tempoMillis.get(i)) {
+                        currentPosition -= lastTempoMillis;
+                        totalTick += tempos.get(i).getTick();
+                        totalTick += tempos.get(i).getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
+                    }
+                }
+                if(totalTick == 0) {
+                    Tempo t = tempos.get(tempos.size()-1);
+                    currentPosition -= tempoMillis.get(tempoMillis.size()-1);
+                    totalTick += t.getTick();
+                    totalTick += t.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
+                }
+
+                if(this.tick < totalTick) {
+                    this.tick = totalTick;
+                }
             }
 
             beforePosition = player.getCurrentPosition();
@@ -244,151 +278,6 @@ public abstract class PlayActivity extends BluetoothActivity {
         MidiTrack signTrack = midifile.getTracks().get(0);
         for(MidiEvent e : signTrack.getEvents()) {
             Logger.i("event : " + e.toString());
-        }
-    }
-    private void initLyrics() {
-        Iterator<MidiEvent> lyricsIt = lyricsTrack.getEvents().iterator();
-        int i = 0;
-        int j = 0;
-        String eng;
-
-        List<MidiLyrics> midiLyrics = new ArrayList<>();
-        try {
-            while (lyricsIt.hasNext()) {
-                MidiEvent event = lyricsIt.next();
-                if (!(event instanceof MidiLyrics)) {
-                    continue;
-                }
-                if (((MidiLyrics) event).getLyric().equals("\r")) {
-                    continue;
-                }
-                if (((MidiLyrics) event).getLyric().equals("\n")) {
-                    continue;
-                }
-                if (((MidiLyrics) event).getLyric().equals("")) {
-                    continue;
-                }
-                if (((MidiLyrics) event).getLyric().endsWith(" ")) {
-                    ((MidiLyrics) event).setLyric(
-                            ((MidiLyrics) event).getLyric().substring(
-                                    0, ((MidiLyrics) event).getLyric().length()-1));
-                }
-
-                char nowCharacter = ksaLyricsArray.get(i).charAt(j);
-                if (nowCharacter == '@' ||
-                        nowCharacter == '#') {
-                    i++;
-                    j = 0;
-                }
-
-                if (nowCharacter == ' ') {
-                    j++;
-                }
-
-                nowCharacter = ksaLyricsArray.get(i).charAt(j);
-                eng = "";
-                char start = nowCharacter;
-                if (start >= 'a' && start <= 'z' ||
-                        start >= 'A' && start <= 'Z') {
-                    while (nowCharacter != ' ' &&
-                            nowCharacter != '\n' &&
-                            nowCharacter != '\r' &&
-                            nowCharacter != '^') {
-                        if (eng.trim().length() < ((MidiLyrics) event).getLyric().trim().length()) {
-                            eng += nowCharacter;
-                            j++;
-                            if (j >= ksaLyricsArray.get(i).length()) {
-                                i++;
-                                j = 0;
-                            }
-                            if(i >= ksaLyricsArray.size()) {
-                                break;
-                            }
-                            nowCharacter = ksaLyricsArray.get(i).charAt(j);
-                        } else {
-                            break;
-                        }
-                    }
-                }
-
-                if (eng.length() > 0) {
-                    ((MidiLyrics) event).setLyric(eng);
-                } else {
-                    ((MidiLyrics) event).setLyric(String.valueOf(nowCharacter));
-
-                    j++;
-                    if (j >= ksaLyricsArray.get(i).length()) {
-                        i++;
-                        j = 0;
-                    }
-                }
-
-                midiLyrics.add((MidiLyrics) event);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 가사들 줄별로 정리해주기.
-        // MidiLyrics -> Lyrics로 대입
-        List<Lyric> lyrics = new ArrayList<>();
-        MidiLyrics beforeLyric = null;
-        i=0;
-        StringBuilder sb = new StringBuilder();
-        for(MidiLyrics lyric : midiLyrics) {
-            if(beforeLyric != null) {
-                long duration = lyric.getTick() - beforeLyric.getTick();
-                if(duration > MidiInfo.resolution * 2) {
-                    duration = MidiInfo.resolution * 2;
-                }
-                lyrics.add(new Lyric(ksaLyricsArray.get(i),
-                        beforeLyric.getLyric(),
-                        beforeLyric.getTick(),
-                        beforeLyric.getTick() + duration));
-            }
-
-            if(ksaLyricsArray.get(i).replaceAll(" ", "").equals(sb.toString())) {
-                if(i < ksaLyricsArray.size() - 1) {
-                    i++;
-                    sb = new StringBuilder();
-                }
-            }
-            sb.append(lyric.getLyric());
-            beforeLyric = lyric;
-        }
-        lyrics.add(new Lyric(ksaLyricsArray.get(i),
-                beforeLyric.getLyric(),
-                beforeLyric.getTick(),
-                beforeLyric.getTick() + MidiInfo.resolution * 2));
-
-        ltv_lyrics.initLyrics(lyrics);
-    }
-    public void loadKsaByMidi(Uri uri) {
-        File lyricsFile = new File(uri.getPath().toLowerCase().replace(".mid", ".ksa"));
-        if (lyricsFile.exists()) {
-            try {
-                InputStream is = new FileInputStream(lyricsFile);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "euc-kr"));
-
-                String line;
-                int count = 0;
-                while ((line = reader.readLine()) != null) {
-                    if (count < 4) {
-                        count++;
-                        continue;
-                    }
-                    if(line.equals("")) {
-                        continue;
-                    }
-                    ksaLyricsArray.add(line);
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

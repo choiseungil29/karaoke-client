@@ -200,7 +200,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         if (measureCount >= allMeasures.size()) {
             return;
         }
-
+        nowMeasure = allMeasures.get(measureCount);
         if (nowMeasure.startTicks <= tick &&
                 nowMeasure.endTicks > tick) {
             // 윗줄인지 아랫줄인지
@@ -212,12 +212,12 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 renderMeasures[measureIndex].addAll(allMeasures.subList(nowMeasureIndex, nowMeasureIndex + MidiInfo.MEASURE_LIMIT));
                 renderMeasures[(measureIndex + 1) % 2].addAll(allMeasures.subList(nowMeasureIndex + 4, nowMeasureIndex + 4 + MidiInfo.MEASURE_LIMIT));
-            } catch (Exception e) {
+            } catch (IndexOutOfBoundsException e) {
+                Logger.i("bounds error");
                 e.printStackTrace();
             }
         } else if (nowMeasure.endTicks <= tick) {
             measureCount++;
-            nowMeasure = allMeasures.get(measureCount);
         }
     }
 
@@ -261,9 +261,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         for (MidiEvent e : renderTrack.getEvents()) {
             if (e instanceof NoteOn &&
                     ((NoteOn) e).getVelocity() > 0) {
-                /*if (((NoteOn) e).getNoteValue() < MidiInfo.LOWER_NOTE_VALUE) {
-                    MidiInfo.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
-                }*/
                 count++;
                 pitch += ((NoteOn) e).getNoteValue();
             }

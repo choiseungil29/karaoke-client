@@ -81,8 +81,8 @@ public class StaffSymbol extends Symbol {
                 progress = temp;
             }
 
-            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), MidiInfo.FIRST_LINE_HEIGHT,
-                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 4, paint);
+            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), MidiInfo.FIRST_LINE_HEIGHT - MidiInfo.LINE_SPACE_HEIGHT * 2,
+                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 6, paint);
         }
     }
 }
