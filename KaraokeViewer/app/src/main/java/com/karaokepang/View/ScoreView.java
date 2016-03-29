@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -152,7 +153,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void onDraw(Canvas canvas) {
 
-        if(!initialized) {
+        if (!initialized) {
             return;
         }
 
@@ -202,7 +203,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         //T/hread thread = Thread.currentThread();
         //Logger.i("update current thread : " + thread.getName());
 
-        if(!initialized) {
+        if (!initialized) {
             return;
         }
 
@@ -211,7 +212,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             // 윗줄인지 아랫줄인지
             int measureIndex = (measureCount / MidiInfo.MEASURE_LIMIT) % 2;
             int nowMeasureIndex = measureCount / MidiInfo.MEASURE_LIMIT * MidiInfo.MEASURE_LIMIT;
-            for(int i=0; i<renderMeasures.length; i++) {
+            for (int i = 0; i < renderMeasures.length; i++) {
                 renderMeasures[i] = new ArrayList<>();
             }
             try {
@@ -227,9 +228,9 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
             nowMeasure = allMeasures.get(measureCount);
         }
-
-        //draw();
     }
+
+    //draw();
 
     private void initRenderTracks(MidiFile midi) {
         signTrack = midi.getTracks().get(0);
@@ -276,7 +277,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
                 pitch += ((NoteOn) e).getNoteValue();
             }
         }
-        MidiInfo.DEFAULT_C = (pitch/count)/MidiInfo.OCTAVE * MidiInfo.OCTAVE;
+        MidiInfo.DEFAULT_C = (pitch / count) / MidiInfo.OCTAVE * MidiInfo.OCTAVE;
     }
 
     private void createAllMeasures() {

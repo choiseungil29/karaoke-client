@@ -1,6 +1,7 @@
 package com.karaokepang.Activity;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -47,8 +48,16 @@ public class DuetActivity extends PlayActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("kkk","----------------------onPause------------------");
+        activityController.setDuetActivity(null);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("kkk","----------------------onDestroy------------------");
         activityController.setDuetActivity(null);
     }
 }
