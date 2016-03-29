@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.karaokepang.Midi.renderer.Symbol;
+import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.View.BeforeScoreView;
 
 /**
@@ -19,8 +20,8 @@ public class SharpSymbol extends Symbol {
     private int y;
 
     public SharpSymbol() {
-        lineWidth = BeforeScoreView.LINE_STROKE;
-        lineSpace = BeforeScoreView.LINE_SPACE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT/4;
+        lineWidth = MidiInfo.LINE_STROKE;
+        lineSpace = MidiInfo.LINE_SPACE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT/4;
 
         width = lineSpace + lineSpace/3;
     }

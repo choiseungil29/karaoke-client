@@ -61,14 +61,12 @@ public class LyricsTextView extends TextView {
         paint.setColor(Color.BLACK);
 
         canvas.save();
-        //if(top.getIndex() < top.getLyrics().size()) {
-            drawLyrics(canvas, top, getWidth() / 4, getTextSize());
-        //}
+        drawLyrics(canvas, top, getWidth() / 4, getTextSize());
         canvas.restore();
-        //if(bottom.getIndex() < bottom.getLyrics().size()) {
-            drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
-        //}
+        drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
         canvas.restore();
+
+        //Logger.i("HELLO");
     }
 
     public void initLyrics(List<Lyric> lyrics) {
@@ -103,10 +101,12 @@ public class LyricsTextView extends TextView {
 
         calculateLyricsWidth(tick, top);
         calculateLyricsWidth(tick, bottom);
+
+        //Logger.i("update");
     }
 
     private void calculateLyricsIndex(float tick, Lyrics lyrics) {
-        for(int i=0; i<lyrics.getLyrics().size(); i++) {
+        for(int i=0; i<lyrics.getLyrics().size()-1; i++) {
             if(tick >= lyrics.getLyrics().get(i).get(
                     lyrics.getLyrics().get(i).size()-1).getEndTick()) {
                 lyrics.setIndex(i+1);
@@ -116,7 +116,11 @@ public class LyricsTextView extends TextView {
     }
 
     private void calculateLyricsWidth(float tick, Lyrics lyrics) {
+        /*if(lyrics.getIndex() >= lyrics.getLyrics().size()) {
+            lyrics.setIndex(lyrics.getLyrics().size()-1);
+        }*/
         List<Lyric> oneLine = lyrics.getLyrics().get(lyrics.getIndex());
+
 
         int space = 0;
         for(int i=0; i<oneLine.size(); i++) {
@@ -137,7 +141,7 @@ public class LyricsTextView extends TextView {
                 String lastIndex = lyric.getParent().substring(i + space, i + lyric.getText().length() + space);
                 float widthPercent = (tick - lyric.getStartTick()) /
                         (lyric.getEndTick() - lyric.getStartTick());
-                float textWidth = getPaint().measureText(text);
+                float textWidth;
                 textWidth = getPaint().measureText(textBuilder.toString());
                 lyrics.setWidth(textWidth + ((int)getPaint().measureText(lastIndex)) * widthPercent);
             }

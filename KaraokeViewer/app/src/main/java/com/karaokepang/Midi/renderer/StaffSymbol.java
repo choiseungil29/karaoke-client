@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Tempo;
+import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.View.BeforeScoreView;
 
 import java.util.List;
@@ -40,25 +41,7 @@ public class StaffSymbol extends Symbol {
 
         clef = new ClefSymbol(context, track);
 
-        for (MidiEvent event : track.getEvents()) {
-            for (MeasureSymbol measure : measures) {
-                if(event instanceof Tempo &&
-                        event.getTick() <= measure.startTicks) {
-                    measure.BPM = ((Tempo) event).getBpm();
-                }
-                if(event instanceof Tempo &&
-                        event.getTick() >= measure.startTicks &&
-                        event.getTick() < measure.endTicks) {
-                    measure.tempoList.add((Tempo) event);
-                }
-            }
-        }
-
         this.measures = measures;
-        for(int i=0; i<measures.size(); i++) {
-            this.measures.get(i).myIndex = i;
-        }
-
         this.startTick = this.measures.get(0).startTicks;
         this.endTick = this.measures.get(measures.size()-1).endTicks;
     }
@@ -67,12 +50,12 @@ public class StaffSymbol extends Symbol {
 
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE);
+        paint.setStrokeWidth(MidiInfo.LINE_STROKE);
 
-        int y = BeforeScoreView.FIRST_LINE_HEIGHT;
+        int y = MidiInfo.FIRST_LINE_HEIGHT;
         for(int i=0; i<5; i++) {
             canvas.drawLine(0, y, width, y, paint);
-            y += BeforeScoreView.LINE_SPACE_HEIGHT;
+            y += MidiInfo.LINE_SPACE_HEIGHT;
         }
     }
 
@@ -89,7 +72,7 @@ public class StaffSymbol extends Symbol {
         drawHorizontalLines(canvas);
 
         Paint paint = new Paint();
-        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE * 3);
+        paint.setStrokeWidth(MidiInfo.LINE_STROKE * 3);
         paint.setColor(Color.BLUE);
         if(this.startTick <= this.nowTick &&
                 this.endTick > this.nowTick) {
@@ -98,8 +81,8 @@ public class StaffSymbol extends Symbol {
                 progress = temp;
             }
 
-            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), BeforeScoreView.FIRST_LINE_HEIGHT,
-                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 4, paint);
+            canvas.drawLine(progress * (width - clef.getWidth()) + clef.getWidth(), MidiInfo.FIRST_LINE_HEIGHT,
+                    progress * (width + 1 - clef.getWidth()) + clef.getWidth(), MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 4, paint);
         }
     }
 }

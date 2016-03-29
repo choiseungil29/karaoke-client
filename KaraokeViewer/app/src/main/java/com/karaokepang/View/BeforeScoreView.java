@@ -498,7 +498,7 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
             float tick;
 
             boolean finishStaffUpdate = false;
-            Tempo tempo = nowMeasure.tempoList.get(0);
+            /*Tempo tempo = nowMeasure.tempoList.get(0);
             while (true) {
                 float millis = 0;
                 try {
@@ -593,7 +593,7 @@ public class BeforeScoreView extends SurfaceView implements SurfaceHolder.Callba
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
         }
     }
 

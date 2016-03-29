@@ -17,7 +17,6 @@
 package com.karaokepang.Midi.util;
 
 import com.karaokepang.Midi.event.meta.Tempo;
-import com.karaokepang.View.BeforeScoreView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -234,9 +233,9 @@ public class MidiUtil
     public static float getHeightFromNoteValue(int noteValue) {
         int octave = 12;
         float height = 0;
-        float defaultHeight = BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 5;
+        float defaultHeight = MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 5;
 
-        int remainder = noteValue%(BeforeScoreView.DEFAULT_C - BeforeScoreView.OCTAVE);
+        int remainder = noteValue%(MidiInfo.DEFAULT_C - MidiInfo.OCTAVE);
 
         HashMap<Integer, Integer> scale = new HashMap<>();
         // remainder, height
@@ -255,7 +254,7 @@ public class MidiUtil
             scale.put(i+11, 6 + j);
         }
 
-        height = defaultHeight - ((float) BeforeScoreView.LINE_SPACE_HEIGHT/2) * scale.get(remainder);
+        height = defaultHeight - ((float) MidiInfo.LINE_SPACE_HEIGHT/2) * scale.get(remainder);
         return height;
     }
 
@@ -266,7 +265,7 @@ public class MidiUtil
      * @return
      */
     public static boolean needToPointLine(int noteValue) {
-        int remainder = noteValue%(BeforeScoreView.DEFAULT_C - BeforeScoreView.OCTAVE);
+        int remainder = noteValue%(MidiInfo.DEFAULT_C - MidiInfo.OCTAVE);
 
         HashMap<Integer, Integer> scale = new HashMap<>();
         // remainder, height
@@ -288,10 +287,10 @@ public class MidiUtil
         /*if (scale.get(remainder) % 2 == 0) {
             return true;
         }*/
-        if(remainder <= BeforeScoreView.OCTAVE) {
+        if(remainder <= MidiInfo.OCTAVE) {
             return true;
         }
-        if(remainder >= BeforeScoreView.OCTAVE * 2 + 8) {
+        if(remainder >= MidiInfo.OCTAVE * 2 + 8) {
             return true;
         }
         return false;
@@ -312,7 +311,7 @@ public class MidiUtil
      * @return true -> 위로향함, false -> 아래로향함
      */
     public static boolean isTailTop(int noteValue) {
-        int remainder = noteValue - BeforeScoreView.DEFAULT_C;
+        int remainder = noteValue - MidiInfo.DEFAULT_C;
         if(remainder >= 11) {
             return false;
         }

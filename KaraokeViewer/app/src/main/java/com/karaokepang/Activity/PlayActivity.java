@@ -82,6 +82,8 @@ public abstract class PlayActivity extends BluetoothActivity {
     public void onDestroy() {
         super.onDestroy();
         Logger.i("destroy!");
+        player.stop();
+        player.release();
         player.reset();
     }
 
@@ -128,7 +130,6 @@ public abstract class PlayActivity extends BluetoothActivity {
         Logger.i("play!!");
         Logger.i("player play!");
         tickCounter();
-        //draw();
         loop();
     }
 
@@ -158,7 +159,7 @@ public abstract class PlayActivity extends BluetoothActivity {
     protected abstract void update(float tick);
 
     protected void draw(float tick) {
-        ltv_lyrics.callOnDraw(tick);
+
     }
 
     @Background

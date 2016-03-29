@@ -13,6 +13,7 @@ import com.karaokepang.Midi.event.meta.TimeSignature;
 import com.karaokepang.Midi.renderer.midi.MidiSymbol;
 import com.karaokepang.Midi.renderer.midi.NoteSymbol;
 import com.karaokepang.Midi.renderer.midi.RestSymbol;
+import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Midi.util.MidiUtil;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.View.BeforeScoreView;
@@ -38,9 +39,6 @@ public class MeasureSymbol extends Symbol {
 
     public int paddingLeft = 0;
 
-    public Tempo tempo;
-    public List<Tempo> tempoList;
-
     public float BPM;
 
     public int segment;
@@ -62,9 +60,8 @@ public class MeasureSymbol extends Symbol {
         symbols = new ArrayList<>();
         notes = new ArrayList<>();
         lyricsList = new ArrayList<>();
-        tempoList = new ArrayList<>();
 
-        height = BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 4 + BeforeScoreView.FIRST_LINE_HEIGHT;
+        height = MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 4 + MidiInfo.FIRST_LINE_HEIGHT;
     }
 
     @Override
@@ -72,7 +69,7 @@ public class MeasureSymbol extends Symbol {
         int x = 0;
         int notesFullWidth = this.width;
         //segment = notesFullWidth/(notes.size()+1);
-        segment = notesFullWidth / ((BeforeScoreView.resolution / (denominator / 4) * numerator) / (BeforeScoreView.resolution/4) + 1);
+        segment = notesFullWidth / ((MidiInfo.resolution / (denominator / 4) * numerator) / (MidiInfo.resolution/4) + 1);
 
         /**
          * calculating segment..
@@ -82,12 +79,12 @@ public class MeasureSymbol extends Symbol {
         int beforeDuration = 0;
         for(Symbol symbol : symbols) {
             if(symbol instanceof RestSymbol &&
-                    (((RestSymbol) symbol).getDuration() == (BeforeScoreView.resolution / (denominator / 4) * numerator))) {
+                    (((RestSymbol) symbol).getDuration() == (MidiInfo.resolution / (denominator / 4) * numerator))) {
                 symbol.draw(canvas, notesFullWidth / 2);
             } else if(symbol instanceof MidiSymbol) {
                 symbol.draw(canvas, nowX);
                 ((MidiSymbol) symbol).segment = segment;
-                beforeDuration = ((MidiSymbol) symbol).getDuration() / (BeforeScoreView.resolution/4);
+                beforeDuration = ((MidiSymbol) symbol).getDuration() / (MidiInfo.resolution/4);
                 nowX += segment * beforeDuration;
             } else {
                 symbol.draw(canvas, x);
@@ -96,13 +93,13 @@ public class MeasureSymbol extends Symbol {
         }
 
         Paint paint = new Paint();
-        paint.setStrokeWidth(BeforeScoreView.LINE_STROKE * 2);
-        if((myIndex+1) % BeforeScoreView.MEASURE_LIMIT == 0) {
-            canvas.drawLine(this.width-4, BeforeScoreView.FIRST_LINE_HEIGHT,
-                    this.width-4, BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 4, paint);
+        paint.setStrokeWidth(MidiInfo.LINE_STROKE * 2);
+        if((myIndex+1) % MidiInfo.MEASURE_LIMIT == 0) {
+            canvas.drawLine(this.width-4, MidiInfo.FIRST_LINE_HEIGHT,
+                    this.width-4, MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 4, paint);
         } else {
-            canvas.drawLine(this.width-2, BeforeScoreView.FIRST_LINE_HEIGHT,
-                    this.width-2, BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 4, paint);
+            canvas.drawLine(this.width-2, MidiInfo.FIRST_LINE_HEIGHT,
+                    this.width-2, MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 4, paint);
         }
     }
 
@@ -143,8 +140,8 @@ public class MeasureSymbol extends Symbol {
             timeSignature = symbol;
             return symbol;
         } else if (e instanceof NoteOn) {
-            if(((NoteOn) e).getNoteValue() < BeforeScoreView.LOWER_NOTE_VALUE) {
-                BeforeScoreView.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
+            if(((NoteOn) e).getNoteValue() < MidiInfo.LOWER_NOTE_VALUE) {
+                MidiInfo.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
             }
             /*if((((NoteOn) e).getNoteValue()/12) * 12 < ScoreView.DEFAULT_C) {
                 ScoreView.DEFAULT_C = ((((NoteOn) e).getNoteValue()+6)/12) * 12;
@@ -208,12 +205,12 @@ public class MeasureSymbol extends Symbol {
                 note.needToTie();
             }
 
-            Logger.i(TAG, "note : " + note.toString());
-            Logger.i(TAG, "note start tick : " + note.getStartTicks());
-            Logger.i(TAG, "note end tick : " + (note.getStartTicks() + note.getDuration()));
-            Logger.i(TAG, "note value : " + note.getNoteValue());
-            Logger.i(TAG, "note duration : " + note.getDuration());
-            Logger.i(TAG, "---------------------------------");
+//            Logger.i(TAG, "note : " + note.toString());
+//            Logger.i(TAG, "note start tick : " + note.getStartTicks());
+//            Logger.i(TAG, "note end tick : " + (note.getStartTicks() + note.getDuration()));
+//            Logger.i(TAG, "note value : " + note.getNoteValue());
+//            Logger.i(TAG, "note duration : " + note.getDuration());
+//            Logger.i(TAG, "---------------------------------");
 
             if(i < notes.size()-1) {
                 // 다음 노트의 startTicks보다 현재 노트의 startTicks + duration이 크면 값을 축소시킴
@@ -287,7 +284,7 @@ public class MeasureSymbol extends Symbol {
             } catch (Exception e) {
                 continue;
             }*/
-            if(MidiUtil.Sixteenth(BeforeScoreView.resolution) == symbol.getDuration()) {
+            if(MidiUtil.Sixteenth(MidiInfo.resolution) == symbol.getDuration()) {
                 if(isSixteenthNote) {
                     ((NoteSymbol) symbol).prev = (NoteSymbol) getAllMidiSymbols().get(i-1);
                     ((NoteSymbol) symbol).prev.next = (NoteSymbol) symbol;
@@ -297,7 +294,7 @@ public class MeasureSymbol extends Symbol {
                 isSixteenthNote = false;
             }
 
-            if(MidiUtil.Eighth(BeforeScoreView.resolution) == symbol.getDuration()) {
+            if(MidiUtil.Eighth(MidiInfo.resolution) == symbol.getDuration()) {
                 if(isEightNote) {
                     ((NoteSymbol) symbol).prev = (NoteSymbol) getAllMidiSymbols().get(i-1);
                     ((NoteSymbol) symbol).prev.next = (NoteSymbol) symbol;
@@ -357,20 +354,21 @@ public class MeasureSymbol extends Symbol {
     public List<NoteSymbol> roundNote(NoteSymbol note) {
         List<NoteSymbol> notes = new ArrayList<>();
 
-        List<Integer> scales = MidiUtil.getBeatScale(BeforeScoreView.resolution);
+        List<Integer> scales = MidiUtil.getBeatScale(MidiInfo.resolution);
         // 30 이하의 애들을 어떻게 처리할지..
 
         note.roundStartTicks();
         int duration = ((note.getDuration() + 5) / 10) * 10;
         int startTicks = note.getStartTicks();
         for(int i=0; i<scales.size(); i++) {
-            if(duration / scales.get(i) == 1) {
+            if (duration / scales.get(i) == 1) {
                 note.setEndTicks(startTicks + duration);
             }
-            if(note.getStartTicks() + note.getDuration() > this.endTicks) {
+            if (note.getStartTicks() + note.getDuration() > this.endTicks) {
                 note.setEndTicks(this.endTicks);
                 note.needToTie();
             }
+        }
 
             /*if(duration / scales.get(i) > 0) { // duration 90 -> 120으로 맞춰준다
                 try {
@@ -385,7 +383,6 @@ public class MeasureSymbol extends Symbol {
                 }
                 break;
             }*/
-        }
 
         duration = note.getDuration();
         for(int i=0; i<scales.size(); i++) {

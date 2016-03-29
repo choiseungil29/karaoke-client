@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.karaokepang.Midi.event.meta.TimeSignature;
+import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.View.BeforeScoreView;
 
 /**
@@ -15,12 +16,12 @@ import com.karaokepang.View.BeforeScoreView;
 public class TimeSignatureSymbol extends Symbol {
 
     private TimeSignature time;
-    private int height = BeforeScoreView.LINE_SPACE_HEIGHT * 2;
+    private int height = MidiInfo.LINE_SPACE_HEIGHT * 2;
 
     public TimeSignatureSymbol(TimeSignature time) {
         this.time = time;
-        this.width = BeforeScoreView.LINE_SPACE_HEIGHT * 2;
-        this.height = BeforeScoreView.LINE_SPACE_HEIGHT * 2;
+        this.width = MidiInfo.LINE_SPACE_HEIGHT * 2;
+        this.height = MidiInfo.LINE_SPACE_HEIGHT * 2;
     }
 
     @Override
@@ -34,19 +35,19 @@ public class TimeSignatureSymbol extends Symbol {
 
         Rect src = new Rect(0, 0, numerator.getWidth(), numerator.getHeight());
         Rect dst = new Rect(0, 0, width, height);
-        canvas.translate(0, BeforeScoreView.FIRST_LINE_HEIGHT);
+        canvas.translate(0, MidiInfo.FIRST_LINE_HEIGHT);
         canvas.drawBitmap(numerator, src, dst, paint);
-        canvas.translate(0, -BeforeScoreView.FIRST_LINE_HEIGHT);
+        canvas.translate(0, -MidiInfo.FIRST_LINE_HEIGHT);
 
         paint.setStrokeWidth(2);
         paint.setColor(Color.BLACK);
-        canvas.drawLine(0, BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 2,
-                        width, BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 2, paint);
+        canvas.drawLine(0, MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 2,
+                        width, MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 2, paint);
 
         src = new Rect(0, 0, denominator.getWidth(), denominator.getHeight());
         dst = new Rect(0, 0, width, height);
-        canvas.translate(0, BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 2);
+        canvas.translate(0, MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 2);
         canvas.drawBitmap(denominator, src, dst, paint);
-        canvas.translate(0, -(BeforeScoreView.FIRST_LINE_HEIGHT + BeforeScoreView.LINE_SPACE_HEIGHT * 2));
+        canvas.translate(0, -(MidiInfo.FIRST_LINE_HEIGHT + MidiInfo.LINE_SPACE_HEIGHT * 2));
     }
 }

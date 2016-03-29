@@ -37,7 +37,6 @@ public class DuetActivity extends PlayActivity {
 
     @Override
     protected void update(float tick) {
-        ltv_lyrics.update(tick);
         sv_score.update(tick);
     }
 

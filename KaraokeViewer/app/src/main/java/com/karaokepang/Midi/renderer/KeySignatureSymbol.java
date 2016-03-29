@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import com.karaokepang.Midi.event.meta.KeySignature;
 import com.karaokepang.Midi.renderer.accidental.FlatSymbol;
 import com.karaokepang.Midi.renderer.accidental.SharpSymbol;
+import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.View.BeforeScoreView;
 
 /**
@@ -52,9 +53,9 @@ public class KeySignatureSymbol extends Symbol {
 
             int quotient = (i+1)/2;
             int remainder = (i+1)%2;
-            int height = BeforeScoreView.LINE_SPACE_HEIGHT;
+            int height = MidiInfo.LINE_SPACE_HEIGHT;
             int middleHeight = height/2;
-            flat.setY(BeforeScoreView.FIRST_LINE_HEIGHT + middleHeight * quotient + (remainder * height * 2));
+            flat.setY(MidiInfo.FIRST_LINE_HEIGHT + middleHeight * quotient + (remainder * height * 2));
             flat.draw(canvas);
 
             x += flat.getWidth();
@@ -64,7 +65,7 @@ public class KeySignatureSymbol extends Symbol {
     }
 
     private void drawSharp(Canvas canvas) {
-        int y = BeforeScoreView.FIRST_LINE_HEIGHT;
+        int y = MidiInfo.FIRST_LINE_HEIGHT;
         int width = 0;
         int x = 0;
         for(int i=0; i<7; i++) {
@@ -73,16 +74,16 @@ public class KeySignatureSymbol extends Symbol {
 
             if(i%2 == 0) {
                 int idx = (i+1)/2;
-                int height = BeforeScoreView.LINE_SPACE_HEIGHT;
+                int height = MidiInfo.LINE_SPACE_HEIGHT;
                 int middleHeight = height/2;
                 if(i > 3) {
-                    sharp.setY(y + BeforeScoreView.LINE_SPACE_HEIGHT * 3 + BeforeScoreView.LINE_SPACE_HEIGHT/2 - idx * middleHeight);
+                    sharp.setY(y + MidiInfo.LINE_SPACE_HEIGHT * 3 + MidiInfo.LINE_SPACE_HEIGHT/2 - idx * middleHeight);
                 } else {
                     sharp.setY(y - idx * middleHeight);
                 }
             } else {
                 int idx = (i+1)/2;
-                int height = BeforeScoreView.LINE_SPACE_HEIGHT;
+                int height = MidiInfo.LINE_SPACE_HEIGHT;
                 int middleHeight = height/2;
                 sharp.setY(y - idx * middleHeight + height * 2);
             }
