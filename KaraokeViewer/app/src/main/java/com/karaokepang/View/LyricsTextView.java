@@ -104,32 +104,38 @@ public class LyricsTextView extends TextView {
 
     public void initLyrics(List<Lyric> lyrics) {
         String parent = lyrics.get(0).getParent();
-        int i = 0;
+        int n = 0;
         List<Lyric> top = new ArrayList<>();
         List<Lyric> bot = new ArrayList<>();
-        for (Lyric lyric : lyrics) {
-            if (!lyric.getParent().equals(parent)) {
-                if (i % 2 == 0) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<lyrics.size(); i++) {
+            Lyric lyric = lyrics.get(i);
+            //if (!lyric.getParent().equals(parent)) {
+            if(parent.replaceAll(" ", "").equals(sb.toString())) {
+                if (n % 2 == 0) {
                     this.top.add(top);
                     top = new ArrayList<>();
                 } else {
                     this.bottom.add(bot);
                     bot = new ArrayList<>();
                 }
+                sb = new StringBuilder();
                 parent = lyric.getParent();
-                i++;
+                n++;
             }
-            if (i % 2 == 0) {
+            if (n % 2 == 0) {
                 top.add(lyric);
             } else {
                 bot.add(lyric);
             }
+            sb.append(lyric.getText());
         }
-        if (i % 2 == 0) {
+        if (n % 2 == 0) {
             this.top.add(top);
         } else {
             this.bottom.add(bot);
         }
+        sb = new StringBuilder();
     }
 
     @Background
@@ -145,8 +151,7 @@ public class LyricsTextView extends TextView {
         for(int i=0; i<lyrics.getLyrics().size()-1; i++) {
             if(tick >= lyrics.getLyrics().get(i).get(
                     lyrics.getLyrics().get(i).size() - 1).getEndTick()) {
-                lyrics.setIndex(i+1);
-                lyrics.setWidth(0);
+                lyrics.setIndex(i + 1);
             }
         }
     }
