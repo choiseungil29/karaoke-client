@@ -76,11 +76,25 @@ public class LyricsTextView extends TextView {
         paint.setTypeface(font);
         paint.setColor(Color.BLACK);
 
-        canvas.save();
+        if(top.getIndex() >= top.getLyrics().size()) {
+            canvas.drawText("", getWidth()/4, getTextSize(), paint);
+        } else {
+            canvas.save();
+            drawLyrics(canvas, top, getWidth() / 4, getTextSize());
+        }
+        if(bottom.getIndex() >= bottom.getLyrics().size()) {
+            canvas.drawText("", getWidth()/2, getTextSize() * 2, paint);
+        } else {
+            canvas.restore();
+            drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
+            canvas.restore();
+        }
+
+        /*canvas.save();
         drawLyrics(canvas, top, getWidth() / 4, getTextSize());
         canvas.restore();
         drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
-        canvas.restore();
+        canvas.restore();*/
     }
 
     public void initLyrics(List<Lyric> lyrics) {
@@ -106,7 +120,6 @@ public class LyricsTextView extends TextView {
                 bot.add(lyric);
             }
         }
-
         if (i % 2 == 0) {
             this.top.add(top);
         } else {
@@ -139,12 +152,8 @@ public class LyricsTextView extends TextView {
         int space = 0;
         for(int i=0; i<oneLine.size(); i++) {
             Lyric lyric = oneLine.get(i);
-            try {
-                if (lyric.getParent().charAt(i + space) == ' ') {
-                    //space++;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
+            if(lyric.getParent().charAt(i + space) == ' ') {
+                space++;
             }
             if(tick >= lyric.getStartTick() &&
                     tick <= lyric.getEndTick()) {
@@ -158,9 +167,11 @@ public class LyricsTextView extends TextView {
                 String lastIndex = lyric.getParent().substring(i + space, i + lyric.getText().length() + space);
                 float widthPercent = (tick - lyric.getStartTick()) /
                         (lyric.getEndTick() - lyric.getStartTick());
-                float textWidth;
-                textWidth = getPaint().measureText(textBuilder.toString());
-                lyrics.setWidth(textWidth + ((int)getPaint().measureText(lastIndex)) * widthPercent);
+                float textWidth = getPaint().measureText(textBuilder.toString());;
+                float temp = textWidth + ((int)getPaint().measureText(lastIndex)) * widthPercent;
+                if(temp > lyrics.getWidth()) {
+                    lyrics.setWidth(temp);
+                }
             }
         }
     }
@@ -168,6 +179,13 @@ public class LyricsTextView extends TextView {
     private void drawLyrics(Canvas canvas, Lyrics lyrics, float x, float y) {
         Paint paint = new Paint(getPaint());
         canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, paint);
+
+        Paint strokePaint = new Paint(getPaint());
+        strokePaint.setColor(Color.WHITE);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setStrokeWidth(2);
+
+        canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, strokePaint);
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.parseColor("#ff7f50"));
@@ -282,20 +300,10 @@ public class LyricsTextView extends TextView {
                 if(duration > MidiInfo.resolution * 2) {
                     duration = MidiInfo.resolution * 2;
                 }
-                if(ksaLyricsArray.get(i).equals("#")) {
-
-                }
-                if(!ksaLyricsArray.get(i).equals("#") &&
-                        !beforeLyric.getLyric().equals("#")) {
-                    lyrics.add(new Lyric(ksaLyricsArray.get(i),
-                            beforeLyric.getLyric(),
-                            beforeLyric.getTick(),
-                            beforeLyric.getTick() + duration));
-                }
-            }
-
-            if(ksaLyricsArray.get(i).equals("#")) {
-                i++;
+                lyrics.add(new Lyric(ksaLyricsArray.get(i),
+                        beforeLyric.getLyric(),
+                        beforeLyric.getTick(),
+                        beforeLyric.getTick() + duration));
             }
 
             if(ksaLyricsArray.get(i).replaceAll(" ", "").equals(sb.toString())) {
@@ -332,6 +340,9 @@ public class LyricsTextView extends TextView {
                     if(line.equals("")) {
                         continue;
                     }
+                    if(line.equals("#") || line.equals("@")) {
+                        continue;
+                    }
                     ksaLyricsArray.add(line);
                 }
             } catch (UnsupportedEncodingException e) {
@@ -343,4 +354,5 @@ public class LyricsTextView extends TextView {
             }
         }
     }
+
 }

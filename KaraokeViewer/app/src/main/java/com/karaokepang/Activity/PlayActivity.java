@@ -50,8 +50,6 @@ public abstract class PlayActivity extends BluetoothActivity {
     private List<MidiTrack> renderTracks = new ArrayList<>();
     private List<Tempo> tempos;
 
-    private List<String> ksaLyricsArray = new ArrayList<>();
-
     private float tick = 0;
 
     @ViewById(R.id.layout_song_name)
@@ -112,7 +110,6 @@ public abstract class PlayActivity extends BluetoothActivity {
                 }
             });
             player.start();
-            Logger.i("player start!");
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -209,41 +206,8 @@ public abstract class PlayActivity extends BluetoothActivity {
                 if(this.tick < totalTick) {
                     this.tick = totalTick;
                 }
-            } else if (tempos.size() == 3) {
-                throw new RuntimeException("sdag");
             } else {
-                ArrayList<Long> tempoMillis = new ArrayList<>();
-                long lastTempoMillis = 0;
-                for(int i=0; i<tempos.size()-1; i++) {
-                    Tempo nowTempo = tempos.get(i);
-                    Tempo nextTempo = tempos.get(i+1);
-                    lastTempoMillis = (long) (lastTempoMillis + nextTempo.getTick() / (nowTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
-                    tempoMillis.add(lastTempoMillis);
-                }
-
-                float totalTick = 0;
-                for(int i=0; i<tempoMillis.size(); i++) {
-                    if(i == 0) {
-                        lastTempoMillis = 0;
-                    } else {
-                        lastTempoMillis = tempoMillis.get(i-1);
-                    }
-                    if(currentPosition < tempoMillis.get(i)) {
-                        currentPosition -= lastTempoMillis;
-                        totalTick += tempos.get(i).getTick();
-                        totalTick += tempos.get(i).getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
-                    }
-                }
-                if(totalTick == 0) {
-                    Tempo t = tempos.get(tempos.size()-1);
-                    currentPosition -= tempoMillis.get(tempoMillis.size()-1);
-                    totalTick += t.getTick();
-                    totalTick += t.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
-                }
-
-                if(this.tick < totalTick) {
-                    this.tick = totalTick;
-                }
+                throw new RuntimeException("tempos size " + tempos.size());
             }
 
             beforePosition = player.getCurrentPosition();
