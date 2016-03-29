@@ -596,7 +596,7 @@ public class MusicPlayActivity extends BaseActivity implements BeforeScoreView.M
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        stopRecord(false);
+//        stopRecord(false);
 //        deleteRecodingFile();
     }
 
