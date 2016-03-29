@@ -43,8 +43,12 @@
         </activity>
         <activity android:name=".Activity.DeviceListActivity_" />
         <activity android:name=".Activity.SelectActivity_" />
-        <activity android:name=".Activity.DuetSelectActivity_" />
-        <activity android:name=".Activity.PangPangSelectActivity_" />
+        <activity
+            android:name=".Activity.DuetSelectActivity_"
+            android:exported="true" />
+        <activity
+            android:name=".Activity.PangPangSelectActivity_"
+            android:exported="true" />
         <activity
             android:name=".Activity.PangPangActivity_"
             android:screenOrientation="landscape"

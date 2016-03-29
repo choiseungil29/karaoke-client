@@ -1,6 +1,7 @@
 package com.global.karaokevewer.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -103,13 +104,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_karaoke:
-//                ComponentName compName = new ComponentName("com.karaokepang", "com.karaokepang");
-//                Intent intent = new Intent(Intent.ACTION_MAIN);
-//                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-//                intent.setComponent(compName);
-//                startActivity(intent);
                 try {
-                    startActivity(getPackageManager().getLaunchIntentForPackage("com.karaokepang"));
+                    ComponentName compName = new ComponentName("com.karaokepang","com.karaokepang.Activity.PangPangSelectActivity_");
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    intent.setComponent(compName);
+                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), getString(R.string.not_installed_application), Toast.LENGTH_SHORT).show();
@@ -117,7 +117,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_duet:
                 try {
-                    startActivity(getPackageManager().getLaunchIntentForPackage("com.karaokepang"));
+                    ComponentName compName = new ComponentName("com.karaokepang","com.karaokepang.Activity.DuetSelectActivity_");
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    intent.setComponent(compName);
+                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), getString(R.string.not_installed_application), Toast.LENGTH_SHORT).show();
