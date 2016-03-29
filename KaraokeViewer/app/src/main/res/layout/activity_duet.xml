@@ -39,16 +39,24 @@
     <com.karaokepang.View.LyricsTextView_
         android:id="@+id/ltv_lyrics"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="300dp"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/transparent"
+        android:background="#FF444444"
         android:textSize="110sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/view_blind"
+        android:background="#FF444444"
+        android:layout_alignParentTop="true"/>
 
     <com.karaokepang.View.ScoreView_
         android:id="@+id/sv_score"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
-        android:layout_above="@id/ltv_lyrics" />
+        android:layout_above="@id/ltv_lyrics"
+        android:layout_below="@id/view_blind"/>
 
 </RelativeLayout>

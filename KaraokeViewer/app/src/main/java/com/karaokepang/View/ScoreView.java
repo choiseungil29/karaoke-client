@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
@@ -79,7 +80,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         Resources.initResources(getContext());
 
         for(int i=0; i<renderMeasures.length; i++) {
-            //renderMeasures[i] = Collections.synchronizedList(new ArrayList<MeasureSymbol>());
             renderMeasures[i] = new ArrayList<>();
         }
     }
@@ -197,7 +197,7 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             return;
         }
 
-        if (measureCount >= allMeasures.size()) {
+        if (measureCount + 4 >= allMeasures.size()) {
             return;
         }
 
@@ -211,22 +211,22 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0; i < renderMeasures.length; i++) {
                 renderMeasures[i] = new ArrayList<>();
             }
-            try {
-                renderMeasures[measureIndex].addAll(allMeasures.subList(nowMeasureIndex, nowMeasureIndex + MidiInfo.MEASURE_LIMIT));
-                renderMeasures[(measureIndex + 1) % 2].addAll(allMeasures.subList(nowMeasureIndex + 4, nowMeasureIndex + 4 + MidiInfo.MEASURE_LIMIT));
-            } catch (IndexOutOfBoundsException e) {
-                renderMeasures[(measureIndex + 1) % 2] = new ArrayList<>();
-                renderMeasures[(measureIndex + 1) % 2].addAll(allMeasures.subList(nowMeasureIndex + 4, allMeasures.size()));
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(this.getVisibility() == View.VISIBLE) {
+                try {
+                    renderMeasures[measureIndex].addAll(allMeasures.subList(nowMeasureIndex, nowMeasureIndex + MidiInfo.MEASURE_LIMIT));
+                    renderMeasures[(measureIndex + 1) % 2].addAll(allMeasures.subList(nowMeasureIndex + 4, nowMeasureIndex + 4 + MidiInfo.MEASURE_LIMIT));
+                } catch (IndexOutOfBoundsException e) {
+                    renderMeasures[(measureIndex + 1) % 2] = new ArrayList<>();
+                    renderMeasures[(measureIndex + 1) % 2].addAll(allMeasures.subList(nowMeasureIndex + 4, allMeasures.size()));
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else if (nowMeasure.endTicks <= tick) {
             measureCount++;
         }
     }
-
-    //draw();
 
     private void initRenderTracks(MidiFile midi) {
         signTrack = midi.getTracks().get(0);
@@ -266,9 +266,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         for (MidiEvent e : renderTrack.getEvents()) {
             if (e instanceof NoteOn &&
                     ((NoteOn) e).getVelocity() > 0) {
-                /*if (((NoteOn) e).getNoteValue() < MidiInfo.LOWER_NOTE_VALUE) {
-                    MidiInfo.LOWER_NOTE_VALUE = ((NoteOn) e).getNoteValue();
-                }*/
                 count++;
                 pitch += ((NoteOn) e).getNoteValue();
             }

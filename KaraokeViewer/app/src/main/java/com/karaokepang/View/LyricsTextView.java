@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -76,6 +77,10 @@ public class LyricsTextView extends TextView {
         paint.setTypeface(font);
         paint.setColor(Color.BLACK);
 
+        Paint backgroundPaint = getPaint();
+        backgroundPaint.setColor(((ColorDrawable)getBackground()).getColor());
+        canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
+
         if(top.getIndex() >= top.getLyrics().size()) {
             canvas.drawText("", getWidth()/4, getTextSize(), paint);
         } else {
@@ -83,7 +88,7 @@ public class LyricsTextView extends TextView {
             drawLyrics(canvas, top, getWidth() / 4, getTextSize());
         }
         if(bottom.getIndex() >= bottom.getLyrics().size()) {
-            canvas.drawText("", getWidth()/2, getTextSize() * 2, paint);
+            canvas.drawText("", getWidth() / 2, getTextSize() * 2, paint);
         } else {
             canvas.restore();
             drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
@@ -149,11 +154,20 @@ public class LyricsTextView extends TextView {
     private void calculateLyricsWidth(float tick, Lyrics lyrics) {
         List<Lyric> oneLine = lyrics.getLyrics().get(lyrics.getIndex());
 
+        if(lyrics.getIndex() >= lyrics.getLyrics().size()) {
+            return;
+        }
+
         int space = 0;
         for(int i=0; i<oneLine.size(); i++) {
             Lyric lyric = oneLine.get(i);
-            if(lyric.getParent().charAt(i + space) == ' ') {
-                space++;
+            try {
+                if (lyric.getParent().charAt(i + space) == ' ') {
+                    space++;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+                space--;
             }
             if(tick >= lyric.getStartTick() &&
                     tick <= lyric.getEndTick()) {
@@ -164,10 +178,16 @@ public class LyricsTextView extends TextView {
                 for(int j=0; j<space; j++) {
                     textBuilder.append(" ");
                 }
-                String lastIndex = lyric.getParent().substring(i + space, i + lyric.getText().length() + space);
+                String lastIndex = null;
+                try {
+                    lastIndex = lyric.getParent().substring(i + space, i + lyric.getText().length() + space);
+                } catch (IndexOutOfBoundsException e) {
+                    lastIndex = lyric.getParent().substring(i + space, lyric.getParent().length());
+                    e.printStackTrace();
+                }
                 float widthPercent = (tick - lyric.getStartTick()) /
                         (lyric.getEndTick() - lyric.getStartTick());
-                float textWidth = getPaint().measureText(textBuilder.toString());;
+                float textWidth = getPaint().measureText(textBuilder.toString());
                 float temp = textWidth + ((int)getPaint().measureText(lastIndex)) * widthPercent;
                 if(temp > lyrics.getWidth()) {
                     lyrics.setWidth(temp);
@@ -177,15 +197,17 @@ public class LyricsTextView extends TextView {
     }
 
     private void drawLyrics(Canvas canvas, Lyrics lyrics, float x, float y) {
-        Paint paint = new Paint(getPaint());
-        canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, paint);
-
         Paint strokePaint = new Paint(getPaint());
         strokePaint.setColor(Color.WHITE);
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(2);
 
         canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, strokePaint);
+
+        Paint paint = new Paint(getPaint());
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawText(lyrics.getLyrics().get(lyrics.getIndex()).get(0).getParent(), x, y, paint);
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.parseColor("#ff7f50"));
@@ -206,9 +228,14 @@ public class LyricsTextView extends TextView {
         String eng;
 
         List<MidiLyrics> midiLyrics = new ArrayList<>();
+        int n=0;
         try {
             while (lyricsIt.hasNext()) {
                 MidiEvent event = lyricsIt.next();
+
+                if(n == 582) {
+                    Logger.i("asdfagq3egSibbal");
+                }
                 if (!(event instanceof MidiLyrics)) {
                     continue;
                 }
@@ -283,6 +310,7 @@ public class LyricsTextView extends TextView {
                 }
 
                 midiLyrics.add((MidiLyrics) event);
+                n++;
             }
         } catch (Exception e) {
             e.printStackTrace();

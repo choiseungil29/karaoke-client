@@ -63,7 +63,7 @@ public class MidiFile
         mType = mTrackCount > 1 ? 1 : 0;
     }
 
-    public MidiFile(File fileIn) throws FileNotFoundException, IOException {
+    public MidiFile(File fileIn) throws IOException {
         this(new FileInputStream(fileIn));
     }
 
@@ -75,7 +75,7 @@ public class MidiFile
 
         initFromBuffer(buffer);
 
-        mTracks = new ArrayList<MidiTrack>();
+        mTracks = new ArrayList<>();
         for(int i = 0; i < mTrackCount; i++) {
             mTracks.add(new MidiTrack(in));
         }

@@ -1,11 +1,15 @@
 package com.karaokepang.Activity;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -13,10 +17,12 @@ import com.google.common.base.Strings;
 import com.karaokepang.Keys;
 import com.karaokepang.Model.FileUri;
 import com.karaokepang.Util.FilePath;
+import com.karaokepang.ftp.FtpServiceUp;
 
 import org.androidannotations.annotations.EActivity;
 
 import java.io.File;
+import java.util.List;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
@@ -65,6 +71,15 @@ public class BluetoothActivity extends BaseActivity {
                     startActivity(intent);
                 } else if (message.equals(Keys.SendData.MODE_HOME)) {
                     bt.send(Keys.SendData.MODE_HOME, true);
+                    ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
+                    ComponentName componentName = info.get(0).topActivity;
+                    String activityName = componentName.getShortClassName().substring(1);
+                    if (activityName.contains("PangPangActivity")) {
+                        activityController.getPangPangActivity().finish();
+                    } else if (activityName.contains("DuetActivity")) {
+                        activityController.getDuetActivity().finish();
+                    }
                     if (activityController.isDuetSelectMode()) {
                         activityController.getDuetSelectActivity().finish();
                     } else if (activityController.isPangSelectMode()) {
@@ -74,12 +89,25 @@ public class BluetoothActivity extends BaseActivity {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
                 } else if (message.equals(Keys.SendData.STOP)) {
-                    if (activityController.isPangMode()) {
+                    ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
+                    ComponentName componentName = info.get(0).topActivity;
+                    String activityName = componentName.getShortClassName().substring(1);
+                    if (activityName.contains("PangPangActivity")) {
+                        activityController.getPangPangActivity().finishSign = true;
                         activityController.getPangPangActivity().finish();
-                    } else if (activityController.isDuetMode()) {
+                    } else if (activityName.contains("DuetActivity")) {
+                        activityController.getDuetActivity().finishSign = true;
                         activityController.getDuetActivity().finish();
                     }
                 } else if (message.equals(Keys.SendData.MUSIC_SHEET_MODE)) {
+                    if(activityController.getDuetActivity() != null) {
+                        if(activityController.getDuetActivity().sv_score.getVisibility() == View.VISIBLE) {
+                            activityController.getDuetActivity().sv_score.setVisibility(View.INVISIBLE);
+                        } else {
+                            activityController.getDuetActivity().sv_score.setVisibility(View.VISIBLE);
+                        }
+                    }
 //                    if (musicPlayActivity.layoutScore.getVisibility() == View.VISIBLE) {
 //                        musicPlayActivity.layoutScore.setVisibility(View.INVISIBLE);
 //                        Toast.makeText(getApplicationContext(), "악보모드x", Toast.LENGTH_SHORT).show();
@@ -88,54 +116,58 @@ public class BluetoothActivity extends BaseActivity {
 //                        Toast.makeText(getApplicationContext(), "악보모드o", Toast.LENGTH_SHORT).show();
 //                    }
                 } else {
-                    if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {
-                        File file;
-                        if (message.contains("||")) {
-                            String[] splits = message.split("\\|\\|");
-                            if (splits.length != 0) {
-                                if (splits[1].equals("0")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
-                                } else if (splits[1].equals("1")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
-                                } else if (splits[1].equals("2")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
-                                } else if (splits[1].equals("3")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
-                                } else if (splits[1].equals("4")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
-                                } else if (splits[1].equals("5")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
-                                } else if (splits[1].equals("6")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
-                                } else if (splits[1].equals("7")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
-                                } else if (splits[1].equals("8")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
-                                } else if (splits[1].equals("9")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
-                                } else if (splits[1].equals("10")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
-                                } else if (splits[1].equals("11")) {
-                                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+                    if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
+                        if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {
+                            File file;
+                            if (message.contains("||")) {
+                                String[] splits = message.split("\\|\\|");
+                                if (splits.length != 0) {
+                                    if (splits[1].equals("0")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+                                    } else if (splits[1].equals("1")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
+                                    } else if (splits[1].equals("2")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
+                                    } else if (splits[1].equals("3")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+                                    } else if (splits[1].equals("4")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
+                                    } else if (splits[1].equals("5")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
+                                    } else if (splits[1].equals("6")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
+                                    } else if (splits[1].equals("7")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
+                                    } else if (splits[1].equals("8")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
+                                    } else if (splits[1].equals("9")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
+                                    } else if (splits[1].equals("10")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
+                                    } else if (splits[1].equals("11")) {
+                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+                                    }
                                 }
+                                file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
+                            } else {
+                                file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
                             }
-                            file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
+                            Uri uri = Uri.parse(file.getAbsolutePath());
+                            FileUri fileUri = new FileUri(uri, file.getName());
+                            if (activityController.isDuetSelectMode()) {
+                                Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
+                                intent.setData(fileUri.getUri());
+                                startActivity(intent);
+                            } else if (activityController.isPangSelectMode()) {
+                                Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
+                                intent.setData(fileUri.getUri());
+                                startActivity(intent);
+                            }
                         } else {
-                            file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
-                        }
-                        Uri uri = Uri.parse(file.getAbsolutePath());
-                        FileUri fileUri = new FileUri(uri, file.getName());
-                        if (activityController.isDuetSelectMode()) {
-                            Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
-                            intent.setData(fileUri.getUri());
-                            startActivity(intent);
-                        } else if (activityController.isPangSelectMode()) {
-                            Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
-                            intent.setData(fileUri.getUri());
-                            startActivity(intent);
+                            Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
+                        bt.send(Keys.SendData.PLAYING, true);
                     }
                 }
             }

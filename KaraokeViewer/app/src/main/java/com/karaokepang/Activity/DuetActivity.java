@@ -1,5 +1,6 @@
 package com.karaokepang.Activity;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Window;
@@ -28,12 +29,12 @@ public class DuetActivity extends PlayActivity {
     @Override
     public void afterViews() {
         super.afterViews();
-        activityController.setDuetActivity(this);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
         sv_score.initMidiFile(midiUri);
         initMidiFileWithStart(midiUri);
+        ltv_lyrics.setBackgroundColor(Color.parseColor("#FF444444"));
     }
 
     @Override
@@ -48,16 +49,16 @@ public class DuetActivity extends PlayActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("kkk","----------------------onPause------------------");
-        activityController.setDuetActivity(null);
+    protected void onResume() {
+        super.onResume();
+        Log.d("kkk", "----------------------onResume------------------");
+        activityController.setDuetActivity(this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("kkk","----------------------onDestroy------------------");
+        @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("kkk", "----------------------onPause------------------");
         activityController.setDuetActivity(null);
     }
 }
