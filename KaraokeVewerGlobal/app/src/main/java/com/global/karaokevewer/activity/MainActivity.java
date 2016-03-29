@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_audition:
                 try {
-                    startActivity(getPackageManager().getLaunchIntentForPackage("com.mobcast.kr.kmp"));
+                    startActivity(getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen"));
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), getString(R.string.not_installed_application), Toast.LENGTH_SHORT).show();

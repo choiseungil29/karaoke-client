@@ -12,7 +12,6 @@ import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Midi.util.MidiUtil;
 import com.karaokepang.Model.Lyric;
-import com.karaokepang.Model.Lyrics;
 import com.karaokepang.R;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.View.CustomTextView;
@@ -44,14 +43,14 @@ public abstract class PlayActivity extends BluetoothActivity {
 
     private ActivityController activityController = ActivityController.getInstance();
 
-    protected MediaPlayer player = new MediaPlayer();
-    protected MidiFile midifile;
-    protected MidiTrack lyricsTrack;
-    protected MidiTrack renderTrack;
-    protected List<MidiTrack> renderTracks = new ArrayList<>();
-    protected List<Tempo> tempos;
+    private MediaPlayer player = new MediaPlayer();
+    private MidiFile midifile;
+    private MidiTrack lyricsTrack;
+    private MidiTrack renderTrack;
+    private List<MidiTrack> renderTracks = new ArrayList<>();
+    private List<Tempo> tempos;
 
-    protected List<String> ksaLyricsArray = new ArrayList<>();
+    private List<String> ksaLyricsArray = new ArrayList<>();
 
     private float tick = 0;
 
@@ -80,9 +79,23 @@ public abstract class PlayActivity extends BluetoothActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Logger.i("===============destroy============================");
+        Logger.i("destroy!");
         player.stop();
-        player.release();
         player.reset();
+        player.release();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Logger.i("================onPause===========================");
+        Logger.i("onPause!");
+
+        player.stop();
+        player.reset();
+        player.release();
+
     }
 
     public void initMidiFile(Uri uri) {
@@ -124,6 +137,7 @@ public abstract class PlayActivity extends BluetoothActivity {
             activityController.getDuetSelectActivity().startRecord(songNumber);
         }
         tickCounter();
+        //draw();
         loop();
     }
 
@@ -153,7 +167,7 @@ public abstract class PlayActivity extends BluetoothActivity {
     protected abstract void update(float tick);
 
     protected void draw(float tick) {
-
+        ltv_lyrics.callOnDraw(tick);
     }
 
     @Background
