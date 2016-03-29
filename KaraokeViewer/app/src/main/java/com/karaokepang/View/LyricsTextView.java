@@ -108,7 +108,7 @@ public class LyricsTextView extends TextView {
     private void calculateLyricsIndex(float tick, Lyrics lyrics) {
         for(int i=0; i<lyrics.getLyrics().size()-1; i++) {
             if(tick >= lyrics.getLyrics().get(i).get(
-                    lyrics.getLyrics().get(i).size()-1).getEndTick()) {
+                    lyrics.getLyrics().get(i).size() - 1).getEndTick()) {
                 lyrics.setIndex(i+1);
                 lyrics.setWidth(0);
             }
@@ -116,11 +116,7 @@ public class LyricsTextView extends TextView {
     }
 
     private void calculateLyricsWidth(float tick, Lyrics lyrics) {
-        /*if(lyrics.getIndex() >= lyrics.getLyrics().size()) {
-            lyrics.setIndex(lyrics.getLyrics().size()-1);
-        }*/
         List<Lyric> oneLine = lyrics.getLyrics().get(lyrics.getIndex());
-
 
         int space = 0;
         for(int i=0; i<oneLine.size(); i++) {
@@ -130,7 +126,6 @@ public class LyricsTextView extends TextView {
             }
             if(tick >= lyric.getStartTick() &&
                     tick <= lyric.getEndTick()) {
-                String text = lyric.getParent().substring(0, i + space);
                 StringBuilder textBuilder = new StringBuilder();
                 for(int j=0; j<i; j++) {
                     textBuilder.append(oneLine.get(j).getText());

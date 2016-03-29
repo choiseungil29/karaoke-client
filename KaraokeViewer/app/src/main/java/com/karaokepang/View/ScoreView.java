@@ -165,18 +165,14 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(0, 0, width, height, paint);
 
         try {
-            //Thread thread = Thread.currentThread();
-            //Logger.i("draw current thread : " + thread.getName());
             staffs[0] = new StaffSymbol(getContext(), width, height / 2, renderTrack, renderMeasures[0]);
             staffs[0].nowTick = tick;
             staffs[0].draw(canvas);
-
             canvas.translate(0, height / 2);
 
             staffs[1] = new StaffSymbol(getContext(), width, height / 2, renderTrack, renderMeasures[1]);
             staffs[1].nowTick = tick;
             staffs[1].draw(canvas);
-
             canvas.translate(0, -(height / 2));
         } catch (IndexOutOfBoundsException e) {
             Logger.i("initialized : " + initialized);
@@ -193,16 +189,16 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
         }
         onDraw(canvas);
         holder.unlockCanvasAndPost(canvas);
-        //invalidate();
     }
 
     public void update(float tick) {
         this.tick = tick;
 
-        //T/hread thread = Thread.currentThread();
-        //Logger.i("update current thread : " + thread.getName());
-
         if(!initialized) {
+            return;
+        }
+
+        if (measureCount >= allMeasures.size()) {
             return;
         }
 
@@ -222,9 +218,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
             }
         } else if (nowMeasure.endTicks <= tick) {
             measureCount++;
-            if (measureCount >= allMeasures.size()) {
-                return;
-            }
             nowMeasure = allMeasures.get(measureCount);
         }
 
@@ -280,28 +273,6 @@ public class ScoreView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void createAllMeasures() {
-        allMeasures = new ArrayList<>();
-
-        /*long tickCount = 0;
-        List<TimeSignature> tsList = signTrack.getEvents(TimeSignature.class);
-        Iterator<MidiEvent> renderIter = renderTrack.getEvents().iterator();
-        int tsIndex = 0;
-        TimeSignature timeSignature = tsList.get(tsIndex);
-
-        MeasureSymbol measure = new MeasureSymbol();
-        int lastTick = 0;
-        while (renderIter.hasNext()) {
-            MidiEvent e = renderIter.next();
-            if(e.getTick() < timeSignature.getTick()) {
-                tsIndex++;
-                timeSignature = tsList.get(tsIndex);
-            }
-
-            measure.startTicks = lastTick;
-            measure.endTicks = measure.startTicks + (BeforeScoreView.resolution / timeSignature.getRealDenominator() / 4) * timeSignature.getNumerator();
-            measure.addSymbol(e);
-        }*/
-
         allMeasures = new ArrayList<>();
 
         Iterator<MidiEvent> it = renderTrack.getEvents().iterator();

@@ -52,7 +52,6 @@ public abstract class PlayActivity extends BluetoothActivity {
     protected List<Tempo> tempos;
 
     protected List<String> ksaLyricsArray = new ArrayList<>();
-    protected Lyrics lyrics = new Lyrics();
 
     private float tick = 0;
 
@@ -81,7 +80,6 @@ public abstract class PlayActivity extends BluetoothActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Logger.i("destroy!");
         player.stop();
         player.release();
         player.reset();
@@ -91,17 +89,16 @@ public abstract class PlayActivity extends BluetoothActivity {
         try {
             FileInputStream fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
-            FileDescriptor fd = fis.getFD();
             player.reset();
-            player.setDataSource(fd);
+            player.setDataSource(fis.getFD());
             player.prepare();
-
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     finish();
                 }
             });
+            player.start();
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -126,9 +123,6 @@ public abstract class PlayActivity extends BluetoothActivity {
         if (activityController.getDuetSelectActivity() != null) {
             activityController.getDuetSelectActivity().startRecord(songNumber);
         }
-        player.start();
-        Logger.i("play!!");
-        Logger.i("player play!");
         tickCounter();
         loop();
     }
