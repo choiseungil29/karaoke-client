@@ -201,33 +201,28 @@ public abstract class PlayActivity extends BluetoothActivity {
             }
 
             long currentPosition = player.getCurrentPosition();
-            if (tempos.size() == 1) {
-                Logger.i("fucking tempo 1");
-                Logger.i("firstTempo : " + tempos.get(0).toString());
+            if(tempos.size() == 1) {
                 float tick = 0;
                 Tempo lastTempo = tempos.get(0);
-                tick += lastTempo.getBpm() / 60 * MidiInfo.resolution * ((float) currentPosition) / 1000;
+                tick += lastTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
 
-                if (this.tick < tick) {
+                if(this.tick < tick) {
                     this.tick = tick;
                 }
             } else if (tempos.size() == 2) {
-                Logger.i("fucking tempo 2");
                 Tempo firstTempo = tempos.get(0);
                 Tempo secondTempo = tempos.get(1);
-                Logger.i("firstTempo : " + firstTempo.toString());
-                Logger.i("secondTempo : " + secondTempo.toString());
 
                 float totalTick = 0;
                 long firstTempoMillis = (long) (secondTempo.getTick() / (firstTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
-                if (currentPosition < firstTempoMillis) {
-                    totalTick += firstTempo.getBpm() / 60 * MidiInfo.resolution * ((float) currentPosition) / 1000;
+                if(currentPosition < firstTempoMillis) {
+                    totalTick += firstTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
                 } else {
-                    currentPosition -= firstTempoMillis;
+                    currentPosition -= (secondTempo.getTick() / (firstTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
                     totalTick += secondTempo.getTick();
-                    totalTick += secondTempo.getBpm() / 60 * MidiInfo.resolution * ((float) currentPosition) / 1000;
+                    totalTick += secondTempo.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
                 }
-                if (this.tick < totalTick) {
+                if(this.tick < totalTick) {
                     this.tick = totalTick;
                 }
             } else if (tempos.size() == 3) {
