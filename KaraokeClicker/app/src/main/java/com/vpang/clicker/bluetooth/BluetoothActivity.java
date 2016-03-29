@@ -18,6 +18,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 import static com.vpang.clicker.bluetooth.SendData.MODE_DUET;
 import static com.vpang.clicker.bluetooth.SendData.MODE_HOME;
 import static com.vpang.clicker.bluetooth.SendData.MODE_VPANG;
+import static com.vpang.clicker.bluetooth.SendData.PLAYING;
 
 /**
  * Created by 1002230 on 16. 2. 5..
@@ -64,6 +65,8 @@ public class BluetoothActivity extends Activity {
                 } else if (message.equals(MODE_HOME)) {
                     MODE = MODE_HOME;
                     MainActivity.buttonLayoutMode();
+                }else if (message.equals(PLAYING)) {
+                    Toast.makeText(getApplicationContext(),"노래가 재생중입니다",Toast.LENGTH_SHORT).show();
                 }
             }
         });

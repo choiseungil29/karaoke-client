@@ -22,7 +22,6 @@ public class PangPangActivity extends PlayActivity {
     @Override
     public void afterViews() {
         super.afterViews();
-        activityController.setPangPangActivity(this);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
@@ -35,8 +34,15 @@ public class PangPangActivity extends PlayActivity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
         activityController.setPangPangActivity(this);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        activityController.setPangPangActivity(null);
+    }
+
 }

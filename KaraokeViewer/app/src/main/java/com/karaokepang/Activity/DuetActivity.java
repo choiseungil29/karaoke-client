@@ -28,7 +28,6 @@ public class DuetActivity extends PlayActivity {
     @Override
     public void afterViews() {
         super.afterViews();
-        activityController.setDuetActivity(this);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
@@ -48,16 +47,16 @@ public class DuetActivity extends PlayActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("kkk", "----------------------onResume------------------");
+        activityController.setDuetActivity(this);
+    }
+
+        @Override
     protected void onPause() {
         super.onPause();
         Log.d("kkk","----------------------onPause------------------");
-        activityController.setDuetActivity(null);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("kkk","----------------------onDestroy------------------");
         activityController.setDuetActivity(null);
     }
 }

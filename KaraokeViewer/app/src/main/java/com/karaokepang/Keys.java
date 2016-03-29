@@ -29,5 +29,6 @@ public class Keys {
         public static final String MODE_HOME = "mode_home";
         public static final String RESERVATION = "reservation";
         public static final String RESERVATION_CANCEL = "reservation_cancel";
+        public static final String PLAYING = "playing";
     }
 }

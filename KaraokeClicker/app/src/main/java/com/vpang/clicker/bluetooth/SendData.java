@@ -18,4 +18,5 @@ public class SendData {
     public static String MODE_HOME = "mode_home";
     public static String RESERVATION = "reservation";
     public static String RESERVATION_CANCEL = "reservation_cancel";
+    public static String PLAYING = "playing";
 }

@@ -26,6 +26,7 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
         FTPClient client = null;
 
+        Logger.i("======FTP Upload 진입===============");
         try {
             client = new FTPClient();
 
