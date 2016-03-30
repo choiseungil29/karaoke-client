@@ -75,9 +75,9 @@ public class BluetoothActivity extends BaseActivity {
                     List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
                     ComponentName componentName = info.get(0).topActivity;
                     String activityName = componentName.getShortClassName().substring(1);
-                    if (activityName.contains("PangPangActivity")) {
+                    if (activityName.contains("PangPangActivity") && activityController.getPangPangActivity() != null) {
                         activityController.getPangPangActivity().finish();
-                    } else if (activityName.contains("DuetActivity")) {
+                    } else if (activityName.contains("DuetActivity") && activityController.getDuetActivity() != null) {
                         activityController.getDuetActivity().finish();
                     }
                     if (activityController.isDuetSelectMode()) {
@@ -89,6 +89,7 @@ public class BluetoothActivity extends BaseActivity {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
                 } else if (message.equals(Keys.SendData.STOP)) {
+                    //Todo 셀렉트 화면에서 화면이 종료된다? & 노래가 진행중이 아닐때 누르면
                     ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                     List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
                     ComponentName componentName = info.get(0).topActivity;
@@ -101,20 +102,13 @@ public class BluetoothActivity extends BaseActivity {
                         activityController.getDuetActivity().finish();
                     }
                 } else if (message.equals(Keys.SendData.MUSIC_SHEET_MODE)) {
-                    if(activityController.getDuetActivity() != null) {
-                        if(activityController.getDuetActivity().sv_score.getVisibility() == View.VISIBLE) {
+                    if (activityController.getDuetActivity() != null) {
+                        if (activityController.getDuetActivity().sv_score.getVisibility() == View.VISIBLE) {
                             activityController.getDuetActivity().sv_score.setVisibility(View.INVISIBLE);
                         } else {
                             activityController.getDuetActivity().sv_score.setVisibility(View.VISIBLE);
                         }
                     }
-//                    if (musicPlayActivity.layoutScore.getVisibility() == View.VISIBLE) {
-//                        musicPlayActivity.layoutScore.setVisibility(View.INVISIBLE);
-//                        Toast.makeText(getApplicationContext(), "악보모드x", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        musicPlayActivity.layoutScore.setVisibility(View.VISIBLE);
-//                        Toast.makeText(getApplicationContext(), "악보모드o", Toast.LENGTH_SHORT).show();
-//                    }
                 } else {
                     if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
                         if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {

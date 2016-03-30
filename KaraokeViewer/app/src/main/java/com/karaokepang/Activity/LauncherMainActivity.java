@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.VideoView;
@@ -27,12 +28,17 @@ import java.util.Collections;
 public class LauncherMainActivity extends BluetoothActivity {
 
 
-    @ViewById(R.id.btn_launcher_vpang) Button btnVpang;
-    @ViewById(R.id.btn_launcher_friend) Button btnFriend;
-    @ViewById(R.id.btn_launcher_star) Button btnStart;
+    @ViewById(R.id.btn_launcher_vpang)
+    Button btnVpang;
+    @ViewById(R.id.btn_launcher_friend)
+    Button btnFriend;
+    @ViewById(R.id.btn_launcher_star)
+    Button btnStart;
 
-    @ViewById(R.id.text_led) VerticalMarqueeTextView textLed;
-    @ViewById(R.id.videoView) VideoView videoView;
+    @ViewById(R.id.text_led)
+    VerticalMarqueeTextView textLed;
+    @ViewById(R.id.videoView)
+    VideoView videoView;
 
 
     private ArrayList<FileUri> list;
@@ -82,6 +88,26 @@ public class LauncherMainActivity extends BluetoothActivity {
                 list.add(fileUri);
             }
         }
+    }
+
+    private void deleteVideoData() {
+        try {
+            String[] fileList = getFileList(FilePath.FILE_PATH_VPANG);
+            for (int i = 0; i < fileList.length; i++) {
+                File file = new File(FilePath.FILE_PATH_VPANG + fileList[i]);
+                boolean delete = file.delete();
+                Log.d("kkk", file.getAbsoluteFile() + "삭제 완료 " + delete);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] getFileList(String strPath) {
+        File fileRoot = new File(strPath);
+        if (!fileRoot.isDirectory())
+            return null;
+        return fileRoot.list();
     }
 
     private void initVideoView() {
@@ -141,6 +167,7 @@ public class LauncherMainActivity extends BluetoothActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        deleteVideoData();
         bt.send(Keys.SendData.MODE_HOME, true);
     }
 }

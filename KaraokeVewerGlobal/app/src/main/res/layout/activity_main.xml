@@ -1,93 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rv_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="@android:color/black"
+    tools:context=".Activity.MainActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:padding="60dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:background="#fff">
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <VideoView
+        android:id="@+id/vv_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:clickable="false" />
 
-        <ImageButton
-            android:id="@+id/btn_ontv"
-            android:layout_width="0px"
-            android:layout_height="251dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/btn_ontv" />
+    <com.global.karaokevewer.View.CustomTextView
+        android:id="@+id/textView_song_selected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="선곡해주세요!"
+        android:textSize="100sp"
+        android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/btn_karaoke"
-            android:layout_width="0px"
-            android:layout_height="251dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/btn_karaoke" />
-
-        <ImageButton
-            android:id="@+id/btn_duet"
-            android:layout_width="0px"
-            android:layout_height="251dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/btn_duet" />
-
-        <ImageButton
-            android:id="@+id/btn_myalbum"
-            android:layout_width="0px"
-            android:layout_height="251dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/btn_myalbum" />
-
-        <ImageButton
-            android:id="@+id/btn_audition"
-            android:layout_width="0px"
-            android:layout_height="251dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/btn_audition" />
-
-        <ImageButton
-            android:id="@+id/btn_internet"
-            android:layout_width="0px"
-            android:layout_height="251dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/btn_internet" />
-    </LinearLayout>
 </RelativeLayout>

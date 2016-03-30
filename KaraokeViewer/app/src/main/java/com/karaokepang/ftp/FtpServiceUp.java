@@ -93,7 +93,6 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
         Log.e("kkk", "ftp upload start");
-//        progressDialog = ProgressDialog.show(activity, "", "영상 전송중 입니다", true);
     }
 
     @Override
@@ -107,7 +106,9 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         Log.d("kkk", "영상 전송이 완료되었습니다");
         try {
-            new File(FilePath.FILE_PATH_VPANG + fileName + ".mp4").delete();
+            File file = new File(FilePath.FILE_PATH_VPANG + fileName + ".mp4");
+            boolean delete = file.delete();
+            Log.d("kkk", file.getAbsoluteFile() + "삭제 완료 " + delete);
         } catch (Exception e) {
             e.printStackTrace();
         }
