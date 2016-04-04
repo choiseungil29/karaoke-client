@@ -6,7 +6,7 @@ package com.karaokepang.Util;
 public class FilePath {
 //    public static final String FILE_PATH = "/SD-FAT32/";
     public static final String FILE_PATH = "/mnt/external_sd/";
-    //public static final String FILE_PATH = "/mnt/sdcard/";
+    //public s`tatic final String FILE_PATH = "/mnt/sdcard/";
     public static final String FILE_PATH_VPANGBG = FILE_PATH + "vpang_bg/";
     public static final String FILE_PATH_VPANGBG2 = FILE_PATH + "vpang_bg2/";
     public static final String FILE_PATH_VPANG = FILE_PATH + "vpang/";
