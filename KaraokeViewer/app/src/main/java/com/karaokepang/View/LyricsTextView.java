@@ -152,6 +152,7 @@ public class LyricsTextView extends TextView {
             if(tick >= lyrics.getLyrics().get(i).get(
                     lyrics.getLyrics().get(i).size() - 1).getEndTick()) {
                 lyrics.setIndex(i + 1);
+                lyrics.setWidth(0);
             }
         }
     }
