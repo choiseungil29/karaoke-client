@@ -33,8 +33,29 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 @EActivity
 public class BluetoothActivity extends BaseActivity {
 
+    public static StringBuffer sbReservation = new StringBuffer();
+    public static String[] reservation;
     public BluetoothSPP bt;
     private ActivityController activityController = ActivityController.getInstance();
+
+    public static  boolean isReservation() {
+        boolean result = false;
+        try {
+            result = reservation.length != 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String getReservationNumber() {
+        sbReservation = new StringBuffer();
+        for (int i = 2; i < reservation.length; i++) {
+            sbReservation.append("," + reservation[i]);
+        }
+        reservation = sbReservation.toString().split(",");
+        return reservation[1];
+    }
 
     @Override
     public void afterViews() {
@@ -110,58 +131,68 @@ public class BluetoothActivity extends BaseActivity {
                         }
                     }
                 } else {
-                    if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
-                        if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {
-                            File file;
-                            if (message.contains("||")) {
-                                String[] splits = message.split("\\|\\|");
-                                if (splits.length != 0) {
-                                    if (splits[1].equals("0")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
-                                    } else if (splits[1].equals("1")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
-                                    } else if (splits[1].equals("2")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
-                                    } else if (splits[1].equals("3")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
-                                    } else if (splits[1].equals("4")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
-                                    } else if (splits[1].equals("5")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
-                                    } else if (splits[1].equals("6")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
-                                    } else if (splits[1].equals("7")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
-                                    } else if (splits[1].equals("8")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
-                                    } else if (splits[1].equals("9")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
-                                    } else if (splits[1].equals("10")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
-                                    } else if (splits[1].equals("11")) {
-                                        activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
-                                    }
-                                }
-                                file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
-                            } else {
-                                file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
-                            }
-                            Uri uri = Uri.parse(file.getAbsolutePath());
-                            FileUri fileUri = new FileUri(uri, file.getName());
-                            if (activityController.isDuetSelectMode()) {
-                                Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
-                                intent.setData(fileUri.getUri());
-                                startActivity(intent);
-                            } else if (activityController.isPangSelectMode()) {
-                                Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
-                                intent.setData(fileUri.getUri());
-                                startActivity(intent);
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
+                    //예약곡
+                    if (message.contains("reservation")) {
+                        message = message.replace("reservation", "");
+                        sbReservation.append("," + message);
+                        reservation = sbReservation.toString().split(",");
+                        for (int i = 1; i < reservation.length; i++) {
+                            Log.e("kkk", "예약곡 " + i + ":" + reservation[i]);
                         }
                     } else {
-                        bt.send(Keys.SendData.PLAYING, true);
+                        if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
+                            if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {
+                                File file;
+                                if (message.contains("||")) {
+                                    String[] splits = message.split("\\|\\|");
+                                    if (splits.length != 0) {
+                                        if (splits[1].equals("0")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+                                        } else if (splits[1].equals("1")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_002.mp4");
+                                        } else if (splits[1].equals("2")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_003.mp4");
+                                        } else if (splits[1].equals("3")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_004.mp4");
+                                        } else if (splits[1].equals("4")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_005.mp4");
+                                        } else if (splits[1].equals("5")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_006.mp4");
+                                        } else if (splits[1].equals("6")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_007.mp4");
+                                        } else if (splits[1].equals("7")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_008.mp4");
+                                        } else if (splits[1].equals("8")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_009.mp4");
+                                        } else if (splits[1].equals("9")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_010.mp4");
+                                        } else if (splits[1].equals("10")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_011.mp4");
+                                        } else if (splits[1].equals("11")) {
+                                            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_012.mp4");
+                                        }
+                                    }
+                                    file = new File(FilePath.FILE_PATH_VPANGMID + splits[0] + ".mid");
+                                } else {
+                                    file = new File(FilePath.FILE_PATH_VPANGMID + message + ".mid");
+                                }
+                                Uri uri = Uri.parse(file.getAbsolutePath());
+                                FileUri fileUri = new FileUri(uri, file.getName());
+                                if (activityController.isDuetSelectMode()) {
+                                    Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
+                                    intent.setData(fileUri.getUri());
+                                    startActivity(intent);
+                                } else if (activityController.isPangSelectMode()) {
+                                    Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
+                                    intent.setData(fileUri.getUri());
+                                    startActivity(intent);
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            bt.send(Keys.SendData.PLAYING, true);
+                        }
                     }
                 }
             }

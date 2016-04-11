@@ -3,6 +3,7 @@ package com.karaokepang.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
@@ -15,8 +16,10 @@ import com.karaokepang.Midi.event.meta.MidiLyrics;
 import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Midi.util.MidiUtil;
+import com.karaokepang.Model.FileUri;
 import com.karaokepang.Model.Lyric;
 import com.karaokepang.R;
+import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.LyricsTextView;
@@ -116,6 +119,22 @@ public abstract class PlayActivity extends BluetoothActivity {
                         activityController.getDuetActivity().finishSign = true;
                         activityController.getDuetActivity().finish();
                         new FtpServiceUp(activityController.getDuetSelectActivity().fileName).execute();
+                    }
+
+                    //예약곡 실행
+                    if (isReservation()) {
+                        File file = new File(FilePath.FILE_PATH_VPANGMID + getReservationNumber() + ".mid");
+                        Uri uri = Uri.parse(file.getAbsolutePath());
+                        FileUri fileUri = new FileUri(uri, file.getName());
+                        if (activityController.isDuetSelectMode()) {
+                            Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
+                            intent.setData(fileUri.getUri());
+                            startActivity(intent);
+                        } else if (activityController.isPangSelectMode()) {
+                            Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
+                            intent.setData(fileUri.getUri());
+                            startActivity(intent);
+                        }
                     }
                 }
             });

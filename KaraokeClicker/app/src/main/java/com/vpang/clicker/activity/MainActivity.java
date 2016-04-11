@@ -342,6 +342,7 @@ public class MainActivity extends BluetoothActivity {
                     startActivity(intent);
                     break;
                 case R.id.btn_reservation:
+                    bt.send("reservation" + textSelectNumber.getText().toString(), true);
                     break;
                 case R.id.btn_reservation_cancle:
                     break;

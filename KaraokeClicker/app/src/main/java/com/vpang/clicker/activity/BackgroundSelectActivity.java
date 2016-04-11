@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +18,6 @@ import com.google.common.base.Strings;
 import com.squareup.picasso.Picasso;
 import com.vpang.clicker.R;
 
-import app.akexorcist.bluetotohspp.library.BluetoothState;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
