@@ -21,6 +21,7 @@ import com.karaokepang.Dialog.ChooseSongDialog;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.MidiLyrics;
+import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Model.FileUri;
 import com.karaokepang.Model.KSALyric;
 import com.karaokepang.Model.KSALyrics;
@@ -33,6 +34,7 @@ import com.karaokepang.View.BMJUATextView;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.OutlineTextView;
 import com.karaokepang.View.BeforeScoreView;
+import com.karaokepang.View.ScoreView;
 import com.karaokepang.camera.CameraPreview;
 import com.karaokepang.ftp.FtpServiceUp;
 
@@ -303,8 +305,10 @@ public class MusicPlayActivity extends BaseActivity implements BeforeScoreView.M
             } catch (IndexOutOfBoundsException e) {
                 endTick = list.get(i).getTick();
             }
-            if ((endTick - startTick) > (BeforeScoreView.resolution * 4)) {
-                endTick = startTick + BeforeScoreView.resolution * 4;
+
+            int limit = MidiInfo.resolution * 6;
+            if ((endTick - startTick) > limit) {
+                endTick = startTick + limit;
             }
             lyrics.lyricList.add(new KSALyric(event.getLyric(), startTick, endTick));
             line.append(event.getLyric());

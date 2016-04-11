@@ -139,6 +139,7 @@ public abstract class PlayActivity extends BluetoothActivity {
                 }
             });
 
+            player.start();
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -166,7 +167,11 @@ public abstract class PlayActivity extends BluetoothActivity {
         if (activityController.getDuetSelectActivity() != null) {
             activityController.getDuetSelectActivity().startRecord(songNumber);
         }
+//        player.start();
+        Logger.i("play!!");
+        Logger.i("player play!");
         tickCounter();
+        //draw();
         loop();
     }
 
