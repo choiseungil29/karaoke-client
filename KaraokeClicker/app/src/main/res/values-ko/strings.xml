@@ -7,5 +7,5 @@
     <string name="select_number">선택된 번호</string>
     <string name="select_title">선택된 노래 제목</string>
     <string name="select_singer">선택된 가수</string>
-    <string name="plz_select_mode">모드를 선택해주세요</string>
+    <string name="plz_select_mode">메뉴를 선택해주세요</string>
 </resources>
