@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ImageView
         android:id="@+id/iv_background"
         android:layout_width="match_parent"
@@ -14,12 +15,12 @@
     <LinearLayout
         android:id="@+id/layout_preview"
         android:layout_width="match_parent"
-        android:visibility="invisible"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="280dp"
         android:gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <VideoView
             android:id="@+id/vv_background"
@@ -46,4 +47,17 @@
         android:textSize="120sp"
         android:textStyle="bold" />
 
+    <com.karaokepang.View.BMJUATextView
+        android:id="@+id/text_reservation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:layout_margin="20dp"
+        android:lines="1"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:textSize="80sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 </RelativeLayout>

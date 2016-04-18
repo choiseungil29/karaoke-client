@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <RelativeLayout
         android:id="@+id/camera_layout"
         android:layout_width="wrap_content"
@@ -14,7 +15,7 @@
         android:id="@+id/vv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:clickable="false" />
 
     <com.karaokepang.View.BMJUATextView
@@ -27,4 +28,18 @@
         android:textColor="#000"
         android:textSize="120sp"
         android:textStyle="bold" />
+
+    <com.karaokepang.View.BMJUATextView
+        android:id="@+id/text_reservation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="20dp"
+        android:lines="1"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:textSize="80sp"
+        android:textStyle="bold" />
+
 </RelativeLayout>

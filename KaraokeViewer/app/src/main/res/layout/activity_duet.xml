@@ -48,7 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/view_blind"
-        android:background="#FF444444"
         android:layout_alignParentTop="true"/>
 
     <com.karaokepang.View.ScoreView_

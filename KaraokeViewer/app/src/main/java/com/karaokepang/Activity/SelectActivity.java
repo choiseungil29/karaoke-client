@@ -4,6 +4,7 @@ import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.VideoView;
 
 import com.karaokepang.R;
 import com.karaokepang.Util.FilePath;
+import com.karaokepang.View.BMJUATextView;
 import com.karaokepang.camera.CameraPreview;
 
 import org.androidannotations.annotations.EActivity;
@@ -42,6 +44,8 @@ public class SelectActivity extends BluetoothActivity {
     RelativeLayout layoutCamera;
     @ViewById(R.id.textView_song_selected)
     TextView textSongSelected;
+    @ViewById(R.id.text_reservation)
+    BMJUATextView textReservation;
 
     @Override
     public void afterViews() {
@@ -141,6 +145,8 @@ public class SelectActivity extends BluetoothActivity {
         runOnUiThread(new Runnable() {
             public void run() {
                 try {
+                    Log.e("kkk", "====recoder===");
+                    Log.e("kkk", activityController.getDuetSelectActivity().getLocalClassName());
                     recorder.start();
                     Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
                     activityController.getDuetSelectActivity().layoutPreiew.setVisibility(LinearLayout.VISIBLE);
@@ -156,8 +162,15 @@ public class SelectActivity extends BluetoothActivity {
         if (!dir.exists()) {
             dir.mkdirs();
         }
+
+        releaseCamera();
+        if (camera == null) {
+            camera = Camera.open(findBackFacingCamera());
+            preview.refreshCamera(camera);
+        }
         recorder = new MediaRecorder();
         camera.unlock();
+        Log.e("kkk", "===========================0");
         recorder.setCamera(camera);
         recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
@@ -171,7 +184,7 @@ public class SelectActivity extends BluetoothActivity {
         recorder.setMaxDuration(6000000 * 10);
         recorder.setMaxFileSize(300000000 * 20);
 
-
+        Log.e("kkk", "===========================1");
         try {
             recorder.prepare();
         } catch (IllegalStateException e) {
@@ -183,8 +196,8 @@ public class SelectActivity extends BluetoothActivity {
             releaseMediaRecorder();
             return false;
         }
+        Log.e("kkk", "===========================2");
         return true;
-
     }
 
     public String getNewFileName(String songNumber) {

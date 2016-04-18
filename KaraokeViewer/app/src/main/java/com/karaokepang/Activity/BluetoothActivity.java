@@ -35,27 +35,26 @@ public class BluetoothActivity extends BaseActivity {
 
     public static StringBuffer sbReservation = new StringBuffer();
     public static String[] reservation;
+    public static String[] reservationName;
     public BluetoothSPP bt;
     private ActivityController activityController = ActivityController.getInstance();
 
-    public static  boolean isReservation() {
+    public static boolean isReservation() {
         boolean result = false;
         try {
-            result = reservation.length != 1;
+            result = reservation.length >= 1;
+            Log.e("kkk", "reservation.length = " + reservation.length);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.e("kkk", "reservation result = " + result);
         return result;
     }
 
     public static String getReservationNumber() {
-        sbReservation = new StringBuffer();
-        for (int i = 2; i < reservation.length; i++) {
-            sbReservation.append("," + reservation[i]);
-        }
-        reservation = sbReservation.toString().split(",");
-        return reservation[1];
+        return reservation[0];
     }
+
 
     @Override
     public void afterViews() {
@@ -135,9 +134,24 @@ public class BluetoothActivity extends BaseActivity {
                     if (message.contains("reservation")) {
                         message = message.replace("reservation", "");
                         sbReservation.append("," + message);
-                        reservation = sbReservation.toString().split(",");
-                        for (int i = 1; i < reservation.length; i++) {
-                            Log.e("kkk", "예약곡 " + i + ":" + reservation[i]);
+                        String[] split = sbReservation.toString().split(",");
+                        reservation = new String[split.length - 1];
+                        reservationName = new String[split.length - 1];
+                        int reservationCount = 0;
+                        Log.e("kkk", "splite = " + arrayJoin("#", split));
+                        Log.e("kkk", "splite = " + split.length);
+                        for (int i = 1; i < split.length; i++) {
+                            reservation[reservationCount] = split[i].split("-")[0];
+                            reservationName[reservationCount] = split[i].split("-")[1];
+                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+                            reservationCount++;
+                        }
+                        if (activityController.isDuetSelectMode()) {
+                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
+                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+                        } else if (activityController.isPangSelectMode()) {
+                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
+                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
                         }
                     } else {
                         if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
@@ -282,5 +296,16 @@ public class BluetoothActivity extends BaseActivity {
             }
         }
     }
+
+    public String arrayJoin(String glue, String array[]) {
+        String result = "";
+
+        for (int i = 0; i < array.length; i++) {
+            result += array[i];
+            if (i < array.length - 1) result += glue;
+        }
+        return result;
+    }
+
 }
 

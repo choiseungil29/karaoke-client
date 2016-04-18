@@ -322,24 +322,21 @@ public class MidiUtil
         if(!isKsaFile(ksaFile)) {
             return null;
         }
-        getLineInFile(ksaFile, 3);
-        return null;
+        return getLineInFile(ksaFile, 3);
     }
 
     public static String getComposer(File ksaFile) {
         if(!isKsaFile(ksaFile)) {
             return null;
         }
-        getLineInFile(ksaFile, 2);
-        return null;
+        return getLineInFile(ksaFile, 2);
     }
 
     public static String getSongName(File ksaFile) {
         if(!isKsaFile(ksaFile)) {
             return null;
         }
-        getLineInFile(ksaFile, 0);
-        return null;
+        return getLineInFile(ksaFile, 0);
     }
 
     private static boolean isKsaFile(File file) {

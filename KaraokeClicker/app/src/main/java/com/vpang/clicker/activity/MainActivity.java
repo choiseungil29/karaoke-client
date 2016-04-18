@@ -342,7 +342,8 @@ public class MainActivity extends BluetoothActivity {
                     startActivity(intent);
                     break;
                 case R.id.btn_reservation:
-                    bt.send("reservation" + textSelectNumber.getText().toString(), true);
+                    bt.send("reservation" + textSelectNumber.getText().toString()+"-"+textSelectSong.getText().toString(), true);
+                    Toast.makeText(getApplicationContext(),"["+textSelectSong.getText().toString()+"]예약완료",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btn_reservation_cancle:
                     break;

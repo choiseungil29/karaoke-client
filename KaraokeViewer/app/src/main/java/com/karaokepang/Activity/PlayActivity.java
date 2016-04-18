@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.common.base.Strings;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
@@ -96,14 +99,25 @@ public abstract class PlayActivity extends BluetoothActivity {
     }
 
     public void initMidiFile(Uri uri) {
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(uri.getPath());
+            fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
             FileDescriptor fd = fis.getFD();
             player.reset();
             player.setDataSource(fd);
-            player.prepare();
-            player.start();
+//            player.release();
+            player.prepareAsync();
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    Log.e("kkk", "onPrepared@@@@@@@@@@@@@@@@@@@@@@");
+                    mediaPlayer.start();
+                    tickCounter();
+                    loop();
+                    Log.e("kkk", "onPrepared######################");
+                }
+            });
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -135,11 +149,37 @@ public abstract class PlayActivity extends BluetoothActivity {
                             intent.setData(fileUri.getUri());
                             startActivity(intent);
                         }
+
+                        sbReservation = new StringBuffer();
+                        for (int i = 1; i < reservation.length; i++) {
+                            sbReservation.append("," + reservation[i] + "-" + reservationName[i]);
+                        }
+//                        reservation = sbReservation.toString().split(",");
+
+                        String[] split = sbReservation.toString().split(",");
+                        reservation = new String[split.length - 1];
+                        reservationName = new String[split.length - 1];
+                        int reservationCount = 0;
+                        Log.e("kkk", "splite = " + arrayJoin("#", split));
+                        Log.e("kkk", "splite = " + split.length);
+                        for (int i = 1; i < split.length; i++) {
+                            reservation[reservationCount] = split[i].split("-")[0];
+                            reservationName[reservationCount] = split[i].split("-")[1];
+                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+                            reservationCount++;
+                        }
+                        if (activityController.isDuetSelectMode()) {
+                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
+                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+                        } else if (activityController.isPangSelectMode()) {
+                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
+                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+                        }
                     }
+                    mp.release();
                 }
             });
 
-            player.start();
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -150,16 +190,30 @@ public abstract class PlayActivity extends BluetoothActivity {
             ltv_lyrics.loadKsaByMidi(uri);
             ltv_lyrics.initLyrics(lyricsTrack);
 
-            File musicFile = new File(uri.getPath());
+            Log.e("kkk", "layoutSongName = visible");
+            Log.e("kkk", uri.getPath());
+            layoutSongName.setVisibility(View.VISIBLE);
+            File musicFile = new File(uri.getPath().replace(".mid", ".ksa"));
             tv_songName.setText(MidiUtil.getSongName(musicFile));
             tv_composerName.setText(MidiUtil.getComposer(musicFile));
             tv_singer.setText(MidiUtil.getSinger(musicFile));
+            Log.e("kkk", "layoutsong =" + MidiUtil.getSongName(musicFile) + "," + MidiUtil.getComposer(musicFile) + "," + MidiUtil.getSinger(musicFile));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void play(String songNumber) {
+    private void play(String songNumber) {
+        Log.e("kkk", "====play===");
+        Runnable mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                layoutSongName.setVisibility(View.GONE);
+            }
+        };
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(mRunnable, 3000);
+
         if (activityController.getPangPangSelectActivity() != null) {
             activityController.getPangPangSelectActivity().startRecord(songNumber);
         }
@@ -168,11 +222,6 @@ public abstract class PlayActivity extends BluetoothActivity {
             activityController.getDuetSelectActivity().startRecord(songNumber);
         }
 //        player.start();
-        Logger.i("play!!");
-        Logger.i("player play!");
-        tickCounter();
-        //draw();
-        loop();
     }
 
     public void stop() {

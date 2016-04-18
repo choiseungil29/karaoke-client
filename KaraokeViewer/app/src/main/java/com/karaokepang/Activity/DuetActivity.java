@@ -32,6 +32,7 @@ public class DuetActivity extends PlayActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
+        Log.e("kkk", "@@@@@@@@@@@@@@@duet midiUri = " + midiUri.getPath());
         sv_score.initMidiFile(midiUri);
         initMidiFileWithStart(midiUri);
         ltv_lyrics.setBackgroundColor(Color.parseColor("#FF444444"));
@@ -51,14 +52,14 @@ public class DuetActivity extends PlayActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("kkk", "----------------------onResume------------------");
+        Log.d("kkk", "----------------------onResume------------------"+getClass());
         activityController.setDuetActivity(this);
     }
 
-        @Override
+    @Override
     protected void onPause() {
         super.onPause();
-        Log.d("kkk", "----------------------onPause------------------");
+        Log.d("kkk", "----------------------onPause------------------"+getClass());
         activityController.setDuetActivity(null);
     }
 }
