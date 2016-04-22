@@ -10,19 +10,16 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.VideoView;
 
-import com.google.common.base.Strings;
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
-import com.karaokepang.Midi.event.meta.MidiLyrics;
 import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Midi.util.MidiUtil;
-import com.karaokepang.Model.FileUri;
-import com.karaokepang.Model.Lyric;
 import com.karaokepang.R;
-import com.karaokepang.Util.FilePath;
 import com.karaokepang.Util.Logger;
 import com.karaokepang.View.CustomTextView;
 import com.karaokepang.View.LyricsTextView;
@@ -32,17 +29,11 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -82,9 +73,8 @@ public abstract class PlayActivity extends BluetoothActivity {
     }
 
     public void initMidiFileWithStart(Uri uri) {
-        initMidiFile(uri);
         String songNumber = uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
-        play(songNumber);
+        initMidiFile(uri, songNumber);
     }
 
     @Override
@@ -93,29 +83,54 @@ public abstract class PlayActivity extends BluetoothActivity {
         Logger.i("================onPause===========================");
         Logger.i("onPause!");
 
-        player.stop();
-        player.reset();
-        player.release();
+//        player.stop();
+//        player.reset();
+//        player.release();
     }
 
-    public void initMidiFile(Uri uri) {
+    public void initMidiFile(Uri uri, final String songNumber) {
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
-            FileDescriptor fd = fis.getFD();
-            player.reset();
-            player.setDataSource(fd);
+//            FileDescriptor fd = fis.getFD();
+//            player.reset();
+//            player.create(this,uri);
+            player.setDataSource(uri.getPath());
 //            player.release();
-            player.prepareAsync();
+            player.prepare();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     Log.e("kkk", "onPrepared@@@@@@@@@@@@@@@@@@@@@@");
+                    play(songNumber);
+                    finishSign = false;
                     mediaPlayer.start();
                     tickCounter();
                     loop();
                     Log.e("kkk", "onPrepared######################");
+                }
+            });
+            player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    Log.e("kkk", "player error" + what + "," + extra);
+                    if (what == 100) {
+                        mp.stop();
+                    } else if (what == 1) {
+                        Log.i("My Error ", "handled here");
+                        mp.stop();
+                    } else if (what == 800) {
+                        mp.stop();
+                    } else if (what == 701) {
+                        mp.stop();
+                    } else if (what == 700) {
+                        mp.stop();
+                        Toast.makeText(getApplicationContext(), "Bad Media format ", Toast.LENGTH_SHORT).show();
+                    } else if (what == -38) {
+                        mp.stop();
+                    }
+                    return false;
                 }
             });
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -125,58 +140,70 @@ public abstract class PlayActivity extends BluetoothActivity {
                     List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
                     ComponentName componentName = info.get(0).topActivity;
                     String activityName = componentName.getShortClassName().substring(1);
+
                     if (activityName.contains("PangPangActivity")) {
                         activityController.getPangPangActivity().finishSign = true;
                         activityController.getPangPangActivity().finish();
+                        if (isReservation()) {
+                            Log.i("kkk", getReservationNumber() + "/예약곡 있다. setResult/" + getLocalClassName());
+                            activityController.getPangPangActivity().setResult(9991, new Intent().putExtra("number", getReservationNumber()));
+                        }
                         new FtpServiceUp(activityController.getPangPangSelectActivity().fileName).execute();
                     } else if (activityName.contains("DuetActivity")) {
                         activityController.getDuetActivity().finishSign = true;
                         activityController.getDuetActivity().finish();
+                        if (isReservation()) {
+                            Log.i("kkk", getReservationNumber() + "/예약곡 있다. setResult/" + getLocalClassName());
+//                            activityController.getDuetActivity().setResult(9991, new Intent().putExtra("number", getReservationNumber()));
+                            startDuetPlay(getReservationNumber());
+                        }
                         new FtpServiceUp(activityController.getDuetSelectActivity().fileName).execute();
                     }
 
-                    //예약곡 실행
-                    if (isReservation()) {
-                        File file = new File(FilePath.FILE_PATH_VPANGMID + getReservationNumber() + ".mid");
-                        Uri uri = Uri.parse(file.getAbsolutePath());
-                        FileUri fileUri = new FileUri(uri, file.getName());
-                        if (activityController.isDuetSelectMode()) {
-                            Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
-                            intent.setData(fileUri.getUri());
-                            startActivity(intent);
-                        } else if (activityController.isPangSelectMode()) {
-                            Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
-                            intent.setData(fileUri.getUri());
-                            startActivity(intent);
-                        }
 
-                        sbReservation = new StringBuffer();
-                        for (int i = 1; i < reservation.length; i++) {
-                            sbReservation.append("," + reservation[i] + "-" + reservationName[i]);
-                        }
-//                        reservation = sbReservation.toString().split(",");
-
-                        String[] split = sbReservation.toString().split(",");
-                        reservation = new String[split.length - 1];
-                        reservationName = new String[split.length - 1];
-                        int reservationCount = 0;
-                        Log.e("kkk", "splite = " + arrayJoin("#", split));
-                        Log.e("kkk", "splite = " + split.length);
-                        for (int i = 1; i < split.length; i++) {
-                            reservation[reservationCount] = split[i].split("-")[0];
-                            reservationName[reservationCount] = split[i].split("-")[1];
-                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
-                            reservationCount++;
-                        }
-                        if (activityController.isDuetSelectMode()) {
-                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
-                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
-                        } else if (activityController.isPangSelectMode()) {
-                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
-                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
-                        }
-                    }
-                    mp.release();
+//                    Log.e("kkk", reservation.length + "개입니다");
+//                    //예약곡 실행
+//                    if (isReservation()) {
+//                        mp.release();
+//                        File file = new File(FilePath.FILE_PATH_VPANGMID + getReservationNumber() + ".mid");
+//                        Uri uri = Uri.parse(file.getAbsolutePath());
+//                        FileUri fileUri = new FileUri(uri, file.getName());
+//                        if (activityController.isDuetSelectMode()) {
+//                            Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
+//                            intent.setData(fileUri.getUri());
+//                            startActivity(intent);
+//                        } else if (activityController.isPangSelectMode()) {
+//                            Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
+//                            intent.setData(fileUri.getUri());
+//                            startActivity(intent);
+//                        }
+//
+//                        sbReservation = new StringBuffer();
+//                        for (int i = 1; i < reservation.length; i++) {
+//                            sbReservation.append("," + reservation[i] + "-" + reservationName[i]);
+//                        }
+////                        reservation = sbReservation.toString().split(",");
+//
+//                        String[] split = sbReservation.toString().split(",");
+//                        reservation = new String[split.length - 1];
+//                        reservationName = new String[split.length - 1];
+//                        int reservationCount = 0;
+//                        Log.e("kkk", "splite = " + arrayJoin("#", split));
+//                        Log.e("kkk", "splite = " + split.length);
+//                        for (int i = 1; i < split.length; i++) {
+//                            reservation[reservationCount] = split[i].split("-")[0];
+//                            reservationName[reservationCount] = split[i].split("-")[1];
+//                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+//                            reservationCount++;
+//                        }
+//                        if (activityController.isDuetSelectMode()) {
+//                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
+//                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+//                        } else if (activityController.isPangSelectMode()) {
+//                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
+//                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+//                        }
+//                    }
                 }
             });
 
@@ -221,7 +248,6 @@ public abstract class PlayActivity extends BluetoothActivity {
         if (activityController.getDuetSelectActivity() != null) {
             activityController.getDuetSelectActivity().startRecord(songNumber);
         }
-//        player.start();
     }
 
     public void stop() {

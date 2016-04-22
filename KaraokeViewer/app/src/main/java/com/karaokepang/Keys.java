@@ -8,6 +8,8 @@ package com.karaokepang;
 public class Keys {
 
     public static final String MODE = "mode";
+    public static final String SONG_CODE = "song_code";
+
 
     // 내부 클래스로 Value값들을 묶어둔다
     public static class Mode {
