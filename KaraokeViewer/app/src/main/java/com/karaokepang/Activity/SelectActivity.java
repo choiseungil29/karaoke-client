@@ -168,10 +168,8 @@ public class SelectActivity extends BluetoothActivity {
         runOnUiThread(new Runnable() {
             public void run() {
                 try {
-                    Log.e("kkk", "====recoder===" + activityController.getDuetSelectActivity().getLocalClassName());
+                    Log.e("kkk", "====recoder===");
                     recorder.start();
-//                    Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
-//                    activityController.getDuetSelectActivity().layoutPreiew.setVisibility(LinearLayout.VISIBLE);
                 } catch (final Exception ex) {
                     ex.printStackTrace();
                 }
@@ -189,7 +187,11 @@ public class SelectActivity extends BluetoothActivity {
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-            camera.unlock();
+         try {
+             camera.unlock();
+         }catch (RuntimeException e){
+             e.printStackTrace();
+         }
         }
         if (recorder == null) {
             recorder = new MediaRecorder();

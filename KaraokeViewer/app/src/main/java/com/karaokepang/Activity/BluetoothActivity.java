@@ -148,23 +148,19 @@ public class BluetoothActivity extends BaseActivity {
                         reservation = new String[split.length - 1];
                         reservationName = new String[split.length - 1];
                         int reservationCount = 0;
-                        Log.e("kkk", "splite = " + arrayJoin("#", split));
-                        Log.e("kkk", "splite = " + split.length);
+//                        Log.e("kkk", "splite = " + arrayJoin("#", split));
+//                        Log.e("kkk", "splite = " + split.length);
                         for (int i = 1; i < split.length; i++) {
                             reservation[reservationCount] = split[i].split("-")[0];
                             reservationName[reservationCount] = split[i].split("-")[1];
-                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+//                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
                             reservationCount++;
                         }
                         if (activityController.isDuetSelectMode()) {
-                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
                             activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
                         } else if (activityController.isPangSelectMode()) {
-                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
                             activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
                         }
-                        Log.i("kkk", "예약곡 입력 완료");
-                        Log.i("kkk", arrayJoin(",", reservation));
                     } else {
                         if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
                             if (activityController.getPangPangSelectActivity() != null || activityController.getDuetSelectActivity() != null) {
@@ -297,9 +293,6 @@ public class BluetoothActivity extends BaseActivity {
                 File file = new File(FilePath.FILE_PATH_VPANGMID + data.getStringExtra("number") + ".mid");
                 Uri uri = Uri.parse(file.getAbsolutePath());
                 FileUri fileUri = new FileUri(uri, file.getName());
-//                Intent intent_select = new Intent(this, DuetSelectActivity_.class);
-//                intent_select.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
-//                startActivity(intent_select);
                 Intent intent = new Intent(this, DuetActivity_.class);
                 intent.setData(fileUri.getUri());
                 startActivityForResult(intent, DUET_RESULT);
@@ -314,9 +307,6 @@ public class BluetoothActivity extends BaseActivity {
                 File file = new File(FilePath.FILE_PATH_VPANGMID + data.getStringExtra("number") + ".mid");
                 Uri uri = Uri.parse(file.getAbsolutePath());
                 FileUri fileUri = new FileUri(uri, file.getName());
-//                Intent intent_select = new Intent(this, PangPangSelectActivity_.class);
-//                intent_select.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
-//                startActivity(intent_select);
                 Intent intent = new Intent(this, PangPangActivity_.class);
                 intent.setData(fileUri.getUri());
                 startActivityForResult(intent, PANGPANG_RESULT);
@@ -325,18 +315,25 @@ public class BluetoothActivity extends BaseActivity {
         }
     }
 
+    public void startPangPlay(String number){
+        Log.i("kkk", "예약곡있어! startDuetPlay = " + number);
+        File file = new File(FilePath.FILE_PATH_VPANGMID + number + ".mid");
+        Uri uri = Uri.parse(file.getAbsolutePath());
+        FileUri fileUri = new FileUri(uri, file.getName());
+        Intent intent = new Intent(this, PangPangActivity_.class);
+        intent.setData(fileUri.getUri());
+        startActivity(intent);
+        reservationSetting();
+    }
+
     public void startDuetPlay(String number) {
         Log.i("kkk", "예약곡있어! startDuetPlay = " + number);
         File file = new File(FilePath.FILE_PATH_VPANGMID + number + ".mid");
         Uri uri = Uri.parse(file.getAbsolutePath());
         FileUri fileUri = new FileUri(uri, file.getName());
-//                Intent intent_select = new Intent(this, DuetSelectActivity_.class);
-//                intent_select.putExtra(Keys.MODE, Keys.Mode.PANGPANG);
-//                startActivity(intent_select);
         Intent intent = new Intent(this, DuetActivity_.class);
         intent.setData(fileUri.getUri());
         startActivity(intent);
-//        startActivityForResult(intent, DUET_RESULT);
         reservationSetting();
         if (null != activityController.getDuetSelectActivity()) {
             activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
@@ -354,19 +351,19 @@ public class BluetoothActivity extends BaseActivity {
         reservation = new String[split.length - 1];
         reservationName = new String[split.length - 1];
         int reservationCount = 0;
-        Log.e("kkk", "splite = " + arrayJoin("#", split));
-        Log.e("kkk", "splite = " + split.length);
+//        Log.e("kkk", "splite = " + arrayJoin("#", split));
+//        Log.e("kkk", "splite = " + split.length);
         for (int i = 1; i < split.length; i++) {
             reservation[reservationCount] = split[i].split("-")[0];
             reservationName[reservationCount] = split[i].split("-")[1];
-            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+//            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
             reservationCount++;
         }
         if (activityController.isDuetSelectMode()) {
-            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
+//            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
             activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
         } else if (activityController.isPangSelectMode()) {
-            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
+//            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
             activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
         }
     }

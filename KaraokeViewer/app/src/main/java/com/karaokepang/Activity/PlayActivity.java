@@ -140,70 +140,30 @@ public abstract class PlayActivity extends BluetoothActivity {
                     List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
                     ComponentName componentName = info.get(0).topActivity;
                     String activityName = componentName.getShortClassName().substring(1);
-
+                    Log.e("kkk", "노래끝");
                     if (activityName.contains("PangPangActivity")) {
-                        activityController.getPangPangActivity().finishSign = true;
-                        activityController.getPangPangActivity().finish();
+                        Log.e("kkk", "pangpang 모드 노래 끝");
+                        if (null != activityController.getPangPangActivity()) {
+                            activityController.getPangPangActivity().finishSign = true;
+                            activityController.getPangPangActivity().finish();
+                        }
                         if (isReservation()) {
                             Log.i("kkk", getReservationNumber() + "/예약곡 있다. setResult/" + getLocalClassName());
-                            activityController.getPangPangActivity().setResult(9991, new Intent().putExtra("number", getReservationNumber()));
+                            startPangPlay(getReservationNumber());
                         }
                         new FtpServiceUp(activityController.getPangPangSelectActivity().fileName).execute();
                     } else if (activityName.contains("DuetActivity")) {
-                        activityController.getDuetActivity().finishSign = true;
-                        activityController.getDuetActivity().finish();
+                        Log.e("kkk", "duet 모드 노래 끝");
+                        if (null != activityController.getDuetActivity()) {
+                            activityController.getDuetActivity().finishSign = true;
+                            activityController.getDuetActivity().finish();
+                        }
                         if (isReservation()) {
                             Log.i("kkk", getReservationNumber() + "/예약곡 있다. setResult/" + getLocalClassName());
-//                            activityController.getDuetActivity().setResult(9991, new Intent().putExtra("number", getReservationNumber()));
                             startDuetPlay(getReservationNumber());
                         }
                         new FtpServiceUp(activityController.getDuetSelectActivity().fileName).execute();
                     }
-
-
-//                    Log.e("kkk", reservation.length + "개입니다");
-//                    //예약곡 실행
-//                    if (isReservation()) {
-//                        mp.release();
-//                        File file = new File(FilePath.FILE_PATH_VPANGMID + getReservationNumber() + ".mid");
-//                        Uri uri = Uri.parse(file.getAbsolutePath());
-//                        FileUri fileUri = new FileUri(uri, file.getName());
-//                        if (activityController.isDuetSelectMode()) {
-//                            Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
-//                            intent.setData(fileUri.getUri());
-//                            startActivity(intent);
-//                        } else if (activityController.isPangSelectMode()) {
-//                            Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
-//                            intent.setData(fileUri.getUri());
-//                            startActivity(intent);
-//                        }
-//
-//                        sbReservation = new StringBuffer();
-//                        for (int i = 1; i < reservation.length; i++) {
-//                            sbReservation.append("," + reservation[i] + "-" + reservationName[i]);
-//                        }
-////                        reservation = sbReservation.toString().split(",");
-//
-//                        String[] split = sbReservation.toString().split(",");
-//                        reservation = new String[split.length - 1];
-//                        reservationName = new String[split.length - 1];
-//                        int reservationCount = 0;
-//                        Log.e("kkk", "splite = " + arrayJoin("#", split));
-//                        Log.e("kkk", "splite = " + split.length);
-//                        for (int i = 1; i < split.length; i++) {
-//                            reservation[reservationCount] = split[i].split("-")[0];
-//                            reservationName[reservationCount] = split[i].split("-")[1];
-//                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
-//                            reservationCount++;
-//                        }
-//                        if (activityController.isDuetSelectMode()) {
-//                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
-//                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
-//                        } else if (activityController.isPangSelectMode()) {
-//                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
-//                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
-//                        }
-//                    }
                 }
             });
 
@@ -216,9 +176,6 @@ public abstract class PlayActivity extends BluetoothActivity {
             initTracks();
             ltv_lyrics.loadKsaByMidi(uri);
             ltv_lyrics.initLyrics(lyricsTrack);
-
-            Log.e("kkk", "layoutSongName = visible");
-            Log.e("kkk", uri.getPath());
             layoutSongName.setVisibility(View.VISIBLE);
             File musicFile = new File(uri.getPath().replace(".mid", ".ksa"));
             tv_songName.setText(MidiUtil.getSongName(musicFile));
