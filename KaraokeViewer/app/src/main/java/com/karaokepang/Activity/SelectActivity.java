@@ -95,6 +95,29 @@ public class SelectActivity extends BluetoothActivity {
                 videoView.start();
             }
         });
+        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                Log.e("kkk", "videoView error" + what + "," + extra);
+                if (what == 100) {
+                    videoView.stopPlayback();
+                } else if (what == 1) {
+                    Log.i("My Error ", "handled here");
+                    videoView.stopPlayback();
+                } else if (what == 800) {
+                    videoView.stopPlayback();
+                } else if (what == 701) {
+                    videoView.stopPlayback();
+                } else if (what == 700) {
+                    videoView.stopPlayback();
+
+                    Toast.makeText(getApplicationContext(), "Bad Media format ", Toast.LENGTH_SHORT).show();
+                } else if (what == -38) {
+                    videoView.stopPlayback();
+                }
+                return false;
+            }
+        });
         videoView.start();
     }
 
@@ -146,10 +169,7 @@ public class SelectActivity extends BluetoothActivity {
             public void run() {
                 try {
                     Log.e("kkk", "====recoder===");
-                    Log.e("kkk", activityController.getDuetSelectActivity().getLocalClassName());
                     recorder.start();
-                    Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
-                    activityController.getDuetSelectActivity().layoutPreiew.setVisibility(LinearLayout.VISIBLE);
                 } catch (final Exception ex) {
                     ex.printStackTrace();
                 }
@@ -167,36 +187,40 @@ public class SelectActivity extends BluetoothActivity {
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
+         try {
+             camera.unlock();
+         }catch (RuntimeException e){
+             e.printStackTrace();
+         }
         }
-        recorder = new MediaRecorder();
-        camera.unlock();
-        Log.e("kkk", "===========================0");
-        recorder.setCamera(camera);
-        recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-        recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+        if (recorder == null) {
+            recorder = new MediaRecorder();
+            Log.e("kkk", "recoder == null");
+            recorder.setCamera(camera);
+            recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+            recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 //        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_1080P));
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
-
-        recorder.setVideoEncodingBitRate(1000000);
-        //recorder.setVideoFrameRate(30);
-        fileName = getNewFileName(songNumber);
-        recorder.setOutputFile(FilePath.FILE_PATH_VPANG + fileName + ".mp4");
-        recorder.setMaxDuration(6000000 * 10);
-        recorder.setMaxFileSize(300000000 * 20);
-
-        Log.e("kkk", "===========================1");
-        try {
-            recorder.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            releaseMediaRecorder();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            releaseMediaRecorder();
-            return false;
+            recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+            recorder.setVideoEncodingBitRate(1000000);
+            //recorder.setVideoFrameRate(30);
+            recorder.setOutputFile(FilePath.FILE_PATH_VPANG + fileName + ".mp4");
+            recorder.setMaxDuration(6000000 * 10);
+            recorder.setMaxFileSize(300000000 * 20);
+            try {
+                recorder.prepare();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                releaseMediaRecorder();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                releaseMediaRecorder();
+                return false;
+            }
         }
-        Log.e("kkk", "===========================2");
+        fileName = getNewFileName(songNumber);
+
+
         return true;
     }
 

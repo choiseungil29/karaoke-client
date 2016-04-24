@@ -10,14 +10,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
 import com.karaokepang.Keys;
 import com.karaokepang.Model.FileUri;
 import com.karaokepang.Util.FilePath;
-import com.karaokepang.ftp.FtpServiceUp;
 
 import org.androidannotations.annotations.EActivity;
 
@@ -33,11 +31,24 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 @EActivity
 public class BluetoothActivity extends BaseActivity {
 
+    private static int PANGPANG_RESULT = 100010;
+    private static int DUET_RESULT = 100011;
+
     public static StringBuffer sbReservation = new StringBuffer();
     public static String[] reservation;
     public static String[] reservationName;
     public BluetoothSPP bt;
     private ActivityController activityController = ActivityController.getInstance();
+
+    public static String[] getReservation() {
+        Log.i("kkk", "reseravtion = " + reservation.length);
+        return reservation;
+    }
+
+    public static String[] getReservationName() {
+        Log.i("kkk", "reseravtionName = " + reservationName.length);
+        return reservationName;
+    }
 
     public static boolean isReservation() {
         boolean result = false;
@@ -109,7 +120,6 @@ public class BluetoothActivity extends BaseActivity {
                     Intent intent = getPackageManager().getLaunchIntentForPackage("com.clipeo.eighteen");
                     startActivity(intent);
                 } else if (message.equals(Keys.SendData.STOP)) {
-                    //Todo 셀렉트 화면에서 화면이 종료된다? & 노래가 진행중이 아닐때 누르면
                     ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                     List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
                     ComponentName componentName = info.get(0).topActivity;
@@ -138,19 +148,17 @@ public class BluetoothActivity extends BaseActivity {
                         reservation = new String[split.length - 1];
                         reservationName = new String[split.length - 1];
                         int reservationCount = 0;
-                        Log.e("kkk", "splite = " + arrayJoin("#", split));
-                        Log.e("kkk", "splite = " + split.length);
+//                        Log.e("kkk", "splite = " + arrayJoin("#", split));
+//                        Log.e("kkk", "splite = " + split.length);
                         for (int i = 1; i < split.length; i++) {
                             reservation[reservationCount] = split[i].split("-")[0];
                             reservationName[reservationCount] = split[i].split("-")[1];
-                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+//                            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
                             reservationCount++;
                         }
                         if (activityController.isDuetSelectMode()) {
-                            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
                             activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
                         } else if (activityController.isPangSelectMode()) {
-                            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
                             activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
                         }
                     } else {
@@ -193,13 +201,13 @@ public class BluetoothActivity extends BaseActivity {
                                 Uri uri = Uri.parse(file.getAbsolutePath());
                                 FileUri fileUri = new FileUri(uri, file.getName());
                                 if (activityController.isDuetSelectMode()) {
-                                    Intent intent = new Intent(activityController.getDuetSelectActivity(), DuetActivity_.class);
+                                    Intent intent = new Intent(getApplicationContext(), DuetActivity_.class);
                                     intent.setData(fileUri.getUri());
-                                    startActivity(intent);
+                                    startActivityForResult(intent, DUET_RESULT);
                                 } else if (activityController.isPangSelectMode()) {
-                                    Intent intent = new Intent(activityController.getPangPangSelectActivity(), PangPangActivity_.class);
+                                    Intent intent = new Intent(getApplicationContext(), PangPangActivity_.class);
                                     intent.setData(fileUri.getUri());
-                                    startActivity(intent);
+                                    startActivityForResult(intent, PANGPANG_RESULT);
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), "모드를 선택해주세요", Toast.LENGTH_SHORT).show();
@@ -257,6 +265,7 @@ public class BluetoothActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("kkk", "onActivityResult = " + requestCode + "," + requestCode);
         if (bt == null) {
             return;
         }
@@ -278,6 +287,84 @@ public class BluetoothActivity extends BaseActivity {
                         , Toast.LENGTH_SHORT).show();
                 finish();
             }
+        } else if (requestCode == DUET_RESULT) {
+            if (resultCode == 9991) {
+                Log.i("kkk", "예약곡있어! duet = " + data.getStringExtra("number"));
+                File file = new File(FilePath.FILE_PATH_VPANGMID + data.getStringExtra("number") + ".mid");
+                Uri uri = Uri.parse(file.getAbsolutePath());
+                FileUri fileUri = new FileUri(uri, file.getName());
+                Intent intent = new Intent(this, DuetActivity_.class);
+                intent.setData(fileUri.getUri());
+                startActivityForResult(intent, DUET_RESULT);
+                reservationSetting();
+                if (null != activityController.getDuetSelectActivity()) {
+                    activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+                }
+            }
+        } else if (requestCode == PANGPANG_RESULT) {
+            if (resultCode == 9991) {
+                Log.i("kkk", "예약곡있어! pang = " + data.getStringExtra("number"));
+                File file = new File(FilePath.FILE_PATH_VPANGMID + data.getStringExtra("number") + ".mid");
+                Uri uri = Uri.parse(file.getAbsolutePath());
+                FileUri fileUri = new FileUri(uri, file.getName());
+                Intent intent = new Intent(this, PangPangActivity_.class);
+                intent.setData(fileUri.getUri());
+                startActivityForResult(intent, PANGPANG_RESULT);
+                reservationSetting();
+            }
+        }
+    }
+
+    public void startPangPlay(String number){
+        Log.i("kkk", "예약곡있어! startDuetPlay = " + number);
+        File file = new File(FilePath.FILE_PATH_VPANGMID + number + ".mid");
+        Uri uri = Uri.parse(file.getAbsolutePath());
+        FileUri fileUri = new FileUri(uri, file.getName());
+        Intent intent = new Intent(this, PangPangActivity_.class);
+        intent.setData(fileUri.getUri());
+        startActivity(intent);
+        reservationSetting();
+    }
+
+    public void startDuetPlay(String number) {
+        Log.i("kkk", "예약곡있어! startDuetPlay = " + number);
+        File file = new File(FilePath.FILE_PATH_VPANGMID + number + ".mid");
+        Uri uri = Uri.parse(file.getAbsolutePath());
+        FileUri fileUri = new FileUri(uri, file.getName());
+        Intent intent = new Intent(this, DuetActivity_.class);
+        intent.setData(fileUri.getUri());
+        startActivity(intent);
+        reservationSetting();
+        if (null != activityController.getDuetSelectActivity()) {
+            activityController.getDuetSelectActivity().videoView.setVideoPath(FilePath.FILE_PATH_VPANGBG2 + "CBG_001.mp4");
+        }
+    }
+
+    private void reservationSetting() {
+        Log.i("kkk", "reservationSetting");
+        sbReservation = new StringBuffer();
+        for (int i = 1; i < getReservation().length; i++) {
+            sbReservation.append("," + getReservation()[i] + "-" + getReservationName()[i]);
+        }
+
+        String[] split = sbReservation.toString().split(",");
+        reservation = new String[split.length - 1];
+        reservationName = new String[split.length - 1];
+        int reservationCount = 0;
+//        Log.e("kkk", "splite = " + arrayJoin("#", split));
+//        Log.e("kkk", "splite = " + split.length);
+        for (int i = 1; i < split.length; i++) {
+            reservation[reservationCount] = split[i].split("-")[0];
+            reservationName[reservationCount] = split[i].split("-")[1];
+//            Log.e("kkk", "예약곡 " + (reservationCount) + ":" + reservation[reservationCount] + "," + reservationName[reservationCount]);
+            reservationCount++;
+        }
+        if (activityController.isDuetSelectMode()) {
+//            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
+            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+        } else if (activityController.isPangSelectMode()) {
+//            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
+            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
         }
     }
 

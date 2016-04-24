@@ -1,8 +1,10 @@
 package com.karaokepang.Activity;
 
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.karaokepang.R;
 
@@ -30,6 +32,22 @@ public class DuetSelectActivity extends SelectActivity {
         setDuetCameraPreView();
     }
 
+    @Override
+    public void startRecord(String songNumber) {
+        super.startRecord(songNumber);
+        // work on UiThread for better performance
+        runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
+                    layoutPreiew.setVisibility(LinearLayout.VISIBLE);
+                } catch (final Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void setImageView() {
         imgBackground.setBackgroundResource(R.drawable.background_musicsheet);
     }
@@ -37,18 +55,21 @@ public class DuetSelectActivity extends SelectActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("kkk", "===============onResume============" + getLocalClassName());
         cameraResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("kkk", "===============onPause============" + getLocalClassName());
         textSongSelected.setVisibility(TextView.GONE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("kkk", "===============onDestroy============" + getLocalClassName());
         activityController.setDuetSelectActivity(null);
     }
 }
