@@ -94,12 +94,6 @@ public class LyricsTextView extends TextView {
             drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
             canvas.restore();
         }
-
-        /*canvas.save();
-        drawLyrics(canvas, top, getWidth() / 4, getTextSize());
-        canvas.restore();
-        drawLyrics(canvas, bottom, getWidth() / 2, getTextSize() * 2);
-        canvas.restore();*/
     }
 
     public void initLyrics(List<Lyric> lyrics) {
@@ -147,12 +141,17 @@ public class LyricsTextView extends TextView {
         calculateLyricsWidth(tick, bottom);
     }
 
+    // 여기를 수정
     private void calculateLyricsIndex(float tick, Lyrics lyrics) {
         for(int i=0; i<lyrics.getLyrics().size()-1; i++) {
             if(tick >= lyrics.getLyrics().get(i).get(
-                    lyrics.getLyrics().get(i).size() - 1).getEndTick()) {
-                lyrics.setIndex(i + 1);
-                lyrics.setWidth(0);
+                    lyrics.getLyrics().get(i).size() - 1).getEndTick() &&
+                    tick < lyrics.getLyrics().get(i+1).get(
+                            lyrics.getLyrics().get(i+1).size() -1).getEndTick())  {
+                if(lyrics.getIndex() == i) {
+                    lyrics.setIndex(i + 1);
+                    lyrics.setWidth(0);
+                }
             }
         }
     }
@@ -197,6 +196,9 @@ public class LyricsTextView extends TextView {
                 float temp = textWidth + ((int)getPaint().measureText(lastIndex)) * widthPercent;
                 if(temp > lyrics.getWidth()) {
                     lyrics.setWidth(temp);
+                    if(oneLine.get(0).getParent().replaceAll(" ", "").equals("너를보낼때부터")) {
+                        Logger.i("get width : " + lyrics.getWidth());
+                    }
                 }
             }
         }
@@ -238,6 +240,8 @@ public class LyricsTextView extends TextView {
         try {
             while (lyricsIt.hasNext()) {
                 MidiEvent event = lyricsIt.next();
+
+                //Logger.i("text : " + ((MidiLyrics)event).getLyric());
 
                 if(n == 582) {
                     Logger.i("asdfagq3egSibbal");
@@ -299,14 +303,12 @@ public class LyricsTextView extends TextView {
                     }
                 }
 
-                if(nowCharacter == '#') {
-                    Logger.i("WTF");
-                }
-
                 if (eng.length() > 0) {
                     ((MidiLyrics) event).setLyric(eng);
+                    //Logger.i("text : " + ((MidiLyrics) event).getLyric());
                 } else {
                     ((MidiLyrics) event).setLyric(String.valueOf(nowCharacter));
+                    //Logger.i("text : " + ((MidiLyrics) event).getLyric());
 
                     j++;
                     if (j >= ksaLyricsArray.get(i).length()) {
@@ -338,6 +340,7 @@ public class LyricsTextView extends TextView {
                         beforeLyric.getLyric(),
                         beforeLyric.getTick(),
                         beforeLyric.getTick() + duration));
+                Logger.i("text : " + (beforeLyric) + ", start tick : " + beforeLyric.getTick() + ", end tick : " + (beforeLyric.getTick() + duration));
             }
 
             if(ksaLyricsArray.get(i).replaceAll(" ", "").equals(sb.toString())) {

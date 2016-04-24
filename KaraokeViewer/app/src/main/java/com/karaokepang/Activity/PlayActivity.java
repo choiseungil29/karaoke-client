@@ -299,27 +299,26 @@ public abstract class PlayActivity extends BluetoothActivity {
                         this.tick = totalTick;
                     }
                 } else if (tempos.size() == 3) {
-                    Logger.i("fucking tempo 3");
                     Tempo firstTempo = tempos.get(0);
                     Tempo secondTempo = tempos.get(1);
                     Tempo thirdTempo = tempos.get(2);
 
-                    Logger.i("firstTempo : " + firstTempo.toString());
-                    Logger.i("secondTempo : " + secondTempo.toString());
-                    Logger.i("thirdTempo : " + thirdTempo.toString());
-
                     float totalTick = 0;
                     long firstTempoMillis = (long) (secondTempo.getTick() / (firstTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
-                    long secondTempoMillis = (long) (firstTempoMillis + (thirdTempo.getTick() - secondTempo.getTick()) / (secondTempo.getBpm() / 60 * MidiInfo.resolution) * 1000);
+                    long secondTempoMillis = (long) (firstTempoMillis + ((thirdTempo.getTick() - secondTempo.getTick()) / (secondTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000);
 
                     if (currentPosition < firstTempoMillis) {
                         totalTick += firstTempo.getBpm() / 60 * MidiInfo.resolution * ((float) currentPosition) / 1000;
                     } else if (currentPosition < secondTempoMillis) {
-                        currentPosition -= firstTempoMillis;
+                        currentPosition -= (secondTempo.getTick() / (firstTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
                         totalTick += secondTempo.getTick();
                         totalTick += secondTempo.getBpm() / 60 * MidiInfo.resolution * ((float) currentPosition) / 1000;
                     } else {
-                        currentPosition = (long) (currentPosition - firstTempoMillis - (thirdTempo.getTick() - secondTempo.getTick()) / (secondTempo.getBpm() / 60 * MidiInfo.resolution) * 1000);
+                        Logger.i("tempo bpm : " + tempos.get(0).getBpm() + ", tempo tick : " + tempos.get(0).getTick());
+                        Logger.i("tempo bpm : " + tempos.get(1).getBpm() + ", tempo tick : " + tempos.get(1).getTick());
+                        Logger.i("tempo bpm : " + tempos.get(2).getBpm() + ", tempo tick : " + tempos.get(2).getTick());
+                        Logger.i("seconds : " + secondTempoMillis);
+                        currentPosition -= firstTempoMillis + ((thirdTempo.getTick() - secondTempo.getTick()) / (secondTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
                         totalTick += thirdTempo.getTick();
                         totalTick += thirdTempo.getBpm() / 60 * MidiInfo.resolution * ((float) currentPosition) / 1000;
                     }
@@ -329,39 +328,6 @@ public abstract class PlayActivity extends BluetoothActivity {
                 } else {
 
                 }
-
-        /*ArrayList<Long> tempoMillis = new ArrayList<>();
-        long lastTempoMillis = 0;
-        for(int i=0; i<tempos.size()-1; i++) {
-            Tempo nowTempo = tempos.get(i);
-            Tempo nextTempo = tempos.get(i+1);
-            lastTempoMillis = (long) (lastTempoMillis + nextTempo.getTick() / (nowTempo.getBpm() / 60 * MidiInfo.resolution)) * 1000;
-            tempoMillis.add(lastTempoMillis);
-        }
-
-        float totalTick = 0;
-        for(int i=0; i<tempoMillis.size(); i++) {
-            if(i == 0) {
-                lastTempoMillis = 0;
-            } else {
-                lastTempoMillis = tempoMillis.get(i-1);
-            }
-            if(currentPosition < tempoMillis.get(i)) {
-                currentPosition -= lastTempoMillis;
-                totalTick += tempos.get(i).getTick();
-                totalTick += tempos.get(i).getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
-            }
-        }
-        if(totalTick == 0) {
-            Tempo t = tempos.get(tempos.size()-1);
-            currentPosition -= tempoMillis.get(tempoMillis.size()-1);
-            totalTick += t.getTick();
-            totalTick += t.getBpm() / 60 * MidiInfo.resolution * ((float)currentPosition) / 1000;
-        }
-
-        if(this.tick < totalTick) {
-            this.tick = totalTick;
-        }*/
 
                 beforePosition = player.getCurrentPosition();
             }
