@@ -313,9 +313,9 @@ public class MainActivity extends BluetoothActivity {
                     break;
             }
 
-            textSelectNumber.setText("선택된 번호");
-            textSelectSong.setText("선택된 노래 제목");
-            textSelectSinger.setText("선택된 가수");
+            textSelectNumber.setText(getString(R.string.select_number));
+            textSelectSong.setText(getString(R.string.select_title));
+            textSelectSinger.setText(getString(R.string.select_singer));
 
             searchAdapter = new SearchAdapter(searchSong(editNumber.getText().toString()));
             listSearch.setAdapter(searchAdapter);
@@ -342,8 +342,8 @@ public class MainActivity extends BluetoothActivity {
                     startActivity(intent);
                     break;
                 case R.id.btn_reservation:
-                    bt.send("reservation" + textSelectNumber.getText().toString()+"-"+textSelectSong.getText().toString(), true);
-                    Toast.makeText(getApplicationContext(),"["+textSelectSong.getText().toString()+"]예약완료",Toast.LENGTH_SHORT).show();
+                    bt.send("reservation" + textSelectNumber.getText().toString() + "-" + textSelectSong.getText().toString(), true);
+                    Toast.makeText(getApplicationContext(), "[" + textSelectSong.getText().toString() + "]예약완료", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btn_reservation_cancle:
                     break;
@@ -360,9 +360,9 @@ public class MainActivity extends BluetoothActivity {
                     } else if (MODE.equals(MODE_VPANG)) {
                         Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
                         bt.send(textSelectNumber.getText().toString(), true);
-                        textSelectNumber.setText("선택된 번호");
-                        textSelectSong.setText("선택된 노래 제목");
-                        textSelectSinger.setText("선택된 가수");
+                        textSelectNumber.setText(getString(R.string.select_number));
+                        textSelectSong.setText(getString(R.string.select_title));
+                        textSelectSinger.setText(getString(R.string.select_singer));
                     }
 
                     break;
@@ -498,9 +498,9 @@ public class MainActivity extends BluetoothActivity {
                 String selectBack = data.getExtras().getString("select_back");
                 Toast.makeText(getApplicationContext(), textSelectNumber.getText().toString(), Toast.LENGTH_SHORT).show();
                 bt.send(textSelectNumber.getText().toString() + "||" + selectBack, true);
-                textSelectNumber.setText("선택된 번호");
-                textSelectSong.setText("선택된 노래 제목");
-                textSelectSinger.setText("선택된 가수");
+                textSelectNumber.setText(getString(R.string.select_number));
+                textSelectSong.setText(getString(R.string.select_title));
+                textSelectSinger.setText(getString(R.string.select_singer));
             }
         } else {
             if (bt == null) {
