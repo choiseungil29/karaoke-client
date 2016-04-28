@@ -94,7 +94,7 @@ public abstract class PlayActivity extends BluetoothActivity {
             fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
 //            FileDescriptor fd = fis.getFD();
-//            player.reset();
+            player.reset();
 //            player.create(this,uri);
             player.setDataSource(uri.getPath());
 //            player.release();
