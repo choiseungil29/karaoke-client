@@ -3,7 +3,6 @@ package com.karaokepang.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.karaokepang.Midi.MidiFile;
 import com.karaokepang.Midi.MidiTrack;
@@ -30,7 +28,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ public abstract class PlayActivity extends BluetoothActivity {
 
     private ActivityController activityController = ActivityController.getInstance();
 
-    private MediaPlayer player = new MediaPlayer();
+    private MediaPlayer player;
     private MidiFile midifile;
     private MidiTrack lyricsTrack;
     private MidiTrack renderTrack;
@@ -80,12 +77,10 @@ public abstract class PlayActivity extends BluetoothActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Logger.i("================onPause===========================");
-        Logger.i("onPause!");
-
-//        player.stop();
-//        player.reset();
-//        player.release();
+        Log.e("kkk", "================onPause===========================");
+        player.stop();
+        player.reset();
+        player.release();
     }
 
     public void initMidiFile(Uri uri, final String songNumber) {
@@ -93,11 +88,10 @@ public abstract class PlayActivity extends BluetoothActivity {
         try {
             fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
-//            FileDescriptor fd = fis.getFD();
+
+            player = new MediaPlayer();
             player.reset();
-//            player.create(this,uri);
             player.setDataSource(uri.getPath());
-//            player.release();
             player.prepare();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override

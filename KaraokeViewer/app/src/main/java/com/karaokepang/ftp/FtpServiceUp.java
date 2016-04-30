@@ -36,8 +36,8 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
             Logger.i("Start~~~~~~");
 
             //client.connect("192.168.0.13");
-            client.connect("mediapot.iptime.org");
             Logger.i("Connected to test.com...........");
+            client.connect("mediapot.iptime.org");
 
             // 응답코드가 비정상일 경우 종료함
             int reply = client.getReplyCode();
@@ -73,11 +73,6 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
 //                client.logout();
             }
-        } catch (Exception e) {
-            Logger.i("해당 ftp 로그인 실패하였습니다.");
-            e.printStackTrace();
-            System.exit(-1);
-        } finally {
             if (client != null && client.isConnected()) {
                 try {
                     client.disconnect();
@@ -85,6 +80,10 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
                     ioe.printStackTrace();
                 }
             }
+        } catch (Exception e) {
+            Logger.i("해당 ftp 로그인 실패하였습니다.");
+            e.printStackTrace();
+            System.exit(-1);
         }
         return client;
     }
