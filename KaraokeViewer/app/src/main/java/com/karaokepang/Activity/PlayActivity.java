@@ -45,7 +45,7 @@ public abstract class PlayActivity extends BluetoothActivity {
 
     private ActivityController activityController = ActivityController.getInstance();
 
-    private MediaPlayer player = new MediaPlayer();
+    private MediaPlayer player;
     private MidiFile midifile;
     private MidiTrack lyricsTrack;
     private MidiTrack renderTrack;
@@ -80,33 +80,27 @@ public abstract class PlayActivity extends BluetoothActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Logger.i("================onPause===========================");
-        Logger.i("onPause!");
-
-//        player.stop();
-//        player.reset();
-//        player.release();
+        Log.e("kkk", "================onPause===========================");
+        player.stop();
+        player.reset();
+        player.release();
     }
 
     public void initMidiFile(Uri uri, final String songNumber) {
-        FileInputStream fis;
         try {
-            fis = new FileInputStream(uri.getPath());
+            FileInputStream fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
-            FileDescriptor fd = fis.getFD();
-//            player.reset();
-//            player.create(this,uri);
-            //player.setDataSource(uri.getPath());
-            player.setDataSource(fd);
-//            player.release();
+            player = new MediaPlayer();
+            player.reset();
+            player.setDataSource(fis.getFD());
             player.prepare();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     Log.e("kkk", "onPrepared@@@@@@@@@@@@@@@@@@@@@@");
-                    player.start();
                     play(songNumber);
                     finishSign = false;
+                    player.start();
                     tickCounter();
                     loop();
                     Log.e("kkk", "onPrepared######################");
@@ -167,8 +161,6 @@ public abstract class PlayActivity extends BluetoothActivity {
                     }
                 }
             });
-
-            fis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,8 +180,10 @@ public abstract class PlayActivity extends BluetoothActivity {
         }
     }
 
-    private void play(String songNumber) {
-        Log.e("kkk", "====play===");
+    @Override
+    public void play(String songNumber) {
+        super.play(songNumber);
+        Log.e("kkk", "====play play===");
         Runnable mRunnable = new Runnable() {
             @Override
             public void run() {
@@ -199,13 +193,13 @@ public abstract class PlayActivity extends BluetoothActivity {
         Handler mHandler = new Handler();
         mHandler.postDelayed(mRunnable, 3000);
 
-        if (activityController.getPangPangSelectActivity() != null) {
-            activityController.getPangPangSelectActivity().startRecord(songNumber);
-        }
-
-        if (activityController.getDuetSelectActivity() != null) {
-            activityController.getDuetSelectActivity().startRecord(songNumber);
-        }
+//        if (activityController.getPangPangSelectActivity() != null) {
+//            activityController.getPangPangSelectActivity().startRecord(songNumber);
+//        }
+//
+//        if (activityController.getDuetSelectActivity() != null) {
+//            activityController.getDuetSelectActivity().startRecord(songNumber);
+//        }
     }
 
     public void stop() {

@@ -82,11 +82,6 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                 }
                 client.logout();
             }
-        } catch (Exception e) {
-            Logger.i("ftp 다운중 오류");
-            e.printStackTrace();
-            return null;
-        } finally {
             if (client != null && client.isConnected()) {
                 try {
                     client.disconnect();
@@ -94,6 +89,11 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                     ioe.printStackTrace();
                 }
             }
+
+        } catch (Exception e) {
+            Logger.i("ftp 다운중 오류");
+            e.printStackTrace();
+            return null;
         }
         return client;
     }

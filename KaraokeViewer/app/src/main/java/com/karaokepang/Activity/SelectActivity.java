@@ -187,11 +187,11 @@ public class SelectActivity extends BluetoothActivity {
         if (camera == null) {
             camera = Camera.open(findBackFacingCamera());
             preview.refreshCamera(camera);
-         try {
-             camera.unlock();
-         }catch (RuntimeException e){
-             e.printStackTrace();
-         }
+            try {
+                camera.unlock();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
         if (recorder == null) {
             recorder = new MediaRecorder();
@@ -258,4 +258,10 @@ public class SelectActivity extends BluetoothActivity {
         }
     }
 
+    @Override
+    public void play(String songNumber) {
+        super.play(songNumber);
+        Log.e("kkk", "select play");
+        startRecord(songNumber);
+    }
 }

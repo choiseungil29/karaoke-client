@@ -394,5 +394,17 @@ public class BluetoothActivity extends BaseActivity {
         return result;
     }
 
+
+    public void  play(String songNumber){
+        Log.e("kkk","bluetooth play");
+        //todo 녹화
+//        if (activityController.getPangPangSelectActivity() != null) {
+//            activityController.getPangPangSelectActivity().startRecord(songNumber);
+//        }
+//
+//        if (activityController.getDuetSelectActivity() != null) {
+//            activityController.getDuetSelectActivity().startRecord(songNumber);
+//        }
+    }
 }
 
