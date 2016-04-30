@@ -84,11 +84,7 @@ public abstract class PlayActivity extends BluetoothActivity {
     }
 
     public void initMidiFile(Uri uri, final String songNumber) {
-        FileInputStream fis = null;
         try {
-            fis = new FileInputStream(uri.getPath());
-            midifile = new MidiFile(fis);
-
             player = new MediaPlayer();
             player.reset();
             player.setDataSource(uri.getPath());
@@ -160,12 +156,13 @@ public abstract class PlayActivity extends BluetoothActivity {
                     }
                 }
             });
-
-            fis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        FileInputStream fis = null;
         try {
+            fis = new FileInputStream(uri.getPath());
+            midifile = new MidiFile(fis);
             MidiInfo.resolution = midifile.getResolution();
             initTracks();
             ltv_lyrics.loadKsaByMidi(uri);
@@ -178,6 +175,12 @@ public abstract class PlayActivity extends BluetoothActivity {
             Log.e("kkk", "layoutsong =" + MidiUtil.getSongName(musicFile) + "," + MidiUtil.getComposer(musicFile) + "," + MidiUtil.getSinger(musicFile));
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

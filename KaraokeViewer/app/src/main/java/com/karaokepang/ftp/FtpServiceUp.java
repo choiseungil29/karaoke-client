@@ -83,7 +83,7 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
         } catch (Exception e) {
             Logger.i("해당 ftp 로그인 실패하였습니다.");
             e.printStackTrace();
-            System.exit(-1);
+//            System.exit(-1);
         }
         return client;
     }
