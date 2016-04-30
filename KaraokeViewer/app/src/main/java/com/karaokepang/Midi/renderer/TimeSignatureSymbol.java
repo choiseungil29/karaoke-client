@@ -8,7 +8,6 @@ import android.graphics.Rect;
 
 import com.karaokepang.Midi.event.meta.TimeSignature;
 import com.karaokepang.Midi.util.MidiInfo;
-import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 12..

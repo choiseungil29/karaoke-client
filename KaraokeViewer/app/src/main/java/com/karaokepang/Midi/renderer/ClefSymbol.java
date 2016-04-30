@@ -12,7 +12,6 @@ import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.NoteOn;
 import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.R;
-import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 10..

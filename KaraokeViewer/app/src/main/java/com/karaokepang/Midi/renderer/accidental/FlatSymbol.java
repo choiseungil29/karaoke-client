@@ -7,7 +7,6 @@ import android.graphics.Path;
 
 import com.karaokepang.Midi.renderer.Symbol;
 import com.karaokepang.Midi.util.MidiInfo;
-import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 11..

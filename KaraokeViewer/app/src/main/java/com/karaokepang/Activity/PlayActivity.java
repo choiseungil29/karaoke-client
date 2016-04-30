@@ -89,23 +89,24 @@ public abstract class PlayActivity extends BluetoothActivity {
     }
 
     public void initMidiFile(Uri uri, final String songNumber) {
-        FileInputStream fis = null;
+        FileInputStream fis;
         try {
             fis = new FileInputStream(uri.getPath());
             midifile = new MidiFile(fis);
-//            FileDescriptor fd = fis.getFD();
+            FileDescriptor fd = fis.getFD();
 //            player.reset();
 //            player.create(this,uri);
-            player.setDataSource(uri.getPath());
+            //player.setDataSource(uri.getPath());
+            player.setDataSource(fd);
 //            player.release();
             player.prepare();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     Log.e("kkk", "onPrepared@@@@@@@@@@@@@@@@@@@@@@");
+                    player.start();
                     play(songNumber);
                     finishSign = false;
-                    mediaPlayer.start();
                     tickCounter();
                     loop();
                     Log.e("kkk", "onPrepared######################");

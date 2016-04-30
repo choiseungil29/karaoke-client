@@ -8,7 +8,6 @@ import android.graphics.RectF;
 
 import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Midi.util.MidiUtil;
-import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 13..

@@ -16,7 +16,6 @@ import com.karaokepang.Midi.renderer.midi.RestSymbol;
 import com.karaokepang.Midi.util.MidiInfo;
 import com.karaokepang.Midi.util.MidiUtil;
 import com.karaokepang.Util.Logger;
-import com.karaokepang.View.BeforeScoreView;
 
 import java.util.ArrayList;
 import java.util.Collections;

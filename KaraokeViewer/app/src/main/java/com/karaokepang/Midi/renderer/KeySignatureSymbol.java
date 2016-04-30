@@ -6,7 +6,6 @@ import com.karaokepang.Midi.event.meta.KeySignature;
 import com.karaokepang.Midi.renderer.accidental.FlatSymbol;
 import com.karaokepang.Midi.renderer.accidental.SharpSymbol;
 import com.karaokepang.Midi.util.MidiInfo;
-import com.karaokepang.View.BeforeScoreView;
 
 /**
  * Created by clogic on 2015. 12. 10..

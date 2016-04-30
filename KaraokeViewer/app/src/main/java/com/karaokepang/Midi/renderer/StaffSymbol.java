@@ -9,7 +9,6 @@ import com.karaokepang.Midi.MidiTrack;
 import com.karaokepang.Midi.event.MidiEvent;
 import com.karaokepang.Midi.event.meta.Tempo;
 import com.karaokepang.Midi.util.MidiInfo;
-import com.karaokepang.View.BeforeScoreView;
 
 import java.util.List;
 
