@@ -19,7 +19,7 @@ public class PangPangSelectActivity extends SelectActivity {
 
         setRandomVideoSource();
         setVideoView();
-        setCameraPreView();
+//        setCameraPreView();
     }
 
     @Override

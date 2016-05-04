@@ -20,7 +20,7 @@
         android:layout_marginBottom="280dp"
         android:gravity="bottom"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <VideoView
             android:id="@+id/vv_background"
@@ -29,8 +29,7 @@
             android:layout_weight="1"
             android:clickable="false" />
 
-        <RelativeLayout
-            android:id="@+id/camera_layout"
+        <View
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="1" />

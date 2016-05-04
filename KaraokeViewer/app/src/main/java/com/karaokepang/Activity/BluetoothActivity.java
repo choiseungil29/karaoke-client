@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -126,10 +127,12 @@ public class BluetoothActivity extends BaseActivity {
                     String activityName = componentName.getShortClassName().substring(1);
                     if (activityName.contains("PangPangActivity")) {
                         activityController.getPangPangActivity().finishSign = true;
-                        activityController.getPangPangActivity().finish();
+                        PangPangActivity.pangPangActivity.finish();
+//                        activityController.getPangPangActivity().finish();
                     } else if (activityName.contains("DuetActivity")) {
                         activityController.getDuetActivity().finishSign = true;
-                        activityController.getDuetActivity().finish();
+                        DuetActivity.duetActivity.finish();
+//                        activityController.getDuetActivity().finish();
                     }
                 } else if (message.equals(Keys.SendData.MUSIC_SHEET_MODE)) {
                     if (activityController.getDuetActivity() != null) {
@@ -157,9 +160,9 @@ public class BluetoothActivity extends BaseActivity {
                             reservationCount++;
                         }
                         if (activityController.isDuetSelectMode()) {
-                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+                            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservation));
                         } else if (activityController.isPangSelectMode()) {
-                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+                            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservation));
                         }
                     } else {
                         if (activityController.getPangPangActivity() == null && activityController.getDuetActivity() == null) {
@@ -315,7 +318,7 @@ public class BluetoothActivity extends BaseActivity {
         }
     }
 
-    public void startPangPlay(String number){
+    public void startPangPlay(String number) {
         Log.i("kkk", "예약곡있어! startDuetPlay = " + number);
         File file = new File(FilePath.FILE_PATH_VPANGMID + number + ".mid");
         Uri uri = Uri.parse(file.getAbsolutePath());
@@ -361,10 +364,10 @@ public class BluetoothActivity extends BaseActivity {
         }
         if (activityController.isDuetSelectMode()) {
 //            Log.e("kkk", "!@# = " + arrayJoin(", ", reservationName));
-            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+            activityController.getDuetSelectActivity().textReservation.setText(arrayJoin(", ", reservation));
         } else if (activityController.isPangSelectMode()) {
 //            Log.e("kkk", "!@#### = " + arrayJoin(", ", reservationName));
-            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservationName));
+            activityController.getPangPangSelectActivity().textReservation.setText(arrayJoin(", ", reservation));
         }
     }
 
@@ -395,8 +398,8 @@ public class BluetoothActivity extends BaseActivity {
     }
 
 
-    public void  play(String songNumber){
-        Log.e("kkk","bluetooth play");
+    public void play(String songNumber,MediaPlayer mediaPlayer) {
+        Log.e("kkk", "bluetooth play");
         //todo 녹화
 //        if (activityController.getPangPangSelectActivity() != null) {
 //            activityController.getPangPangSelectActivity().startRecord(songNumber);

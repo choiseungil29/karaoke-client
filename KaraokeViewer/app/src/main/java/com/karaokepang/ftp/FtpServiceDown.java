@@ -70,14 +70,13 @@ public class FtpServiceDown extends AsyncTask<Void, Void, Void> {
                 for (int i = 0; i < ftpdirs.length; i++) {
                     ftpFiles.add(ftpdirs[i].getName());
                 }
-                Log.e("kkk_ftp", ftpFiles.toString());
-                Log.e("kkk_local", localFiles.toString());
+                Log.i("kkk_ftp", ftpFiles.toString());
+                Log.i("kkk_local", localFiles.toString());
                 if (ftpFiles.size() != localFiles.size() || localFiles.size() == 0) {
-                    Log.e("kkk", "fuck");
                     for (int i = 0; i < ftpdirs.length; i++) {
                         FileOutputStream fileOutputStream = new FileOutputStream(FilePath.FILE_PATH_VPANGMID + ftpdirs[i].getName());
                         boolean result = client.retrieveFile("/vpang_mid/" + ftpdirs[i].getName(), fileOutputStream);
-                        Log.e("kkk", "ftp result = " + result);
+                        Log.i("kkk", "ftp result = " + result);
                     }
                 }
                 client.logout();

@@ -29,17 +29,15 @@ public class DuetSelectActivity extends SelectActivity {
 
         setVideoView();
         setImageView();
-        setDuetCameraPreView();
+//        setDuetCameraPreView();
     }
 
     @Override
-    public void startRecord(String songNumber) {
-        super.startRecord(songNumber);
-        // work on UiThread for better performance
+    public void startSong(String songNumber) {
+        super.startSong(songNumber);
         runOnUiThread(new Runnable() {
             public void run() {
                 try {
-                    Toast.makeText(getApplicationContext(), "녹화시작", Toast.LENGTH_LONG).show();
                     layoutPreiew.setVisibility(LinearLayout.VISIBLE);
                 } catch (final Exception ex) {
                     ex.printStackTrace();

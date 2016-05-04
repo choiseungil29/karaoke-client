@@ -20,6 +20,7 @@ import org.androidannotations.annotations.WindowFeature;
 @EActivity(R.layout.activity_duet)
 public class DuetActivity extends PlayActivity {
 
+    public static DuetActivity duetActivity;
     private ActivityController activityController = ActivityController.getInstance();
     private Uri midiUri;
 
@@ -29,10 +30,10 @@ public class DuetActivity extends PlayActivity {
     @Override
     public void afterViews() {
         super.afterViews();
+        duetActivity = DuetActivity.this;
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setLayout(android.view.WindowManager.LayoutParams.MATCH_PARENT, android.view.WindowManager.LayoutParams.MATCH_PARENT);
         midiUri = getIntent().getData();
-        Log.e("kkk", "@@@@@@@@@@@@@@@duet midiUri = " + midiUri.getPath());
         sv_score.initMidiFile(midiUri);
         initMidiFileWithStart(midiUri);
         ltv_lyrics.setBackgroundColor(Color.parseColor("#FF444444"));
@@ -50,16 +51,30 @@ public class DuetActivity extends PlayActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.w("kkk", "----------------------onStart------------------" + getClass());
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        Log.d("kkk", "----------------------onResume------------------"+getClass());
+        Log.w("kkk", "----------------------onResume------------------" + getClass());
+        cameraResume();
         activityController.setDuetActivity(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("kkk", "----------------------onPause------------------"+getClass());
+        Log.w("kkk", "----------------------onPause------------------" + getClass());
+        cameraPause();
         activityController.setDuetActivity(null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.w("kkk", "----------------------onDestroy------------------" + getClass());
     }
 }

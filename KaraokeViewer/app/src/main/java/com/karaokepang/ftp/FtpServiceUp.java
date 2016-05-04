@@ -41,7 +41,7 @@ public class FtpServiceUp extends AsyncTask<Void, Void, Void> {
 
             // 응답코드가 비정상일 경우 종료함
             int reply = client.getReplyCode();
-            Log.e("kkk", "reply = " + reply);
+            Log.e("kkk", "ftp reply = " + reply);
             if (!FTPReply.isPositiveCompletion(reply)) {
                 client.disconnect();
                 Logger.i("FTP server refused connection");

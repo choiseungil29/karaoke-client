@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.karaokepang.Activity.PlayActivity;
+
 import java.io.IOException;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
@@ -14,8 +16,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    public CameraPreview(Context context, Camera camera) {
+    private PlayActivity playActivity;
+
+    public CameraPreview(Context context, PlayActivity playActivity, Camera camera) {
         super(context);
+        this.playActivity = playActivity;
         mContext = context;
         mCamera = camera;
         mHolder = getHolder();
@@ -43,10 +48,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            if (mCamera == null) {
+            if (mCamera != null) {
+                Log.e("kkk", "camera not null");
                 mCamera.setPreviewDisplay(holder);
                 mCamera.startPreview();
             }
+            playActivity.startRecord(playActivity.songNumber);
+            Log.e("kkk", "fucking play 재생 = " + playActivity.songNumber);
         } catch (IOException e) {
             Log.d(VIEW_LOG_TAG, "Error setting camera preview: " + e.getMessage());
         }
@@ -70,6 +78,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         refreshCamera(mCamera);
     }
@@ -82,6 +91,5 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder) {
         // TODO Auto-generated method stub
         mCamera.release();
-
     }
 }
